@@ -1,0 +1,7 @@
+method,coverage_pct,scheduled_h,required_h,unplaced_requirements,hard_violations,batch_clash,faculty_clash,room_clash,outside_hours,soft_penalty,idle_gaps,batch_day_overload,faculty_consec_excess,faculty_day_overload,saturday_h,late_h,extended_h,room_changes,weekday_imbalance,kept_vs_published_pct,seconds
+Published grid (manual + macro),98.96,667,674,4,20,2,3,0,15,2762,170,100,17,26,88,96,14,0,0.172,100.0,
+VBA Allot macro (Python port),88.13,594,674,39,4,0,4,0,0,2586,238,52,19,26,49,80,0,0,0.569,21.61,0.0
+CP-SAT exact (rooms inside),71.81,484,674,89,0,0,0,0,0,2855,268,3,2,1,56,74,0,123,0.07,21.25,63.0
+CP-SAT decomposed (no repair),98.96,667,674,7,0,0,0,0,0,2367,114,90,11,20,69,83,0,142,0.042,6.25,56.0
+Decomposed + LNS repair (ours),99.85,673,674,1,0,0,0,0,0,2479,110,95,14,21,70,86,0,164,0.041,6.25,97.2
+Ours + stability (minimal change),99.7,672,674,2,0,0,0,0,0,2573,143,73,15,14,81,85,0,153,0.102,44.64,97.8

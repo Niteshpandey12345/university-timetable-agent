@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "timetable-data":      {"command": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2\\.venv\\Scripts\\python.exe",
+                            "args": ["-m", "ttagent.mcp_servers.data_server"],
+                            "cwd": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2",
+                            "env": {"PYTHONPATH": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2"}},
+    "timetable-academic":  {"command": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2\\.venv\\Scripts\\python.exe",
+                            "args": ["-m", "ttagent.mcp_servers.academic_server"],
+                            "cwd": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2",
+                            "env": {"PYTHONPATH": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2"}},
+    "timetable-resource":  {"command": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2\\.venv\\Scripts\\python.exe",
+                            "args": ["-m", "ttagent.mcp_servers.resource_server"],
+                            "cwd": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2",
+                            "env": {"PYTHONPATH": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2"}},
+    "timetable-scheduler": {"command": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2\\.venv\\Scripts\\python.exe",
+                            "args": ["-m", "ttagent.mcp_servers.timetable_server"],
+                            "cwd": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2",
+                            "env": {"PYTHONPATH": "C:\\Users\\Nitesh Pandey\\Desktop\\M. Tech 3rd sem\\DL\\university-timetable-agent-v2"}}
+  }
+}

@@ -1,0 +1,7 @@
+faculty,day,sessions_displaced,resolved,coverage_pct,hard_violations,constraint_respected,sessions_moved_total,disruption_pct,seconds
+RAVI,Fri,2,False,99.85,0,True,33,5.83,40.1
+AKD,Wed,3,True,100.0,0,True,40,7.05,11.4
+DRM,Mon,1,False,99.85,0,True,3,0.53,26.7
+DKR,Mon,3,True,100.0,0,True,41,7.23,2.2
+SG,Fri,2,True,100.0,0,True,31,5.47,1.4
+RP,Wed,3,True,100.0,0,True,33,5.82,9.5

@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timetable Agent Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0f17;--bg2:#111726;--panel:#141b2b;--panel2:#1a2336;--line:#26314a;--ink:#e8ecf5;--muted:#8b97b1;--accent:#6c8cff;--accent2:#22d3ee;
+--ok:#34d399;--warn:#fbbf24;--bad:#fb7185;--L:#24365e;--Lb:#6c8cff;--T:#1d3d33;--Tb:#34d399;--P:#43341c;--Pb:#fbbf24;--shadow:0 10px 30px rgba(0,0,0,.35);
+--s-data:#a78bfa;--s-academic:#22d3ee;--s-resource:#34d399;--s-timetable:#fb923c}
+[data-theme=light]{--bg:#f4f6fb;--bg2:#eef1f8;--panel:#fff;--panel2:#f7f9fd;--line:#e1e6f0;--ink:#172033;--muted:#5d6a85;--accent:#3b5bdb;--accent2:#0891b2;
+--ok:#059669;--warn:#b45309;--bad:#e11d48;--L:#e7edff;--Lb:#3b5bdb;--T:#e3f7ee;--Tb:#059669;--P:#fff1d6;--Pb:#b45309;--shadow:0 6px 20px rgba(20,30,60,.08)}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font:14px/1.5 Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px}
+a{color:var(--accent)}
+/* sidebar */
+aside.side{background:var(--bg2);border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;align-self:start;overflow-y:auto}
+.brand{display:flex;gap:10px;align-items:center;padding:4px 8px 16px}.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-weight:700}
+.brand b{display:block;font-size:15px}.brand span{font-size:11px;color:var(--muted)}
+.nav button{all:unset;cursor:pointer;display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:9px;color:var(--muted);width:100%;box-sizing:border-box;font-weight:500}
+.nav button:hover{background:var(--panel)}.nav button.on{background:var(--panel2);color:var(--ink);box-shadow:inset 3px 0 0 var(--accent)}
+.nav svg{width:17px;height:17px;flex:none}
+.status{margin-top:auto;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;background:var(--panel)}
+.status div{display:flex;justify-content:space-between;align-items:center;padding:2px 0;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}.dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}.dot.off{background:var(--warn)}
+/* main */
+main{min-width:0;display:flex;flex-direction:column}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 24px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+.top h1{font-size:18px;margin:0 auto 0 0}
+select,input,button.btn{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:7px 10px}
+button.btn{cursor:pointer}button.primary{background:linear-gradient(135deg,var(--accent),#8b5cf6);border:none;color:#fff;font-weight:600}
+button.btn:disabled{opacity:.55;cursor:wait}
+.page{padding:22px 24px;display:none}.page.on{display:block;animation:fade .25s}@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-bottom:18px}
+.card h3{margin:0 0 12px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;gap:8px;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:1200px){.grid2,.grid3{grid-template-columns:1fr}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.kpi b{font-size:24px;display:block;letter-spacing:-.02em}.kpi span{color:var(--muted);font-size:12px}
+.good{color:var(--ok)}.badc{color:var(--bad)}.warnc{color:var(--warn)}
+.hero{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+.ring{width:150px;height:150px}
+.pill{display:inline-flex;gap:6px;align-items:center;padding:3px 10px;border-radius:99px;background:var(--panel2);border:1px solid var(--line);font-size:12px;color:var(--muted);margin:2px}
+.bars .row{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center;margin:8px 0;font-size:12px}
+.bars .track{display:flex;flex-direction:column;gap:3px}.bar{height:9px;border-radius:5px}.bar.a{background:var(--bad);opacity:.75}.bar.b{background:var(--accent)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted)}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}th{font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.05em}
+/* timetable grid */
+.tt{display:grid;grid-template-columns:56px repeat(8,minmax(118px,1fr));gap:4px;overflow-x:auto}
+.tt .h{font-size:11px;color:var(--muted);text-align:center;padding:4px}.tt .d{font-weight:600;display:flex;align-items:center;color:var(--muted)}
+.tt .c{min-height:58px;background:var(--panel2);border-radius:8px;padding:3px;display:flex;flex-direction:column;gap:3px}
+.tt .lunch{background:repeating-linear-gradient(45deg,var(--panel2),var(--panel2) 6px,var(--bg2) 6px,var(--bg2) 12px);color:var(--muted);font-size:10px;display:grid;place-items:center}
+.ses{border-radius:6px;padding:4px 6px;font-size:11px;line-height:1.25;border-left:3px solid}.ses b{font-size:12px}
+.ses.L{background:var(--L);border-color:var(--Lb)}.ses.T{background:var(--T);border-color:var(--Tb)}.ses.P{background:var(--P);border-color:var(--Pb)}
+.ses small{color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+/* agent studio */
+.studio{display:grid;grid-template-columns:minmax(320px,420px) 1fr;gap:18px}@media (max-width:1150px){.studio{grid-template-columns:1fr}}
+#chatlog{height:calc(100vh - 330px);min-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px}
+.msg{padding:10px 12px;flex:none;border-radius:12px;max-width:95%;word-wrap:break-word}.u{align-self:flex-end;background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff}
+.a{background:var(--panel2);border:1px solid var(--line);overflow-x:auto}.a table{font-size:11px}.a td,.a th{padding:3px 5px}
+.a h4{margin:4px 0 6px;font-size:14px}.a ul{margin:4px 0;padding-left:18px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0;max-height:62px;overflow-y:auto}.chip{cursor:pointer;font-size:11px;padding:3px 9px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+.chip:hover{border-color:var(--accent)}
+.chatin{display:flex;gap:8px}.chatin input{flex:1}
+.approve{border:1px solid var(--accent);border-radius:12px;padding:10px;background:color-mix(in srgb,var(--accent) 10%,transparent)}
+svg.flow{width:100%;height:auto}
+.flow .n rect{fill:var(--panel2);stroke:var(--line);stroke-width:1.5;rx:10;transition:all .3s}.flow .n text{fill:var(--muted);font-size:12px;font-weight:600;text-anchor:middle;dominant-baseline:middle;transition:fill .3s}
+.flow .n.done rect{stroke:var(--accent);fill:color-mix(in srgb,var(--accent) 14%,var(--panel2))}.flow .n.done text{fill:var(--ink)}
+.flow .n.active rect{stroke:var(--accent2);stroke-width:3;filter:drop-shadow(0 0 8px var(--accent2))}.flow .n.active text{fill:var(--ink)}
+.flow .e{stroke:var(--line);stroke-width:1.6;fill:none;transition:stroke .3s}.flow .e.dash{stroke-dasharray:5 4}.flow .e.done{stroke:var(--accent);stroke-width:2.4}
+.flow .lbl{fill:var(--muted);font-size:10px}
+.servers{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media (max-width:900px){.servers{grid-template-columns:repeat(2,1fr)}}
+.srv{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--panel2);transition:all .3s;position:relative}
+.srv b{display:flex;gap:8px;align-items:center}.srv .sw{width:10px;height:10px;border-radius:3px}.srv small{color:var(--muted);display:block;margin-top:3px}
+.srv.hit{transform:translateY(-3px);box-shadow:0 0 0 2px var(--hc),0 8px 20px color-mix(in srgb,var(--hc) 35%,transparent)}
+.timeline{max-height:250px;overflow-y:auto;font-size:12px}.timeline .t{display:grid;grid-template-columns:86px 1fr 54px;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line);align-items:center}
+.tag{font-size:10px;padding:2px 6px;border-radius:5px;color:#0b0f17;font-weight:600;text-align:center}
+/* system */
+.arch{display:grid;gap:10px}.layer{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:stretch}
+.layer>div:first-child{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center}
+.boxes{display:flex;flex-wrap:wrap;gap:8px}.box{flex:1;min-width:150px;border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:9px 11px;font-size:12px}
+.box b{display:flex;gap:7px;align-items:center;font-size:13px}.arrow{text-align:center;color:var(--muted);font-size:12px}
+.toollist{font-size:12px;margin:6px 0 0;padding:0;list-style:none;max-height:210px;overflow:auto}.toollist li{padding:3px 0;border-bottom:1px dashed var(--line)}
+.figs{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:16px}.figs img{width:100%;border-radius:10px;background:#fff}
+.muted{color:var(--muted)}.small{font-size:12px}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--panel);border:1px solid var(--line);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);display:none}
+</style>
+</head>
+<body>
+<aside class="side">
+  <div class="brand"><div class="logo">TT</div><div><b>Timetable Agent</b><span>LangGraph · MCP · CP-SAT</span></div></div>
+  <nav class="nav">
+    <button data-p="overview" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Overview</button>
+    <button data-p="timetable"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Timetable</button>
+    <button data-p="studio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7.3 11 16.7 6M7.3 13l9.4 5"/></svg>Agent Studio</button>
+    <button data-p="system"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="6" rx="1"/><rect x="3" y="15" width="18" height="6" rx="1"/><path d="M7 6h.01M7 18h.01M12 9v6"/></svg>System &amp; MCP</button>
+    <button data-p="quality"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v5M12 18h.01"/></svg>Data quality</button>
+    <button data-p="experiments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Research results</button>
+  </nav>
+  <div class="status" id="sideStatus">
+    <div>API <span class="dot on"></span></div><div>Dataset <span class="dot" id="stDs"></span></div>
+    <div>LangGraph agent <span class="dot" id="stAg"></span></div><div>MCP servers <span id="stMcp" class="mono">–</span></div>
+    <div>LLM <span id="stLlm" class="mono" style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">–</span></div>
+  </div>
+  <button class="btn" id="themeBtn" style="margin-top:8px">Toggle theme</button>
+</aside>
+
+<main>
+  <div class="top">
+    <h1 id="pageTitle">Overview</h1>
+    <select id="solSel" title="Timetable version"></select>
+    <select id="semSel"><option value="">All semesters</option></select>
+    <select id="tlSel"><option value="30">30 s</option><option value="60" selected>60 s</option><option value="120">120 s</option><option value="300">5 min</option></select>
+    <button class="btn primary" id="genBtn">⚡ Generate</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="page on" id="p-overview">
+    <div class="card"><div class="hero">
+      <svg class="ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--line)" stroke-width="12"/>
+        <circle id="ringArc" cx="60" cy="60" r="50" fill="none" stroke="url(#gr)" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 400" transform="rotate(-90 60 60)"/>
+        <defs><linearGradient id="gr"><stop offset="0" stop-color="#6c8cff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+        <text id="ringTxt" x="60" y="58" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">–</text>
+        <text x="60" y="78" text-anchor="middle" font-size="10" fill="var(--muted)">hours scheduled</text></svg>
+      <div><div id="solHead" style="font-size:20px;font-weight:600">Select or generate a timetable</div>
+        <div class="muted small" id="solNote"></div><div class="kpis" id="kpis" style="margin-top:12px"></div></div>
+    </div></div>
+    <div class="grid2">
+      <div class="card"><h3>vs. the published workbook grid</h3><div class="legend"><span><i style="background:var(--bad)"></i>published</span><span><i style="background:var(--accent)"></i>selected</span></div><div class="bars" id="cmpBars"></div><div class="muted small" id="cmpNote"></div></div>
+      <div class="card"><h3>Teaching hours by day</h3><div id="dayChart"></div><h3 style="margin-top:14px">…and by slot</h3><div id="slotChart"></div></div>
+    </div>
+  </section>
+
+  <!-- TIMETABLE -->
+  <section class="page" id="p-timetable">
+    <div class="card">
+      <div class="controls">
+        <select id="kindSel"><option value="batch">Batch</option><option value="faculty">Faculty</option><option value="room">Room</option><option value="semester">Semester</option></select>
+        <input id="codeIn" list="codeList" placeholder="type a code…" style="width:140px"><datalist id="codeList"></datalist>
+        <span class="pill" id="viewNote">–</span>
+        <span style="flex:1"></span>
+        <div class="legend"><span><i style="background:var(--Lb)"></i>Lecture</span><span><i style="background:var(--Tb)"></i>Tutorial</span><span><i style="background:var(--Pb)"></i>Lab</span></div>
+        <button class="btn" id="xlsxBtn">⬇ Excel</button><button class="btn" id="icsBtn">⬇ Calendar</button>
+      </div>
+      <div class="tt" id="tt"></div>
+    </div>
+  </section>
+
+  <!-- AGENT STUDIO -->
+  <section class="page" id="p-studio">
+    <div class="studio">
+      <div class="card" style="margin:0">
+        <h3>Chat with the agents <span class="pill" id="threadPill"></span></h3>
+        <div id="chatlog"><div class="msg a">Hi! I'm a team of LangGraph agents. I can only act through MCP tools backed by a CP-SAT solver and an independent validator, so I never invent a room or a slot. Pick an example below.</div></div>
+        <div class="chips" id="chips"></div>
+        <div class="chatin"><input id="chatIn" placeholder="e.g. RAVI is unavailable on Monday"><button class="btn primary" id="sendBtn">Send</button></div>
+      </div>
+      <div>
+        <div class="card"><h3>LangGraph execution <span class="pill" id="intentPill">idle</span></h3>
+          <svg class="flow" id="flow" viewBox="0 0 780 430"></svg></div>
+        <div class="card"><h3>MCP servers <span class="pill">stdio transport</span></h3><div class="servers" id="srvRow"></div></div>
+        <div class="card"><h3>Trace (this turn)</h3><div class="timeline" id="timeline"><span class="muted small">No calls yet.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYSTEM -->
+  <section class="page" id="p-system">
+    <div class="card"><h3>Live architecture <button class="btn" id="connectBtn" style="margin-left:auto">Connect agent &amp; MCP servers</button></h3><div class="arch" id="arch"></div></div>
+    <div class="card"><h3>MCP tools by server</h3><div class="grid2" id="toolGrid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))"></div></div>
+    <div class="card"><h3>MCP audit log (latest calls)</h3><div id="audit" style="max-height:380px;overflow:auto"></div></div>
+  </section>
+
+  <!-- QUALITY -->
+  <section class="page" id="p-quality">
+    <div class="card"><h3>Workbook</h3><div class="kpis" id="qKpis"></div></div>
+    <div class="grid2">
+      <div class="card"><h3>Elective baskets (learned from the published grid)</h3><div id="baskets"></div></div>
+      <div class="card"><h3>Capacity proof (pigeonhole)</h3><div id="capacity"></div></div>
+    </div>
+    <div class="card"><h3>Issues <select id="sevSel" style="margin-left:auto"><option value="">all</option><option>warning</option><option>info</option></select></h3><div id="issues" style="max-height:420px;overflow:auto"></div></div>
+  </section>
+
+  <!-- EXPERIMENTS -->
+  <section class="page" id="p-experiments">
+    <div class="card"><h3>Research results <span class="pill">python -m scripts.run_experiments</span></h3><div class="figs" id="figs"></div></div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const api=(p,o)=>fetch(p,o).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.detail||r.statusText);return j});
+const post=(p,b)=>api(p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b||{})});
+const store={get(k,d){try{return localStorage.getItem(k)??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',3500)};
+let ENT={},SYS=null,thread=store.get('tt_thread',null);if(!thread){thread=Math.random().toString(36).slice(2,9);store.set('tt_thread',thread)}
+document.documentElement.dataset.theme=store.get('tt_theme','dark');
+$('#themeBtn').onclick=()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;store.set('tt_theme',t)};
+const SRV_COLOR={data:'var(--s-data)',academic:'var(--s-academic)',resource:'var(--s-resource)',timetable:'var(--s-timetable)'};
+const TITLES={overview:'Overview',timetable:'Timetable explorer',studio:'Agent Studio',system:'System & MCP connections',quality:'Data quality',experiments:'Research results'};
+
+// ---------- navigation
+function go(p){$$('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));$('#pageTitle').textContent=TITLES[p];store.set('tt_page',p);
+  if(p==='system')loadSystem();if(p==='quality')loadQuality();if(p==='experiments')loadFigs();if(p==='timetable')grid()}
+$$('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.p));
+
+// ---------- init
+async function init(){
+  ENT=await api('/api/entities');ENT.semesters.forEach(s=>$('#semSel').insertAdjacentHTML('beforeend',`<option value="${s}">Semester ${s}</option>`));
+  $('#threadPill').textContent='thread '+thread;
+  ['Generate timetable for Year 2','Show all conflicts in the current timetable','JP is unavailable on Tuesday','Why could you not schedule the DBMS lab?','Show timetable of batch 3B1','Compare with the published timetable','Is it even possible to schedule everything?','How good is the data in the Excel workbook?']
+   .forEach(q=>$('#chips').insertAdjacentHTML('beforeend',`<span class="chip">${q}</span>`));
+  $$('.chip').forEach(c=>c.onclick=()=>{$('#chatIn').value=c.textContent;send()});
+  drawFlow();await refreshSystem();await loadSolutions();fillCodes();await refresh();go(store.get('tt_page','overview'));
+}
+async function refreshSystem(){try{SYS=await api('/api/system')}catch(e){return}
+  $('#stDs').className='dot on';$('#stAg').className='dot '+(SYS.agent.ready?'on':'off');
+  const n=Object.values(SYS.mcp).filter(s=>s.connected).length;$('#stMcp').textContent=`${n}/4 live`;$('#stLlm').textContent=SYS.agent.model;
+  drawServers()}
+async function loadSolutions(sel){
+  const sols=await api('/api/solutions');const s=$('#solSel');const cur=sel||s.value;s.innerHTML='';
+  sols.forEach(x=>s.insertAdjacentHTML('beforeend',`<option value="${x.id}">${x.published?'★ ':''}${x.id} · ${esc(x.label).slice(0,32)} · ${x.coverage_pct??'?'}%</option>`));
+  s.insertAdjacentHTML('beforeend','<option value="published">📄 Workbook grid (published)</option><option value="vba">⚙ VBA macro baseline</option>');
+  if(cur&&[...s.options].some(o=>o.value===cur))s.value=cur}
+function fillCodes(){const k=$('#kindSel').value;const list={batch:ENT.batches,faculty:ENT.faculty,room:ENT.rooms,semester:ENT.semesters}[k];
+  $('#codeList').innerHTML=list.map(c=>`<option value="${c}">`).join('');$('#codeIn').value=store.get('tt_code_'+k,list[0])}
+async function refresh(){await overview();if($('#p-timetable').classList.contains('on'))grid()}
+
+// ---------- overview
+async function overview(){
+  const sid=$('#solSel').value;if(!sid)return;let s,c,m;
+  try{[s,m]=await Promise.all([api(`/api/solutions/${sid}`),api(`/api/solutions/${sid}/metrics`)]);c=await api(`/api/compare?a=published&b=${sid}`)}catch(e){$('#solHead').textContent=e.message;return}
+  const q=s.quality||{},hv=Object.values(s.hard_violations||{}).reduce((a,b)=>a+b,0),cov=s.coverage_pct??0;
+  $('#ringArc').setAttribute('stroke-dasharray',`${3.1416*100*cov/100} 400`);$('#ringTxt').textContent=cov+'%';
+  $('#solHead').innerHTML=`${esc(s.label||s.solution_id)} ${s.valid?'<span class="pill good">✔ valid</span>':'<span class="pill badc">✖ not valid</span>'}${s.published?'<span class="pill">★ published</span>':''}`;
+  $('#solNote').textContent=`${s.solution_id} · method ${s.method} · ${s.scheduled_hours??'?'}/${s.required_hours??'?'} h${s.unplaced_count?` · ${s.unplaced_count} unplaced`:''}${s.seconds?` · solved in ${s.seconds}s`:''}`;
+  const k=[['Hard violations',hv,hv?'badc':'good'],['Soft penalty',q.soft_penalty],['Idle gaps',q.batch_idle_gaps],['Saturday hours',q.saturday_hours],['16:00+ hours',q.extended_hours_slot8plus,q.extended_hours_slot8plus?'warnc':'good'],['Teacher >3h in a row',q.faculty_consecutive_excess],['Room changes',q.room_changes],['Weekday imbalance',q.weekday_imbalance]];
+  $('#kpis').innerHTML=k.map(([a,b,cl])=>`<div class="kpi"><b class="${cl||''}">${b??'–'}</b><span>${a}</span></div>`).join('');
+  const A=c.a.id,B=c.b.id,rows=c.rows.filter(r=>r.metric!=='coverage_pct'&&r.metric!=='room_changes');
+  $('#cmpBars').innerHTML=rows.map(r=>{const a=+r[A]||0,b=+r[B]||0,mx=Math.max(a,b,1e-9);return `<div class="row"><span>${r.metric.replaceAll('_',' ')}<br><small class="muted">${a} → <b>${b}</b></small></span><div class="track"><div class="bar a" style="width:${100*a/mx}%"></div><div class="bar b" style="width:${100*b/mx}%"></div></div></div>`}).join('');
+  $('#cmpNote').textContent=c.note;
+  barChart('#dayChart',m.hours_by_day);barChart('#slotChart',Object.fromEntries(Object.entries(m.hours_by_slot||{}).map(([k,v])=>['slot '+k,v])));
+}
+function barChart(sel,obj){const e=Object.entries(obj||{});const mx=Math.max(1,...e.map(x=>x[1]));const W=520,H=150,bw=W/e.length;
+  $(sel).innerHTML=`<svg viewBox="0 0 ${W} ${H+24}" style="width:100%">${e.map(([k,v],i)=>{const h=(H-14)*v/mx;return `<rect x="${i*bw+8}" y="${H-h}" width="${bw-16}" height="${h}" rx="5" fill="url(#gr)"/><text x="${i*bw+bw/2}" y="${H-h-4}" font-size="11" text-anchor="middle" fill="var(--ink)">${v}</text><text x="${i*bw+bw/2}" y="${H+16}" font-size="11" text-anchor="middle" fill="var(--muted)">${k}</text>`}).join('')}</svg>`}
+
+// ---------- timetable grid
+async function grid(){
+  const sid=$('#solSel').value,k=$('#kindSel').value,c=$('#codeIn').value.trim();if(!sid||!c)return;store.set('tt_code_'+k,c);
+  let v;try{v=await api(`/api/solutions/${sid}/view?kind=${k}&code=${encodeURIComponent(c)}`)}catch(e){$('#tt').textContent=e.message;return}
+  $('#viewNote').textContent=`${v.hours} h/week · ${v.sessions} sessions`;
+  const slots=['09:00-10:00','10:00-11:00','11:00-12:00','12:00-13:00','13:00-14:00','14:00-15:00','15:00-16:00','16:00-17:00'];
+  let h='<div></div>'+slots.map(s=>`<div class="h">${s}</div>`).join('');
+  for(const d of Object.keys(v.grid)){h+=`<div class="d">${d}</div>`;for(const s of slots){
+    if(s.startsWith('13:')){h+='<div class="c lunch">LUNCH</div>';continue}
+    const it=v.grid[d][s]||[];h+='<div class="c">'+it.map(x=>{const m=x.match(/^(\S+)\((L|T|P)\) (\S+) (\S+)(?: \[(.+)\])?/);if(!m)return `<div class="ses L">${esc(x)}</div>`;
+      return `<div class="ses ${m[2]}" title="${esc(x)}"><b>${esc(m[1])}</b> <small>${m[2]}</small><br><small>${esc(m[3])} · ${esc(m[4])}</small>${m[5]?`<br><small>${esc(m[5]).slice(0,40)}</small>`:''}</div>`}).join('')+'</div>'}}
+  $('#tt').innerHTML=h}
+$('#kindSel').onchange=()=>{fillCodes();grid()};$('#codeIn').onchange=grid;$('#solSel').onchange=refresh;
+$('#xlsxBtn').onclick=()=>location.href=`/api/solutions/${$('#solSel').value}/export?fmt=xlsx`;
+$('#icsBtn').onclick=()=>{const k=$('#kindSel').value;if(k==='semester')return toast('Pick a batch, faculty or room');location.href=`/api/solutions/${$('#solSel').value}/export?fmt=ics&entity=${k}:${$('#codeIn').value}`};
+$('#genBtn').onclick=async()=>{const b=$('#genBtn');b.disabled=true;b.textContent='⏳ Solving…';const sem=$('#semSel').value;
+  try{const r=await post('/api/solve',{semesters:sem?[+sem]:null,time_limit_s:+$('#tlSel').value});await loadSolutions(r.solution_id);await refresh();toast(`Solved: ${r.coverage_pct}% · ${r.valid?'valid':'invalid'}`)}catch(e){toast(e.message)}b.disabled=false;b.textContent='⚡ Generate'};
+
+// ---------- LangGraph flow
+const NODES={supervisor:[390,34,'Supervisor'],requirements:[130,112,'Requirements'],action:[390,112,'Action agent'],assistant:[650,112,'ReAct assistant'],
+ scheduler:[130,190,'Scheduler'],validator:[130,272,'Validator'],diagnoser:[350,232,'Diagnoser'],repairer:[350,312,'Repairer'],approval:[130,360,'Approval (HITL)'],explainer:[560,300,'Explainer'],respond:[650,392,'Respond']};
+const EDGES=[['supervisor','requirements'],['supervisor','action'],['supervisor','assistant'],['requirements','scheduler'],['requirements','explainer',1],['scheduler','validator'],['validator','diagnoser'],['diagnoser','repairer'],['repairer','validator'],['validator','approval'],['validator','explainer',1],['approval','explainer'],['action','explainer'],['assistant','respond'],['explainer','respond']];
+function drawFlow(){const W=128,H=34;let s=`<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>`;
+  for(const [a,b,d] of EDGES){const[x1,y1]=NODES[a],[x2,y2]=NODES[b];const dx=x2-x1,dy=y2-y1;const sx=Math.abs(dx)*H>Math.abs(dy)*W?W/2/Math.abs(dx||1):H/2/Math.abs(dy||1);
+    const ex=Math.abs(dx)*H>Math.abs(dy)*W?W/2/Math.abs(dx||1):H/2/Math.abs(dy||1);
+    s+=`<path id="e-${a}-${b}" class="e${d?' dash':''}" d="M${x1+dx*sx} ${y1+dy*sx} L${x2-dx*ex} ${y2-dy*ex}" marker-end="url(#ar)"/>`}
+  s+=`<text class="lbl" x="250" y="276">unplaced?</text><text class="lbl" x="44" y="320">valid</text>`;
+  for(const [k,[x,y,l]] of Object.entries(NODES))s+=`<g class="n" id="n-${k}"><rect x="${x-W/2}" y="${y-H/2}" width="${W}" height="${H}"/><text x="${x}" y="${y}">${l}</text></g>`;
+  s+=`<text class="lbl" x="560" y="20">START → supervisor · state checkpointed in SQLite</text>`;$('#flow').innerHTML=s}
+function resetFlow(){$$('#flow .n').forEach(n=>n.classList.remove('done','active'));$$('#flow .e').forEach(e=>e.classList.remove('done'))}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function animate(r){resetFlow();const path=[];for(const t of r.trace||[]){if(!path.length||path[path.length-1]!==t.node)path.push(t.node)}
+  const solve=['generate','what_if_unavailable','repair'].includes(r.intent?.action);
+  if(solve&&path.includes('validator')&&!path.includes('approval')){const i=path.lastIndexOf('validator');path.splice(i+1,0,'approval')}
+  if(path[path.length-1]!=='respond')path.push('respond');
+  $('#intentPill').textContent='intent: '+(r.intent?.action||'?');
+  const tl=$('#timeline');tl.innerHTML='';
+  for(let i=0;i<path.length;i++){const n=$('#n-'+path[i]);if(!n)continue;$$('#flow .n.active').forEach(x=>x.classList.remove('active'));n.classList.add('done','active');
+    if(i)$(`#e-${path[i-1]}-${path[i]}`)?.classList.add('done');
+    for(const t of (r.trace||[]).filter(t=>t.node===path[i])){
+      if(t.mcp){const[sv,tool]=t.mcp.split('.');hitServer(sv);tl.insertAdjacentHTML('beforeend',`<div class="t"><span class="tag" style="background:${SRV_COLOR[sv]}">${sv}</span><span class="mono">${esc(tool)} <span class="muted">${esc(JSON.stringify(t.args||{})).slice(0,70)}</span></span><span class="muted">${t.ms??''} ms</span></div>`)}
+      else tl.insertAdjacentHTML('beforeend',`<div class="t"><span class="tag" style="background:var(--accent)">${t.node}</span><span class="small">${esc(Object.entries(t).filter(([k])=>!['node','t'].includes(k)).map(([k,v])=>k+'='+v).join(' · '))}</span><span></span></div>`)}
+    await sleep(420)}
+  $$('#flow .n.active').forEach(x=>x.classList.remove('active'))}
+function drawServers(){const m=SYS?.mcp||{};$('#srvRow').innerHTML=['data','academic','resource','timetable'].map(k=>`<div class="srv" id="srv-${k}" style="--hc:${SRV_COLOR[k]}"><b><span class="sw" style="background:${SRV_COLOR[k]}"></span>${k}<span class="dot ${m[k]?.connected?'on':'off'}" style="margin-left:auto"></span></b><small>${m[k]?.tools?.length??'?'} tools · ${m[k]?.connected?'connected':'starts with agent'}</small><small id="srvl-${k}" class="mono"></small></div>`).join('')}
+function hitServer(k){const e=$('#srv-'+k);if(!e)return;e.classList.add('hit');setTimeout(()=>e.classList.remove('hit'),900)}
+
+// ---------- chat
+function md(t){const lines=String(t||'').split('\n');let out='',inT=false,inL=false;
+  const inl=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code>$1</code>').replace(/&lt;br&gt;/g,'<br>').replace(/_\((.+?)\)_/g,'<i>($1)</i>');
+  for(const l of lines){
+    if(/^\s*\|/.test(l)){if(/^\s*\|[-\s|:]+\|\s*$/.test(l))continue;const cells=l.trim().replace(/^\||\|$/g,'').split('|');if(!inT){out+='<table>';inT=true;out+='<tr>'+cells.map(c=>`<th>${inl(c.trim())}</th>`).join('')+'</tr>';continue}out+='<tr>'+cells.map(c=>`<td>${inl(c.trim())}</td>`).join('')+'</tr>';continue}
+    if(inT){out+='</table>';inT=false}
+    if(/^\s*-\s+/.test(l)){if(!inL){out+='<ul>';inL=true}out+=`<li>${inl(l.replace(/^\s*-\s+/,''))}</li>`;continue}
+    if(inL){out+='</ul>';inL=false}
+    if(/^#{1,4}\s/.test(l)){out+=`<h4>${inl(l.replace(/^#+\s/,''))}</h4>`;continue}
+    if(/^<\/?details|^<summary/.test(l.trim())){out+=l.replace(/<summary>/,'<summary class="small muted">');continue}
+    if(l.trim().startsWith('>')){out+=`<div class="pill warnc">${inl(l.replace(/^>\s?/,''))}</div>`;continue}
+    if(l.trim())out+=`<div>${inl(l)}</div>`}
+  if(inT)out+='</table>';if(inL)out+='</ul>';return out}
+function addMsg(cls,html){const d=document.createElement('div');d.className='msg '+cls;d.innerHTML=html;$('#chatlog').appendChild(d);$('#chatlog').scrollTop=1e9;return d}
+async function showReply(r){await animate(r);
+  if(r.pending_approval){const d=addMsg('a',`<div class="approve"><b>Human-in-the-loop approval</b><div class="small">${esc(r.pending_approval.question)}</div><div style="margin-top:8px;display:flex;gap:8px"><button class="btn primary">Approve &amp; publish</button><button class="btn">Not now</button></div></div>`);
+    const [y,n]=d.querySelectorAll('button');y.onclick=()=>resume(true,d);n.onclick=()=>resume(false,d)}
+  else addMsg('a',md(r.answer));
+  if(r.solution_id){await loadSolutions(r.solution_id);overview()}refreshSystem()}
+async function resume(ok,el){el.querySelectorAll('button').forEach(b=>b.disabled=true);try{await showReply(await post('/api/chat/approve',{thread_id:thread,approve:ok}))}catch(e){addMsg('a','⚠ '+esc(e.message))}}
+async function send(){const m=$('#chatIn').value.trim();if(!m)return;$('#chatIn').value='';addMsg('u',esc(m));resetFlow();$('#n-supervisor').classList.add('active');
+  const w=addMsg('a','<span class="muted small">agents working… (the first message also starts the 4 MCP servers; solving can take a minute)</span>');$('#sendBtn').disabled=true;
+  try{const r=await post('/api/chat',{message:m,thread_id:thread});w.remove();await showReply(r)}catch(e){w.innerHTML='⚠ '+esc(e.message)}$('#sendBtn').disabled=false}
+$('#sendBtn').onclick=send;$('#chatIn').onkeydown=e=>{if(e.key==='Enter')send()};
+
+// ---------- system
+async function loadSystem(){await refreshSystem();const S=SYS;if(!S)return;const live=k=>`<span class="dot ${S.mcp[k].connected?'on':'off'}"></span>`;
+  $('#arch').innerHTML=`
+  <div class="layer"><div>Interface</div><div class="boxes"><div class="box"><b><span class="dot on"></span>FastAPI + dashboard</b>REST · /docs · this page</div><div class="box"><b><span class="dot on"></span>CLI</b>scripts.chat · run_demo · solve</div></div></div>
+  <div class="arrow">▼ natural language</div>
+  <div class="layer"><div>Agents</div><div class="boxes"><div class="box"><b><span class="dot ${S.agent.ready?'on':'off'}"></span>LangGraph StateGraph</b>${S.agent.graph_nodes.length} nodes · SQLite checkpointer · interrupt() approval</div><div class="box"><b><span class="dot ${S.agent.ready?'on':'off'}"></span>LLM</b>${esc(S.agent.model)}</div></div></div>
+  <div class="arrow">▼ MCP (JSON-RPC over stdio, typed tool schemas)</div>
+  <div class="layer"><div>MCP servers</div><div class="boxes">${Object.keys(S.mcp).map(k=>`<div class="box" style="border-color:${SRV_COLOR[k]}"><b>${live(k)}${k}</b>${S.mcp[k].tools.length} tools · ${S.recent_calls_by_server[k]||0} recent calls</div>`).join('')}</div></div>
+  <div class="arrow">▼ Python calls</div>
+  <div class="layer"><div>Engine</div><div class="boxes"><div class="box"><b><span class="dot on"></span>CP-SAT decomposed</b>time → rooms · Hall cuts</div><div class="box"><b><span class="dot on"></span>LNS repair</b>minimal-perturbation ladder</div><div class="box"><b><span class="dot on"></span>Independent validator</b>rules H1–H9</div><div class="box"><b><span class="dot on"></span>Diagnosis</b>pigeonhole proof · blockers</div></div></div>
+  <div class="arrow">▼</div>
+  <div class="layer"><div>Data</div><div class="boxes"><div class="box"><b><span class="dot on"></span>${esc(S.dataset.source)}</b>${S.dataset.requirements} requirements · ${S.dataset.hours} h/week · ${S.dataset.rooms} rooms</div><div class="box"><b><span class="dot on"></span>SQLite store</b>${S.store.solutions} timetable versions · audit log</div></div></div>`;
+  $('#toolGrid').innerHTML=Object.entries(S.mcp).map(([k,v])=>`<div class="box" style="border-top:3px solid ${SRV_COLOR[k]}"><b>${live(k)} ${k}_server <span class="pill" style="margin-left:auto">${v.tools.length}</span></b><ul class="toollist">${v.tools.map(t=>`<li><code>${t.name}</code><br><span class="muted">${esc(t.description).slice(0,110)}</span></li>`).join('')}</ul></div>`).join('');
+  const a=await api('/api/audit?n=80');$('#audit').innerHTML='<table><tr><th>time</th><th>server</th><th>tool</th><th>ms</th><th>ok</th><th>result</th></tr>'+a.map(x=>`<tr><td class="mono">${x.ts}</td><td><span class="tag" style="background:${SRV_COLOR[x.server]}">${x.server}</span></td><td class="mono">${x.tool}</td><td>${Math.round(x.ms)}</td><td>${x.ok?'✔':'✖'}</td><td class="mono muted">${esc(x.summary).slice(0,120)}</td></tr>`).join('')+'</table>'}
+$('#connectBtn').onclick=async()=>{const b=$('#connectBtn');b.disabled=true;b.textContent='starting 4 MCP servers…';try{await post('/api/agent/start');toast('Agent and MCP servers connected')}catch(e){toast(e.message)}b.disabled=false;b.textContent='Connect agent & MCP servers';loadSystem()};
+
+// ---------- quality
+async function loadQuality(){const q=await api('/api/quality');const s=q.summary;
+  $('#qKpis').innerHTML=[['Requirements',s.requirements],['Teaching h/week',s.teaching_hours_per_week],['Batches',s.batches_internal],['Faculty codes',s.faculty],['Rooms',s.rooms],['Macro left unscheduled',q.vba_macro_bookkeeping.requirements_not_fully_scheduled,'badc'],['Published-grid hard violations',q.published_grid_validation.hard_violation_total,'badc'],['Elective baskets',s.elective_baskets.length,'good']].map(([a,b,c])=>`<div class="kpi"><b class="${c||''}">${b}</b><span>${a}</span></div>`).join('');
+  $('#baskets').innerHTML=s.elective_baskets.map(b=>`<div style="margin:6px 0"><span class="pill" style="color:var(--ink)"><b>${b.basket_id}</b></span> ${b.courses.map(c=>`<span class="pill">${c}</span>`).join('')} <span class="muted small">evidence ${b.evidence}</span></div>`).join('');
+  const c=await api('/api/capacity'),cs=await api('/api/capacity?basket_aware=false');
+  const bar=(x,lbl)=>`<div class="bars"><div class="row"><span>${lbl}<br><small class="muted">${x.demand_h}/${x.capacity_h} h</small></span><div class="track"><div class="bar ${x.utilisation_pct>100?'a':'b'}" style="width:${Math.min(100,x.utilisation_pct)}%"></div></div></div></div>`;
+  $('#capacity').innerHTML=`<p>Strict model (macro): <b class="badc">${cs.provably_infeasible?'provably infeasible':'feasible'}</b> · ${cs.infeasible_resources.length} resources over capacity<br>With elective baskets: <b class="${c.provably_infeasible?'badc':'good'}">${c.provably_infeasible?'infeasible':'feasible'}</b></p>`+
+   cs.infeasible_resources.slice(0,3).map(x=>bar(x,'strict · '+(x.batch||x.faculty||x.pool))).join('')+c.batches_top.slice(0,3).map(x=>bar(x,'batch '+x.batch)).join('')+c.faculty_top.slice(0,2).map(x=>bar(x,'faculty '+x.faculty)).join('');
+  const render=()=>{const sev=$('#sevSel').value;$('#issues').innerHTML='<table><tr><th>severity</th><th>category</th><th>message</th><th>where</th></tr>'+q.issues_sample.filter(i=>!sev||i.severity===sev).map(i=>`<tr><td><span class="pill ${i.severity==='warning'?'warnc':''}">${i.severity}</span></td><td class="mono">${i.category}</td><td>${esc(i.message)}</td><td class="mono">${i.location}</td></tr>`).join('')+'</table>'};
+  $('#sevSel').onchange=render;render()}
+async function loadFigs(){if(!SYS)await refreshSystem();const f=SYS?.experiments||[];$('#figs').innerHTML=f.length?f.map(x=>`<figure style="margin:0"><img src="/results/${x}" alt="${x}"><figcaption class="small muted">${x}</figcaption></figure>`).join(''):'<p class="muted">Run <code>python -m scripts.run_experiments</code> to generate figures.</p>'}
+
+init().catch(e=>toast('init failed: '+e.message));
+</script>
+</body>
+</html>

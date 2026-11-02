@@ -1,0 +1,79 @@
+# ---------------------------------------------------------------------------
+# University Timetable Agent v2 -- institutional configuration
+# Every value here was derived from the real Master_TimeTable workbook and its
+# VBA macro (Module2.Allot / Module7.findSafeHaven). Change it here, not in code.
+# ---------------------------------------------------------------------------
+
+workbook:
+  path: data/raw/Master_TimeTable_July-Dec-2026.xlsm
+  main_sheet: Main
+  # Requirement table lives in Main!K:V (VBA: token=col 11 ... hours scheduled=col 21)
+  requirement_first_row: 5
+  requirement_columns: {token: K, batch: L, type: M, course: N, hours: O, venue: P,
+                        faculty: Q, frequency: R, freq_scheduled: S, day: T,
+                        hours_scheduled: U, aggregate: V}
+  # Grid lives in Main!B2:J301, 50 stacking rows per day (VBA: j=2..51 Mon, 52..101 Tue ...)
+  grid_first_row: 2
+  grid_rows_per_day: 50
+  grid_first_col: B
+  grid_slots: 9
+
+time_grid:
+  days: [Mon, Tue, Wed, Thu, Fri, Sat]
+  slots:            # slot -> clock time (VBA comments: slot 8/9 = 4-5 PM / 5-6 PM)
+    1: "09:00-10:00"
+    2: "10:00-11:00"
+    3: "11:00-12:00"
+    4: "12:00-13:00"
+    5: "13:00-14:00"
+    6: "14:00-15:00"
+    7: "15:00-16:00"
+    8: "16:00-17:00"
+    9: "17:00-18:00"
+  lunch_slot: 5                 # Main!R3 = column 6 = Slot-5
+  teaching_slots: [1, 2, 3, 4, 6, 7]   # VBA Allot: k = 2..8 minus lunch
+  extended_slots: [8]           # only used by the repair agent as a last-resort relaxation
+  saturday_last_slot: 4         # VBA: "remove 1PM onward classes on Sat"
+
+faculty:
+  # Department / pool placeholders -- not individual people, so never clash-checked.
+  placeholder_patterns: ['^HSS\d*$', '^OTH\d*$', '^RSCH\d*$', '^ECE\d*$', '^TBA$']
+  # Optional real-world availability: {CODE: ["Sat", "Mon:1", ...]}
+  unavailable: {}
+
+electives:
+  # Elective baskets are inferred automatically from the published grid; the
+  # inferred list is written to data/processed/electives.yaml where it can be
+  # edited by a human and is then treated as authoritative.
+  infer_from_grid: true
+  min_cooccurrence: 1
+  kinds: [L]
+
+solver:
+  time_limit_s: 60
+  workers: 8
+  seed: 7
+  daily_batch_cap: 5          # soft: > 5 h/day for a batch is penalised
+  faculty_daily_cap: 4        # soft
+  faculty_max_consecutive: 3  # soft
+  weights:
+    unplaced_hour: 1000
+    batch_gap: 8
+    batch_day_overload: 6
+    faculty_consecutive: 6
+    faculty_day_overload: 3
+    saturday_hour: 2
+    late_hour: 1
+    extended_hour: 25
+    room_change: 4
+    stability: 0             # >0 => minimal-perturbation w.r.t. the published grid
+
+agent:
+  max_repair_iterations: 3
+  require_approval: false     # true => LangGraph interrupt() before publishing
+  model_provider: auto        # auto | google | anthropic | openai | ollama | none
+
+calendar:                     # used by the .ics exporter
+  semester_start: 2026-07-20  # Monday of the first teaching week (July-Dec 2026 term)
+  semester_end: 2026-12-05
+  timezone: Asia/Kolkata

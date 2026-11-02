@@ -1,0 +1,39 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	supervisor(supervisor)
+	requirements(requirements)
+	scheduler(scheduler)
+	validator(validator)
+	diagnoser(diagnoser)
+	repairer(repairer)
+	approval(approval)
+	action(action)
+	assistant(assistant)
+	explainer(explainer)
+	respond(respond)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> supervisor;
+	action --> explainer;
+	approval --> explainer;
+	assistant --> respond;
+	diagnoser --> repairer;
+	explainer --> respond;
+	repairer --> validator;
+	requirements -.-> explainer;
+	requirements -.-> scheduler;
+	scheduler --> validator;
+	supervisor -.-> action;
+	supervisor -.-> assistant;
+	supervisor -.-> requirements;
+	validator -.-> approval;
+	validator -.-> diagnoser;
+	validator -.-> explainer;
+	respond --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

@@ -1,0 +1,33 @@
+query,gold,predicted,correct
+Generate timetable for Year 3.,generate,generate,True
+Create the timetable for semester 1,generate,generate,True
+build a schedule for all semesters,generate,generate,True
+make the 4th year timetable with minimal changes,generate,generate,True
+Show all conflicts in the current timetable.,validate,validate,True
+check the timetable for clashes,validate,validate,True
+are there any violations?,validate,validate,True
+validate the latest version,validate,validate,True
+Why could you not schedule the DBMS lab?,explain_unplaced,explain_unplaced,True
+why is token 104 unplaced,explain_unplaced,explain_unplaced,True
+what could not be scheduled and why,explain_unplaced,explain_unplaced,True
+Show timetable of batch 1B1,view,view,True
+show faculty RAVI timetable,view,view,True
+display room LT1,view,view,True
+view semester 5 timetable,view,view,True
+RAVI is on leave on Monday,what_if_unavailable,what_if_unavailable,True
+JP is unavailable on Tuesday,what_if_unavailable,what_if_unavailable,True
+LT1 is not available on Friday,what_if_unavailable,what_if_unavailable,True
+move R104#0 to Friday slot 2,move,move,True
+reschedule R12#1 to Wed slot 3,move,move,True
+Compare with the published timetable,compare,compare,True
+is it better than the macro?,compare,compare,True
+how good is the data in the excel workbook,quality,quality,True
+show me data issues,quality,quality,True
+Is it even possible to schedule everything?,capacity,capacity,True
+do we have enough rooms,capacity,capacity,True
+export to excel,export,export,True
+download the calendar for batch 3B1,export,export,True
+publish it,publish,publish,True
+repair the timetable,repair,repair,True
+hello,chat,chat,True
+what can you do,chat,chat,True

@@ -1,0 +1,5 @@
+method,coverage_pct,scheduled_h,required_h,unplaced_requirements,hard_violations,batch_clash,faculty_clash,room_clash,outside_hours,soft_penalty,idle_gaps,batch_day_overload,faculty_consec_excess,faculty_day_overload,saturday_h,late_h,extended_h,room_changes,weekday_imbalance,kept_vs_published_pct,seconds
+full model,99.41,670,674,4,0,0,0,0,0,1929,102,55,7,15,77,74,0,117,0.093,5.36,45.3
+no elective baskets,93.03,627,674,33,0,0,0,0,0,1978,138,42,8,7,73,71,0,84,0.108,5.18,55.9
+requested venue only (no room choice),84.72,571,674,56,0,0,0,0,0,1850,201,6,3,8,51,62,0,0,0.154,4.82,60.7
+no soft objective,99.85,673,674,1,0,0,0,0,0,2698,139,99,17,24,75,92,0,144,0.134,46.07,30.3
