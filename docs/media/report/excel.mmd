@@ -1,0 +1,18 @@
+flowchart TB
+  subgraph X[Existing: Excel + VBA]
+    direction LR
+    x1[Type 348 rows into Main!K:V] --> x2[Run Allot macro<br/>greedy, first fit]
+    x2 --> x3[40 rows left unscheduled<br/>red comments]
+    x3 --> x4[Read Conflict Report sheet]
+    x4 --> x5[Hand-edit grid cells]
+    x5 --> x6[Published grid:<br/>98.96 %, 20 violations]
+  end
+  subgraph N[Proposed: agentic system]
+    direction LR
+    n1[Ingest same workbook<br/>+ data-quality audit] --> n2[Capacity proof +<br/>learned electives]
+    n2 --> n3[CP-SAT solve<br/>optimal search]
+    n3 --> n4[Independent validation]
+    n4 --> n5[Automatic LNS repair<br/>+ explanation]
+    n5 --> n6[Approved timetable:<br/>100 %, 0 violations]
+  end
+  X ~~~ N

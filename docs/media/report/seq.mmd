@@ -1,0 +1,23 @@
+sequenceDiagram
+  actor U as User
+  participant G as LangGraph agents
+  participant R as resource MCP
+  participant A as academic MCP
+  participant T as timetable MCP
+  participant E as CP-SAT engine + validator
+  U->>G: "Generate timetable for Year 2"
+  G->>G: Supervisor: intent = generate, semesters = [3]
+  G->>R: capacity_report()
+  R-->>G: provably_infeasible = false
+  G->>A: get_requirements(semester=3)
+  A-->>G: 98 requirements, 170 h/week
+  G->>T: generate_timetable(semesters=[3])
+  T->>E: stage 1 (times) + stage 2 (rooms)
+  E-->>T: assignments, 0 unplaced
+  T-->>G: solution S..., coverage 100 %
+  G->>T: validate_timetable(S...)
+  T-->>G: valid, 0 hard violations
+  G-->>U: interrupt: "Publish timetable S...?"
+  U->>G: approve
+  G->>T: publish_timetable(S...)
+  G-->>U: explanation (coverage, quality, next steps)

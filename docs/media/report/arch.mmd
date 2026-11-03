@@ -1,0 +1,25 @@
+flowchart TB
+  U([Timetable officer / student / faculty]) --> I
+  subgraph I[Interface layer]
+    D[Web dashboard<br/>Overview · Timetable · Agent Studio · System · Quality · Results]
+    C[CLI: chat, run_demo, solve]
+    R[REST API /docs]
+  end
+  I --> A
+  subgraph A[Agent layer: LangGraph StateGraph, 11 nodes]
+    SUP[Supervisor] --> REQ[Requirements] --> SCH[Scheduler] --> VAL[Validator]
+    VAL --> DIA[Diagnoser] --> REP[Repairer] --> VAL
+    VAL --> APP{{Approval gate}} --> EXP[Explainer]
+    SUP --> ACT[Action agent] --> EXP
+    SUP --> AST[ReAct assistant]
+  end
+  A -- MCP JSON-RPC over stdio --> M
+  subgraph M[MCP layer: 4 servers, 30 tools]
+    M1[data · 3] --- M2[academic · 4] --- M3[resource · 8] --- M4[timetable · 15]
+  end
+  M --> E
+  subgraph E[Engine layer: deterministic, no LLM]
+    E1[Decomposed CP-SAT] --- E2[LNS repair] --- E3[Validator H1-H9] --- E4[Diagnosis & capacity proof] --- E5[VBA baseline]
+  end
+  E --> S[(SQLite store<br/>versions · pins · audit · memory)]
+  E --> X[(Master_TimeTable .xlsm)]

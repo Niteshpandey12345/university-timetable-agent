@@ -1,0 +1,18 @@
+flowchart TD
+  S([START]) --> SUP[1 Supervisor<br/>intent classification]
+  SUP -->|generate / what-if / repair| REQ[2 Requirements agent<br/>capacity proof]
+  SUP -->|view, validate, explain,<br/>move, compare, export...| ACT[8 Action agent]
+  SUP -->|free-form question| AST[9 ReAct assistant<br/>all 30 MCP tools]
+  REQ -->|ok| SCH[3 Scheduler agent]
+  REQ -.->|missing info| EXP
+  SCH --> VAL[4 Validator agent]
+  VAL -->|unplaced and progress| DIA[5 Diagnoser]
+  DIA --> REP[6 Repairer]
+  REP --> VAL
+  VAL -->|valid or stalled| APP{{7 Approval gate<br/>interrupt - human}}
+  VAL -.->|error| EXP
+  APP --> EXP[10 Explainer]
+  ACT --> EXP
+  EXP --> RES[11 Respond]
+  AST --> RES
+  RES --> E([END])

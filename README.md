@@ -16,7 +16,7 @@ LangGraph agents · Model Context Protocol (MCP) · OR-Tools CP-SAT**
 
 <img src="docs/media/agent_studio.gif" alt="Agent Studio: the LangGraph path and MCP calls light up live" width="900">
 
-🎬 **[Watch the 2-minute demo video](docs/media/demo.mp4)** · 📘 [User guide](docs/USAGE.md) · 🏗️ [Architecture](docs/ARCHITECTURE.md) · 🔬 [Research report](docs/RESEARCH_REPORT.md)
+🎬 **[Watch the 2-minute demo video](docs/media/demo.mp4)** · 📄 [Project report (Word)](docs/Project_Report.docx) · 📘 [User guide](docs/USAGE.md) · 🏗️ [Architecture](docs/ARCHITECTURE.md) · 🔬 [Research report](docs/RESEARCH_REPORT.md)
 
 </div>
 
