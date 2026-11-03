@@ -15,7 +15,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -90,6 +90,55 @@ def quality(section: str | None = None) -> dict:
 @app.post("/api/ingest")
 async def ingest(path: str | None = None) -> dict:
     return await asyncio.to_thread(_call, svc.ingest, path)
+
+
+@app.post("/api/ingest/upload")
+async def ingest_upload(request: Request, filename: str = "uploaded.xlsm") -> dict:
+    """Upload a new Master_TimeTable workbook (raw file body) and ingest it."""
+    from ttagent.config import ROOT
+    if not filename.lower().endswith((".xlsm", ".xlsx")):
+        raise HTTPException(400, "please upload an .xlsm or .xlsx workbook")
+    data = await request.body()
+    if len(data) > 30_000_000:
+        raise HTTPException(413, "file too large")
+    dest = ROOT / "data" / "raw" / "uploads" / Path(filename).name
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(data)
+    out = await asyncio.to_thread(_call, svc.ingest, str(dest))
+    for k in ("pseudo:published", "pseudo:vba"):
+        svc.store.put(k, None)
+    return out
+
+
+@app.get("/api/version")
+def version() -> dict:
+    from ttagent import __version__
+    from ttagent.agents.llm import describe
+    return {"version": __version__, "llm": describe()}
+
+
+EDITABLE = {"solver": ["time_limit_s", "daily_batch_cap", "faculty_daily_cap", "faculty_max_consecutive", "weights"],
+            "agent": ["max_repair_iterations", "require_approval", "model_provider"], "rooms": ["default_batch_size"]}
+
+
+@app.get("/api/settings")
+def get_settings() -> dict:
+    from ttagent.config import settings
+    cfg = settings()
+    return {sec: {k: cfg.get(sec, {}).get(k) for k in keys} for sec, keys in EDITABLE.items()}
+
+
+@app.put("/api/settings")
+async def put_settings(request: Request) -> dict:
+    from ttagent.config import save_overrides
+    body = await request.json()
+    clean = {}
+    for sec, keys in EDITABLE.items():
+        for k in keys:
+            if k in body.get(sec, {}):
+                clean.setdefault(sec, {})[k] = body[sec][k]
+    save_overrides(clean)
+    return get_settings()
 
 
 @app.get("/api/capacity")

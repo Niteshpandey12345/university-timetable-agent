@@ -239,8 +239,12 @@ class TimetableService:
         elif method == "decomposed":
             from ttagent.engine.decomposed import solve_decomposed
             res = solve_decomposed(ds, opts)
+        elif method in ("ga", "ga_plain"):
+            from ttagent.engine.ga import GAOptions, solve_ga
+            res = solve_ga(ds, GAOptions(time_limit_s=time_limit_s, seed=seed, semesters=semesters,
+                                         local_search=method == "ga", use_baskets=use_baskets))
         else:
-            raise ServiceError("method must be one of: decomposed, exact, vba")
+            raise ServiceError("method must be one of: decomposed, exact, ga, ga_plain, vba")
         if repair and res["unplaced"]:
             from ttagent.engine.repair import lns_repair
             res = lns_repair(ds, res, opts, time_limit_s=repair_time_s or max(15, time_limit_s / 3))

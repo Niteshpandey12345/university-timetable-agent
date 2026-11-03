@@ -24,7 +24,15 @@ def room_suitable(ds: Dataset, req: Requirement, room: Room) -> bool:
         return False
     if home.lab_type and room.lab_type != home.lab_type:
         return False
+    if room.seats is not None:                      # real seat counts (config/rooms.yaml) take precedence
+        return room.seats >= required_seats(ds, req)
     return room.observed_batch_capacity >= len(req.batches)
+
+
+def required_seats(ds: Dataset, req: Requirement) -> int:
+    from ttagent.config import settings
+    default = int(settings().get("rooms", {}).get("default_batch_size", 60))
+    return sum((ds.batches[b].size if b in ds.batches and ds.batches[b].size else default) for b in req.batches)
 
 
 def room_options(ds: Dataset, req: Requirement, mode: str = "flex", max_alt: int = 5) -> list[str]:

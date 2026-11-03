@@ -14,7 +14,7 @@ from ttagent.engine.service import TimetableService
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--semesters", type=int, nargs="*")
-    ap.add_argument("--method", default="decomposed", choices=["decomposed", "exact", "vba"])
+    ap.add_argument("--method", default="decomposed", choices=["decomposed", "exact", "ga", "ga_plain", "vba"])
     ap.add_argument("--time", type=float, default=120)
     ap.add_argument("--stability", type=float, default=None)
     ap.add_argument("--workers", type=int, default=8)

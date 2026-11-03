@@ -9,14 +9,15 @@ LangGraph agents · Model Context Protocol (MCP) · OR-Tools CP-SAT**
 ![langgraph](https://img.shields.io/badge/LangGraph-1.2-1C3C3C)
 ![mcp](https://img.shields.io/badge/MCP-4%20servers%20%C2%B7%2030%20tools-6c8cff)
 ![ortools](https://img.shields.io/badge/OR--Tools-CP--SAT%209.15-4285F4)
-![tests](https://img.shields.io/badge/tests-35%20passing-34d399)
+![tests](https://img.shields.io/badge/tests-45%20passing-34d399)
+![version](https://img.shields.io/badge/version-3.0.0-8b5cf6)
 ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
 **100% of 674 weekly teaching hours scheduled · 0 hard-constraint violations · works offline, LLM optional**
 
 <img src="docs/media/agent_studio.gif" alt="Agent Studio: the LangGraph path and MCP calls light up live" width="900">
 
-🎬 **[Watch the 2-minute demo video](docs/media/demo.mp4)** · 📄 [Project report (Word)](docs/Project_Report.docx) · 📘 [User guide](docs/USAGE.md) · 🏗️ [Architecture](docs/ARCHITECTURE.md) · 🔬 [Research report](docs/RESEARCH_REPORT.md)
+🎬 **[Watch the 2-minute demo video](docs/media/demo.mp4)** · 🆕 [v3 analysis: GA & ITC-2007](docs/V3_ANALYSIS.md) · 📄 [Project report (Word)](docs/Project_Report.docx) · 📘 [User guide](docs/USAGE.md) · 🏗️ [Architecture](docs/ARCHITECTURE.md) · 🔬 [Research report](docs/RESEARCH_REPORT.md)
 
 </div>
 
@@ -24,7 +25,7 @@ LangGraph agents · Model Context Protocol (MCP) · OR-Tools CP-SAT**
 
 ## Contents
 1. [What it does](#-what-it-does)
-2. [Key results](#-key-results)
+2. [Key results](#-key-results) · [What's new in v3](#-whats-new-in-v3)
 3. [How it works](#-how-it-works)
 4. [Screenshots](#-screenshots)
 5. [Quick start](#-quick-start)
@@ -74,6 +75,29 @@ Findings that came out of the real data:
 - 🔧 **What-if repairs touch only 0.5–7 % of sessions**, instead of rebuilding the whole timetable.
 
 Full method, ablations, robustness and threats to validity: **[docs/RESEARCH_REPORT.md](docs/RESEARCH_REPORT.md)**.
+
+## 🆕 What's new in v3
+
+| Area | v3 addition |
+|---|---|
+| **GA comparison** | A memetic genetic algorithm (`ttagent/engine/ga.py`): legal-candidate encoding, requirement-level crossover, conflict-directed local search, incremental evaluation. Selectable everywhere (`--method ga`, dashboard method selector) |
+| **Statistics** | 5 seeds per method, Mann–Whitney U and Cliff's δ, anytime curves, per-semester breakdown, heatmap case study |
+| **Public benchmark** | ITC-2007 Track 3 (all 21 instances), UD2 scorer, CP-SAT and GA solvers, comparison with published results |
+| **Limitations fixed** | real seat counts and class sizes (optional YAML), teacher time preferences, elective-basket confidence, disruption-vs-quality study of repair |
+| **Software** | installable package with a `ttagent` command, double-click launcher (`TimetableAgent.bat`), settings page, workbook upload, head-to-head method comparison in the dashboard |
+
+On the real workbook (5 seeds × 120 s):
+
+| Method | Hours scheduled | Hard violations | Soft penalty / scheduled h |
+|---|---:|---:|---:|
+| Published grid | 98.96 % | 20 | 4.14 |
+| VBA macro (port) | 88.13 % | 4 | 4.35 |
+| Memetic GA | 98.10 ± 0.57 % | 0 | 4.34 |
+| **CP-SAT pipeline** | **99.76 ± 0.31 %** | **0** | **3.38** |
+
+CP-SAT beats the GA in every run (Cliff's δ = 1.0, p = 0.011) and on all 21 ITC-2007 instances, where it
+also proves 3 instances optimal. Details, the qualitative comparison and the limitations of the comparison:
+**[docs/V3_ANALYSIS.md](docs/V3_ANALYSIS.md)**.
 
 ## 🧩 How it works
 
@@ -125,6 +149,11 @@ The agent graph exactly as LangGraph compiles it is in [`docs/agent_graph.mermai
 
 **Requirements:** Python 3.10–3.14. No API key is needed.
 
+**Windows, one click:** double-click `TimetableAgent.bat`. It installs everything on first run, loads the
+workbook and opens the dashboard. (`./run.sh` on macOS/Linux.)
+
+**Manual:**
+
 ```powershell
 git clone https://github.com/<your-username>/university-timetable-agent.git
 cd university-timetable-agent
@@ -135,9 +164,9 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .venv\Scripts\Activate.ps1
 # macOS / Linux:  source .venv/bin/activate
 
-python -m pip install -r requirements.txt
-python -m scripts.ingest                 # parse the workbook (a few seconds)
-uvicorn ttagent.api.main:app             # → open http://127.0.0.1:8000
+python -m pip install -e .               # installs the `ttagent` command
+ttagent ingest                           # parse the workbook (a few seconds)
+ttagent serve                            # → opens http://127.0.0.1:8000
 ```
 
 In the dashboard, click **⚡ Generate** (try 120 s), then explore **Timetable**, **Agent Studio** and **System & MCP**.
@@ -150,7 +179,10 @@ In the dashboard, click **⚡ Generate** (try 120 s), then explore **Timetable**
 
 | Command | Purpose |
 |---|---|
-| `uvicorn ttagent.api.main:app` | Web dashboard at `:8000`, REST API docs at `:8000/docs` |
+| `ttagent serve` | Web dashboard at `:8000`, REST API docs at `:8000/docs` |
+| `ttagent solve --method ga --time 120` | Solve with any method: `decomposed` (default), `exact`, `ga`, `ga_plain`, `vba` |
+| `ttagent benchmark --time 120` | ITC-2007 benchmark, CP-SAT vs GA |
+| `python -m scripts.run_analysis_v3` | v3 analysis: methods over seeds, anytime, repair trade-off, heatmaps |
 | `python -m scripts.chat --trace` | Chat with the agents in the terminal and see each node and MCP call |
 | `python -m scripts.run_demo` | Scripted viva/demo conversation with a full trace |
 | `python -m scripts.solve --time 120` | Solve without agents and export to Excel (`--semesters 3`, `--method vba`, `--stability 20`) |
@@ -164,8 +196,10 @@ A step-by-step walkthrough of every feature is in **[docs/USAGE.md](docs/USAGE.m
 
 ```
 ├── config/settings.yaml          # institution rules: slots, lunch, Saturday cut-off, weights, LLM provider
+├── config/*.example.yaml         # templates for real seat counts and batch sizes (v3)
 ├── data/
 │   ├── raw/                      # the Master_TimeTable .xlsm (input)
+│   ├── benchmarks/itc2007/       # comp01–comp21 .ctt instances (v3)
 │   ├── processed/                # dataset.json · quality_report.json · electives.yaml (generated, editable)
 │   └── state/                    # SQLite: timetable versions, audit log, agent memory (generated)
 ├── ttagent/
@@ -176,13 +210,18 @@ A step-by-step walkthrough of every feature is in **[docs/USAGE.md](docs/USAGE.m
 │   ├── store/                    # SQLite persistence shared by all MCP processes
 │   ├── export/                   # Excel (institution format) · iCalendar
 │   ├── mcp_servers/              # data · academic · resource · timetable  (FastMCP, stdio)
+│   ├── engine/ga.py              # memetic genetic algorithm (v3)
+│   ├── benchmarks/               # ITC-2007 CB-CTT: parser + UD2 scorer · CP-SAT · GA · LNS (v3)
 │   ├── agents/                   # graph (LangGraph) · agent · mcp_bridge · intent · llm · prompts · render
-│   └── api/                      # FastAPI + static/index.html (dashboard)
+│   ├── api/                      # FastAPI + static/index.html (dashboard)
+│   └── cli.py                    # the `ttagent` command (v3)
 ├── scripts/                      # ingest · solve · chat · run_demo · run_experiments
-├── tests/                        # 35 tests on the real workbook (incl. MCP round-trip & agent)
-├── experiments/results/          # CSVs, results.json, figures
+│                                 # run_analysis_v3 · run_benchmark_itc · report_itc · run_llm_eval (v3)
+├── tests/                        # 45 tests on the real workbook and ITC-2007 (incl. MCP round-trip & agent)
+├── experiments/results/          # CSVs, results.json, figures · v3/ · itc2007_*
+├── experiments/llm_eval/         # 77 labelled requests for the agent-layer evaluation (v3)
 ├── samples/                      # a solved full-university timetable (.xlsx)
-├── docs/                         # ARCHITECTURE · RESEARCH_REPORT · USAGE · DEMO · media/
+├── docs/                         # ARCHITECTURE · RESEARCH_REPORT · V3_ANALYSIS · USAGE · DEMO · media/
 └── .github/workflows/ci.yml      # runs the test suite on every push
 ```
 
@@ -193,11 +232,18 @@ the Saturday cut-off, placeholder-faculty patterns, faculty unavailability, solv
 requirement and the LLM provider. Inferred elective baskets are written to `data/processed/electives.yaml`.
 Edit that file and set `authoritative: true` to make the solver use your version.
 
+v3 adds: `config/rooms.yaml` and `config/batches.yaml` for real seat counts and class sizes (templates in
+`config/*.example.yaml`), `faculty.avoid` for soft teacher time preferences, and the dashboard **Settings**
+page, which saves changes to `config/overrides.yaml` without touching `settings.yaml`.
+
 ## 🧪 Testing & research reproduction
 
 ```bash
-python -m pytest tests -q                         # 35 tests, ~1–2 min
+python -m pytest tests -q                         # 45 tests, ~2 min
 python -m scripts.run_experiments --time 120      # RQ1–RQ6 → experiments/results/
+python -m scripts.run_analysis_v3 --time 120      # v3 sections A–E → experiments/results/v3/
+ttagent benchmark --time 120 && python -m scripts.report_itc   # ITC-2007
+ttagent llm-eval                                  # agent-layer evaluation (needs an LLM key for the LLM parts)
 ```
 
 ## ❓ FAQ & troubleshooting

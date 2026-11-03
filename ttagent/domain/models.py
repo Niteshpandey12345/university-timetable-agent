@@ -68,6 +68,7 @@ class Room(BaseModel):
     lab_type: str | None = None
     observed_batch_capacity: int = 1
     used_by_requirements: int = 0
+    seats: int | None = None          # real seat count from config/rooms.yaml (if provided)
 
 
 class Faculty(BaseModel):
@@ -75,6 +76,7 @@ class Faculty(BaseModel):
     is_placeholder: bool = False
     aliases: list[str] = Field(default_factory=list)
     unavailable: list[tuple[str, int | None]] = Field(default_factory=list)
+    avoid: list[tuple[str, int | None]] = Field(default_factory=list)   # soft time preferences
 
 
 class Batch(BaseModel):
@@ -82,6 +84,7 @@ class Batch(BaseModel):
     semester: int | None
     program: str
     in_requirements: bool = True
+    size: int | None = None           # students (config/batches.yaml or default)
 
 
 class ElectiveBasket(BaseModel):
@@ -89,6 +92,7 @@ class ElectiveBasket(BaseModel):
     semester: int
     courses: list[str]
     evidence: int = 0
+    confidence: str = "medium"        # high | medium | low (from co-scheduling evidence)
     note: str = ""
 
 

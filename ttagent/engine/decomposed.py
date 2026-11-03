@@ -32,6 +32,16 @@ from ttagent.domain.timegrid import TimeGrid
 from ttagent.engine.cpsat import SolveOptions, _blocked_index, _blocks
 
 
+def _pref_hours(ds: Dataset, r: Requirement, d: str, t: int) -> int:
+    """Hours of a session at (d, t) that fall in slots one of its teachers asked to avoid."""
+    n = 0
+    for f in r.faculty:
+        fac = ds.faculty.get(f)
+        if fac and fac.avoid:
+            n += sum(1 for s in range(t, t + r.duration) for d0, s0 in fac.avoid if d0 == d and (s0 is None or s0 == s))
+    return n
+
+
 def _pool(ds: Dataset, r: Requirement) -> str:
     home = ds.rooms.get(r.venue)
     if home is None:
@@ -117,7 +127,7 @@ def solve_decomposed(ds: Dataset, opts: SolveOptions | None = None) -> dict[str,
     pool_cov = defaultdict(list)       # (pool, need, d, h) -> vars
     home_cov = defaultdict(list)       # (venue, d, h) -> vars
     basket_batches = defaultdict(set)
-    sat_terms, late_terms, ext_terms, stab_terms = [], [], [], []
+    sat_terms, late_terms, ext_terms, stab_terms, pref_terms = [], [], [], [], []
     no_cand = {}
     for r in scope:
         bk = basket_of(r)
@@ -177,6 +187,9 @@ def solve_decomposed(ds: Dataset, opts: SolveOptions | None = None) -> dict[str,
                         ext_terms.append(v)
                 if d == "Sat":
                     sat_terms.append((v, r.duration))
+                ph = _pref_hours(ds, r, d, t)
+                if ph:
+                    pref_terms.append((v, ph))
             Y[sid] = ys
             p = m.NewBoolVar(f"p_{sid}")
             P[sid] = p
@@ -316,6 +329,7 @@ def solve_decomposed(ds: Dataset, opts: SolveOptions | None = None) -> dict[str,
                 obj.append(W["faculty_day_overload"] * ex); n_soft += 1
         obj += [W["saturday_hour"] * dur * v for v, dur in sat_terms]
         obj += [W["late_hour"] * v for v in late_terms]
+        obj += [W.get("faculty_preference", 5) * h * v for v, h in pref_terms]
         # proxy for room changes: more than one session wanting the same home venue at once
         for (venue, d, s), vs in home_cov.items():
             if len(vs) > 1:

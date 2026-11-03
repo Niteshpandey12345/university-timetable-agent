@@ -1,0 +1,9 @@
+method,seed,coverage_pct,scheduled_h,required_h,hard,soft_penalty,idle_gaps,saturday_h,late_h,extended_h,room_changes,faculty_consec,weekday_imbalance,seconds,budget_s,generations
+CP-SAT pipeline,1,99.85,673,674,0,2895,187,80,96,0,150,8,0.101,76.8,30,
+GA memetic,1,96.44,650,674,0,2730,108,59,70,0,229,27,0.093,30.8,30,
+CP-SAT pipeline,1,100.0,674,674,0,2628,143,76,86,0,157,11,0.176,77.6,60,
+GA memetic,1,98.66,665,674,0,2845,111,63,88,0,255,16,0.1,60.8,60,
+CP-SAT pipeline,1,99.85,673,674,0,1938,110,91,70,0,128,3,0.103,234.2,240,
+GA memetic,1,99.41,670,674,0,2986,120,68,84,0,273,21,0.091,240.3,240,
+CP-SAT pipeline,1,99.26,669,674,0,2321,149,73,80,0,126,6,0.084,183.9,120.0,
+GA memetic,1,98.52,664,674,0,2855,119,62,80,0,241,21,0.083,120.2,120.0,103

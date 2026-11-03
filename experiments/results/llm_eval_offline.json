@@ -1,0 +1,77 @@
+{
+ "model": "none (offline)",
+ "when": "2026-11-03 17:01",
+ "routing": {
+  "rules": {
+   "n": 77,
+   "action_accuracy": 0.922,
+   "parameter_accuracy": 0.886,
+   "exact_match": 0.883,
+   "seconds": 0.0,
+   "errors": [
+    {
+     "query": "I need a fresh timetable for first year students",
+     "gold": "generate",
+     "pred": "chat",
+     "ok_action": false,
+     "ok_semesters": false
+    },
+    {
+     "query": "pls make timetable for 3rd yr",
+     "gold": "generate",
+     "pred": "generate",
+     "ok_action": true,
+     "ok_semesters": false
+    },
+    {
+     "query": "build the time table for semester three",
+     "gold": "generate",
+     "pred": "generate",
+     "ok_action": true,
+     "ok_semesters": false
+    },
+    {
+     "query": "schedule year two lectures and labs",
+     "gold": "generate",
+     "pred": "generate",
+     "ok_action": true,
+     "ok_semesters": false
+    },
+    {
+     "query": "any double booking of teachers?",
+     "gold": "validate",
+     "pred": "chat",
+     "ok_action": false
+    },
+    {
+     "query": "run a validation on the timetable",
+     "gold": "validate",
+     "pred": "chat",
+     "ok_action": false
+    },
+    {
+     "query": "does the timetable break any rule?",
+     "gold": "validate",
+     "pred": "chat",
+     "ok_action": false
+    },
+    {
+     "query": "show me JP's weekly schedule",
+     "gold": "view",
+     "pred": "generate",
+     "ok_action": false,
+     "ok_kind": false,
+     "ok_code": false
+    },
+    {
+     "query": "show schedule of teacher DKV",
+     "gold": "view",
+     "pred": "generate",
+     "ok_action": false,
+     "ok_kind": false,
+     "ok_code": false
+    }
+   ]
+  }
+ }
+}

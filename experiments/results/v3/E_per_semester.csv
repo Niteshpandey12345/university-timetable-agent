@@ -1,0 +1,17 @@
+method,semester,coverage_pct,required_h
+Published grid,1,100.0,286
+Published grid,3,99.41,170
+Published grid,5,100.0,158
+Published grid,7,90.0,60
+VBA macro (port),1,91.61,286
+VBA macro (port),3,98.24,170
+VBA macro (port),5,84.18,158
+VBA macro (port),7,53.33,60
+CP-SAT pipeline,1,98.6,286
+CP-SAT pipeline,3,100.0,170
+CP-SAT pipeline,5,99.37,158
+CP-SAT pipeline,7,100.0,60
+GA memetic,1,100.0,286
+GA memetic,3,98.82,170
+GA memetic,5,94.94,158
+GA memetic,7,100.0,60

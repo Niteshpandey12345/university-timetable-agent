@@ -38,8 +38,14 @@ time_grid:
 faculty:
   # Department / pool placeholders -- not individual people, so never clash-checked.
   placeholder_patterns: ['^HSS\d*$', '^OTH\d*$', '^RSCH\d*$', '^ECE\d*$', '^TBA$']
-  # Optional real-world availability: {CODE: ["Sat", "Mon:1", ...]}
+  # Hard availability: {CODE: ["Sat", "Mon:1", ...]}
   unavailable: {}
+  # Soft time preferences (penalised, not forbidden): {CODE: ["Sat", "Fri:7", ...]}
+  avoid: {}
+
+rooms:
+  # Used with config/rooms.yaml (real seat counts) and config/batches.yaml (students per batch).
+  default_batch_size: 60
 
 electives:
   # Elective baskets are inferred automatically from the published grid; the
@@ -66,6 +72,7 @@ solver:
     late_hour: 1
     extended_hour: 25
     room_change: 4
+    faculty_preference: 5   # per hour taught in a slot the teacher asked to avoid
     stability: 0             # >0 => minimal-perturbation w.r.t. the published grid
 
 agent:

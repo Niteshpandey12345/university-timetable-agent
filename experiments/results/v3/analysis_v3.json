@@ -1,0 +1,2449 @@
+{
+ "time_limit_s": 120.0,
+ "seeds": 5,
+ "started": "2026-11-03 18:25",
+ "ga_history": {
+  "1": [
+   {
+    "t": 37.63,
+    "gen": 0,
+    "best_hard": 15,
+    "best_soft": 2413
+   },
+   {
+    "t": 43.33,
+    "gen": 8,
+    "best_hard": 15,
+    "best_soft": 2413
+   },
+   {
+    "t": 48.88,
+    "gen": 15,
+    "best_hard": 12,
+    "best_soft": 2508
+   },
+   {
+    "t": 54.57,
+    "gen": 22,
+    "best_hard": 10,
+    "best_soft": 2624
+   },
+   {
+    "t": 60.11,
+    "gen": 29,
+    "best_hard": 9,
+    "best_soft": 2519
+   },
+   {
+    "t": 65.52,
+    "gen": 36,
+    "best_hard": 9,
+    "best_soft": 2519
+   },
+   {
+    "t": 70.66,
+    "gen": 43,
+    "best_hard": 7,
+    "best_soft": 2724
+   },
+   {
+    "t": 75.93,
+    "gen": 50,
+    "best_hard": 7,
+    "best_soft": 2724
+   },
+   {
+    "t": 81.27,
+    "gen": 57,
+    "best_hard": 7,
+    "best_soft": 2724
+   },
+   {
+    "t": 86.86,
+    "gen": 63,
+    "best_hard": 6,
+    "best_soft": 2615
+   },
+   {
+    "t": 91.88,
+    "gen": 69,
+    "best_hard": 6,
+    "best_soft": 2615
+   },
+   {
+    "t": 96.92,
+    "gen": 75,
+    "best_hard": 6,
+    "best_soft": 2615
+   },
+   {
+    "t": 102.4,
+    "gen": 81,
+    "best_hard": 6,
+    "best_soft": 2615
+   },
+   {
+    "t": 107.8,
+    "gen": 88,
+    "best_hard": 6,
+    "best_soft": 2615
+   },
+   {
+    "t": 113.2,
+    "gen": 94,
+    "best_hard": 6,
+    "best_soft": 2615
+   },
+   {
+    "t": 118.86,
+    "gen": 101,
+    "best_hard": 6,
+    "best_soft": 2615
+   },
+   {
+    "t": 120.2,
+    "gen": 103,
+    "best_hard": 6,
+    "best_soft": 2615
+   }
+  ],
+  "2": [
+   {
+    "t": 36.07,
+    "gen": 0,
+    "best_hard": 20,
+    "best_soft": 2246
+   },
+   {
+    "t": 41.3,
+    "gen": 7,
+    "best_hard": 15,
+    "best_soft": 2311
+   },
+   {
+    "t": 46.89,
+    "gen": 14,
+    "best_hard": 15,
+    "best_soft": 2311
+   },
+   {
+    "t": 52.45,
+    "gen": 21,
+    "best_hard": 12,
+    "best_soft": 2401
+   },
+   {
+    "t": 57.81,
+    "gen": 28,
+    "best_hard": 11,
+    "best_soft": 2462
+   },
+   {
+    "t": 63.42,
+    "gen": 35,
+    "best_hard": 11,
+    "best_soft": 2462
+   },
+   {
+    "t": 69.24,
+    "gen": 42,
+    "best_hard": 10,
+    "best_soft": 2472
+   },
+   {
+    "t": 74.8,
+    "gen": 49,
+    "best_hard": 10,
+    "best_soft": 2410
+   },
+   {
+    "t": 80.14,
+    "gen": 55,
+    "best_hard": 10,
+    "best_soft": 2410
+   },
+   {
+    "t": 85.7,
+    "gen": 62,
+    "best_hard": 10,
+    "best_soft": 2410
+   },
+   {
+    "t": 91.17,
+    "gen": 69,
+    "best_hard": 10,
+    "best_soft": 2338
+   },
+   {
+    "t": 96.7,
+    "gen": 76,
+    "best_hard": 6,
+    "best_soft": 2542
+   },
+   {
+    "t": 101.98,
+    "gen": 82,
+    "best_hard": 6,
+    "best_soft": 2542
+   },
+   {
+    "t": 107.19,
+    "gen": 88,
+    "best_hard": 6,
+    "best_soft": 2542
+   },
+   {
+    "t": 112.32,
+    "gen": 95,
+    "best_hard": 6,
+    "best_soft": 2535
+   },
+   {
+    "t": 117.86,
+    "gen": 101,
+    "best_hard": 6,
+    "best_soft": 2535
+   },
+   {
+    "t": 120.37,
+    "gen": 104,
+    "best_hard": 6,
+    "best_soft": 2535
+   }
+  ],
+  "3": [
+   {
+    "t": 38.27,
+    "gen": 0,
+    "best_hard": 22,
+    "best_soft": 2481
+   },
+   {
+    "t": 43.86,
+    "gen": 7,
+    "best_hard": 22,
+    "best_soft": 2481
+   },
+   {
+    "t": 49.23,
+    "gen": 14,
+    "best_hard": 21,
+    "best_soft": 2433
+   },
+   {
+    "t": 54.74,
+    "gen": 21,
+    "best_hard": 20,
+    "best_soft": 2461
+   },
+   {
+    "t": 60.12,
+    "gen": 28,
+    "best_hard": 19,
+    "best_soft": 2434
+   },
+   {
+    "t": 65.44,
+    "gen": 35,
+    "best_hard": 19,
+    "best_soft": 2434
+   },
+   {
+    "t": 70.92,
+    "gen": 42,
+    "best_hard": 16,
+    "best_soft": 2377
+   },
+   {
+    "t": 76.23,
+    "gen": 49,
+    "best_hard": 16,
+    "best_soft": 2377
+   },
+   {
+    "t": 81.96,
+    "gen": 56,
+    "best_hard": 13,
+    "best_soft": 2357
+   },
+   {
+    "t": 87.12,
+    "gen": 62,
+    "best_hard": 13,
+    "best_soft": 2357
+   },
+   {
+    "t": 92.75,
+    "gen": 69,
+    "best_hard": 13,
+    "best_soft": 2357
+   },
+   {
+    "t": 98.33,
+    "gen": 76,
+    "best_hard": 12,
+    "best_soft": 2329
+   },
+   {
+    "t": 103.57,
+    "gen": 83,
+    "best_hard": 11,
+    "best_soft": 2531
+   },
+   {
+    "t": 108.66,
+    "gen": 90,
+    "best_hard": 11,
+    "best_soft": 2438
+   },
+   {
+    "t": 114.53,
+    "gen": 97,
+    "best_hard": 11,
+    "best_soft": 2422
+   },
+   {
+    "t": 120.05,
+    "gen": 104,
+    "best_hard": 9,
+    "best_soft": 2645
+   },
+   {
+    "t": 120.05,
+    "gen": 104,
+    "best_hard": 9,
+    "best_soft": 2645
+   }
+  ],
+  "4": [
+   {
+    "t": 36.84,
+    "gen": 0,
+    "best_hard": 20,
+    "best_soft": 2541
+   },
+   {
+    "t": 42.38,
+    "gen": 7,
+    "best_hard": 19,
+    "best_soft": 2496
+   },
+   {
+    "t": 47.74,
+    "gen": 14,
+    "best_hard": 19,
+    "best_soft": 2496
+   },
+   {
+    "t": 53.15,
+    "gen": 21,
+    "best_hard": 18,
+    "best_soft": 2510
+   },
+   {
+    "t": 58.91,
+    "gen": 28,
+    "best_hard": 16,
+    "best_soft": 2779
+   },
+   {
+    "t": 64.59,
+    "gen": 34,
+    "best_hard": 16,
+    "best_soft": 2751
+   },
+   {
+    "t": 70.66,
+    "gen": 40,
+    "best_hard": 14,
+    "best_soft": 2657
+   },
+   {
+    "t": 75.82,
+    "gen": 45,
+    "best_hard": 14,
+    "best_soft": 2657
+   },
+   {
+    "t": 81.84,
+    "gen": 51,
+    "best_hard": 14,
+    "best_soft": 2657
+   },
+   {
+    "t": 87.21,
+    "gen": 57,
+    "best_hard": 14,
+    "best_soft": 2657
+   },
+   {
+    "t": 92.76,
+    "gen": 64,
+    "best_hard": 14,
+    "best_soft": 2657
+   },
+   {
+    "t": 98.47,
+    "gen": 70,
+    "best_hard": 14,
+    "best_soft": 2657
+   },
+   {
+    "t": 103.67,
+    "gen": 76,
+    "best_hard": 14,
+    "best_soft": 2657
+   },
+   {
+    "t": 109.58,
+    "gen": 83,
+    "best_hard": 12,
+    "best_soft": 2719
+   },
+   {
+    "t": 114.96,
+    "gen": 90,
+    "best_hard": 12,
+    "best_soft": 2719
+   },
+   {
+    "t": 120.39,
+    "gen": 96,
+    "best_hard": 12,
+    "best_soft": 2719
+   },
+   {
+    "t": 120.39,
+    "gen": 96,
+    "best_hard": 12,
+    "best_soft": 2719
+   }
+  ],
+  "5": [
+   {
+    "t": 36.82,
+    "gen": 0,
+    "best_hard": 21,
+    "best_soft": 2278
+   },
+   {
+    "t": 42.17,
+    "gen": 6,
+    "best_hard": 21,
+    "best_soft": 2278
+   },
+   {
+    "t": 47.74,
+    "gen": 13,
+    "best_hard": 18,
+    "best_soft": 2418
+   },
+   {
+    "t": 53.04,
+    "gen": 20,
+    "best_hard": 17,
+    "best_soft": 2478
+   },
+   {
+    "t": 58.41,
+    "gen": 27,
+    "best_hard": 17,
+    "best_soft": 2478
+   },
+   {
+    "t": 63.5,
+    "gen": 34,
+    "best_hard": 15,
+    "best_soft": 2464
+   },
+   {
+    "t": 68.8,
+    "gen": 41,
+    "best_hard": 13,
+    "best_soft": 2602
+   },
+   {
+    "t": 74.35,
+    "gen": 48,
+    "best_hard": 13,
+    "best_soft": 2548
+   },
+   {
+    "t": 80.06,
+    "gen": 56,
+    "best_hard": 11,
+    "best_soft": 2652
+   },
+   {
+    "t": 85.6,
+    "gen": 63,
+    "best_hard": 10,
+    "best_soft": 2672
+   },
+   {
+    "t": 91.03,
+    "gen": 70,
+    "best_hard": 9,
+    "best_soft": 2623
+   },
+   {
+    "t": 96.66,
+    "gen": 77,
+    "best_hard": 9,
+    "best_soft": 2623
+   },
+   {
+    "t": 102.16,
+    "gen": 84,
+    "best_hard": 9,
+    "best_soft": 2599
+   },
+   {
+    "t": 107.35,
+    "gen": 90,
+    "best_hard": 7,
+    "best_soft": 2597
+   },
+   {
+    "t": 112.37,
+    "gen": 96,
+    "best_hard": 7,
+    "best_soft": 2597
+   },
+   {
+    "t": 118.16,
+    "gen": 103,
+    "best_hard": 7,
+    "best_soft": 2597
+   },
+   {
+    "t": 120.61,
+    "gen": 106,
+    "best_hard": 7,
+    "best_soft": 2597
+   }
+  ]
+ },
+ "A_runs": [
+  {
+   "method": "Published grid",
+   "seed": null,
+   "coverage_pct": 98.96,
+   "scheduled_h": 667,
+   "required_h": 674,
+   "hard": 20,
+   "soft_penalty": 2762,
+   "idle_gaps": 170,
+   "saturday_h": 88,
+   "late_h": 96,
+   "extended_h": 14,
+   "room_changes": 0,
+   "faculty_consec": 17,
+   "weekday_imbalance": 0.172,
+   "seconds": 0
+  },
+  {
+   "method": "VBA macro (port)",
+   "seed": null,
+   "coverage_pct": 88.13,
+   "scheduled_h": 594,
+   "required_h": 674,
+   "hard": 4,
+   "soft_penalty": 2586,
+   "idle_gaps": 238,
+   "saturday_h": 49,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 0,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.569,
+   "seconds": 0.1
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 99.26,
+   "scheduled_h": 669,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2321,
+   "idle_gaps": 149,
+   "saturday_h": 73,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 126,
+   "faculty_consec": 6,
+   "weekday_imbalance": 0.084,
+   "seconds": 183.9
+  },
+  {
+   "method": "GA memetic",
+   "seed": 1,
+   "coverage_pct": 98.52,
+   "scheduled_h": 664,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2855,
+   "idle_gaps": 119,
+   "saturday_h": 62,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 241,
+   "faculty_consec": 21,
+   "weekday_imbalance": 0.083,
+   "seconds": 120.2,
+   "generations": 103
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 2,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2002,
+   "idle_gaps": 100,
+   "saturday_h": 79,
+   "late_h": 73,
+   "extended_h": 0,
+   "room_changes": 140,
+   "faculty_consec": 6,
+   "weekday_imbalance": 0.059,
+   "seconds": 149.3
+  },
+  {
+   "method": "GA memetic",
+   "seed": 2,
+   "coverage_pct": 98.81,
+   "scheduled_h": 666,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2836,
+   "idle_gaps": 127,
+   "saturday_h": 70,
+   "late_h": 81,
+   "extended_h": 0,
+   "room_changes": 243,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.076,
+   "seconds": 120.4,
+   "generations": 104
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 3,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2764,
+   "idle_gaps": 137,
+   "saturday_h": 77,
+   "late_h": 93,
+   "extended_h": 0,
+   "room_changes": 158,
+   "faculty_consec": 17,
+   "weekday_imbalance": 0.126,
+   "seconds": 111.2
+  },
+  {
+   "method": "GA memetic",
+   "seed": 3,
+   "coverage_pct": 97.77,
+   "scheduled_h": 659,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2932,
+   "idle_gaps": 132,
+   "saturday_h": 71,
+   "late_h": 87,
+   "extended_h": 0,
+   "room_changes": 246,
+   "faculty_consec": 20,
+   "weekday_imbalance": 0.094,
+   "seconds": 120.1,
+   "generations": 104
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 4,
+   "coverage_pct": 99.55,
+   "scheduled_h": 671,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2076,
+   "idle_gaps": 99,
+   "saturday_h": 80,
+   "late_h": 79,
+   "extended_h": 0,
+   "room_changes": 139,
+   "faculty_consec": 7,
+   "weekday_imbalance": 0.135,
+   "seconds": 145.6
+  },
+  {
+   "method": "GA memetic",
+   "seed": 4,
+   "coverage_pct": 97.18,
+   "scheduled_h": 655,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2907,
+   "idle_gaps": 123,
+   "saturday_h": 68,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 246,
+   "faculty_consec": 17,
+   "weekday_imbalance": 0.102,
+   "seconds": 120.5,
+   "generations": 96
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 5,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2191,
+   "idle_gaps": 94,
+   "saturday_h": 78,
+   "late_h": 85,
+   "extended_h": 0,
+   "room_changes": 151,
+   "faculty_consec": 10,
+   "weekday_imbalance": 0.109,
+   "seconds": 111.7
+  },
+  {
+   "method": "GA memetic",
+   "seed": 5,
+   "coverage_pct": 98.22,
+   "scheduled_h": 662,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2821,
+   "idle_gaps": 118,
+   "saturday_h": 67,
+   "late_h": 84,
+   "extended_h": 0,
+   "room_changes": 234,
+   "faculty_consec": 21,
+   "weekday_imbalance": 0.151,
+   "seconds": 120.7,
+   "generations": 106
+  },
+  {
+   "method": "GA plain",
+   "seed": 1,
+   "coverage_pct": 95.55,
+   "scheduled_h": 644,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2359,
+   "idle_gaps": 92,
+   "saturday_h": 58,
+   "late_h": 66,
+   "extended_h": 0,
+   "room_changes": 205,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.102,
+   "seconds": 120.1,
+   "generations": 8605
+  },
+  {
+   "method": "GA plain",
+   "seed": 2,
+   "coverage_pct": 92.88,
+   "scheduled_h": 626,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2439,
+   "idle_gaps": 102,
+   "saturday_h": 58,
+   "late_h": 72,
+   "extended_h": 0,
+   "room_changes": 205,
+   "faculty_consec": 18,
+   "weekday_imbalance": 0.097,
+   "seconds": 120.2,
+   "generations": 8561
+  },
+  {
+   "method": "GA plain",
+   "seed": 3,
+   "coverage_pct": 94.07,
+   "scheduled_h": 634,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2860,
+   "idle_gaps": 141,
+   "saturday_h": 67,
+   "late_h": 71,
+   "extended_h": 0,
+   "room_changes": 216,
+   "faculty_consec": 24,
+   "weekday_imbalance": 0.115,
+   "seconds": 120.1,
+   "generations": 8523
+  }
+ ],
+ "A_summary": {
+  "Published grid": {
+   "coverage_pct": {
+    "mean": 98.96,
+    "sd": 0.0,
+    "min": 98.96,
+    "max": 98.96
+   },
+   "hard": {
+    "mean": 20,
+    "sd": 0.0,
+    "min": 20,
+    "max": 20
+   },
+   "soft_penalty": {
+    "mean": 2762,
+    "sd": 0.0,
+    "min": 2762,
+    "max": 2762
+   },
+   "idle_gaps": {
+    "mean": 170,
+    "sd": 0.0,
+    "min": 170,
+    "max": 170
+   },
+   "saturday_h": {
+    "mean": 88,
+    "sd": 0.0,
+    "min": 88,
+    "max": 88
+   },
+   "seconds": {
+    "mean": 0,
+    "sd": 0.0,
+    "min": 0,
+    "max": 0
+   }
+  },
+  "VBA macro (port)": {
+   "coverage_pct": {
+    "mean": 88.13,
+    "sd": 0.0,
+    "min": 88.13,
+    "max": 88.13
+   },
+   "hard": {
+    "mean": 4,
+    "sd": 0.0,
+    "min": 4,
+    "max": 4
+   },
+   "soft_penalty": {
+    "mean": 2586,
+    "sd": 0.0,
+    "min": 2586,
+    "max": 2586
+   },
+   "idle_gaps": {
+    "mean": 238,
+    "sd": 0.0,
+    "min": 238,
+    "max": 238
+   },
+   "saturday_h": {
+    "mean": 49,
+    "sd": 0.0,
+    "min": 49,
+    "max": 49
+   },
+   "seconds": {
+    "mean": 0.1,
+    "sd": 0.0,
+    "min": 0.1,
+    "max": 0.1
+   }
+  },
+  "CP-SAT pipeline": {
+   "coverage_pct": {
+    "mean": 99.76,
+    "sd": 0.31,
+    "min": 99.26,
+    "max": 100.0
+   },
+   "hard": {
+    "mean": 0,
+    "sd": 0.0,
+    "min": 0,
+    "max": 0
+   },
+   "soft_penalty": {
+    "mean": 2270.8,
+    "sd": 269.2,
+    "min": 2002,
+    "max": 2764
+   },
+   "idle_gaps": {
+    "mean": 115.8,
+    "sd": 22.62,
+    "min": 94,
+    "max": 149
+   },
+   "saturday_h": {
+    "mean": 77.4,
+    "sd": 2.42,
+    "min": 73,
+    "max": 80
+   },
+   "seconds": {
+    "mean": 140.34,
+    "sd": 27.11,
+    "min": 111.2,
+    "max": 183.9
+   }
+  },
+  "GA memetic": {
+   "coverage_pct": {
+    "mean": 98.1,
+    "sd": 0.57,
+    "min": 97.18,
+    "max": 98.81
+   },
+   "hard": {
+    "mean": 0,
+    "sd": 0.0,
+    "min": 0,
+    "max": 0
+   },
+   "soft_penalty": {
+    "mean": 2870.2,
+    "sd": 42.41,
+    "min": 2821,
+    "max": 2932
+   },
+   "idle_gaps": {
+    "mean": 123.8,
+    "sd": 5.19,
+    "min": 118,
+    "max": 132
+   },
+   "saturday_h": {
+    "mean": 67.6,
+    "sd": 3.14,
+    "min": 62,
+    "max": 71
+   },
+   "seconds": {
+    "mean": 120.38,
+    "sd": 0.21,
+    "min": 120.1,
+    "max": 120.7
+   }
+  },
+  "GA plain": {
+   "coverage_pct": {
+    "mean": 94.17,
+    "sd": 1.09,
+    "min": 92.88,
+    "max": 95.55
+   },
+   "hard": {
+    "mean": 0,
+    "sd": 0.0,
+    "min": 0,
+    "max": 0
+   },
+   "soft_penalty": {
+    "mean": 2552.67,
+    "sd": 219.76,
+    "min": 2359,
+    "max": 2860
+   },
+   "idle_gaps": {
+    "mean": 111.67,
+    "sd": 21.14,
+    "min": 92,
+    "max": 141
+   },
+   "saturday_h": {
+    "mean": 61,
+    "sd": 4.24,
+    "min": 58,
+    "max": 67
+   },
+   "seconds": {
+    "mean": 120.13,
+    "sd": 0.05,
+    "min": 120.1,
+    "max": 120.2
+   }
+  }
+ },
+ "A_tests": {
+  "coverage CP-SAT vs GA": {
+   "U": 25.0,
+   "p": 0.0112,
+   "cliffs_delta": 1.0
+  },
+  "soft CP-SAT vs GA": {
+   "U": 0.0,
+   "p": 0.0079,
+   "cliffs_delta": -1.0
+  },
+  "coverage GA memetic vs plain": {
+   "U": 15.0,
+   "p": 0.0357,
+   "cliffs_delta": 1.0
+  }
+ },
+ "B_single_thread_cpsat": {
+  "method": "CP-SAT pipeline (1 worker)",
+  "seed": 1,
+  "coverage_pct": 0.0,
+  "scheduled_h": 0,
+  "required_h": 674,
+  "hard": 0,
+  "soft_penalty": 0,
+  "idle_gaps": 0,
+  "saturday_h": 0,
+  "late_h": 0,
+  "extended_h": 0,
+  "room_changes": 0,
+  "faculty_consec": 0,
+  "weekday_imbalance": 0.0,
+  "seconds": 146.9,
+  "phase1_status": "UNKNOWN",
+  "phase1_placed": 0,
+  "phase1_unplaced": 567,
+  "phase1_stats": "{\"wall_s\": 42.79}"
+ },
+ "C_anytime": [
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 99.85,
+   "scheduled_h": 673,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2895,
+   "idle_gaps": 187,
+   "saturday_h": 80,
+   "late_h": 96,
+   "extended_h": 0,
+   "room_changes": 150,
+   "faculty_consec": 8,
+   "weekday_imbalance": 0.101,
+   "seconds": 76.8,
+   "budget_s": 30
+  },
+  {
+   "method": "GA memetic",
+   "seed": 1,
+   "coverage_pct": 96.44,
+   "scheduled_h": 650,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2730,
+   "idle_gaps": 108,
+   "saturday_h": 59,
+   "late_h": 70,
+   "extended_h": 0,
+   "room_changes": 229,
+   "faculty_consec": 27,
+   "weekday_imbalance": 0.093,
+   "seconds": 30.8,
+   "budget_s": 30
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2628,
+   "idle_gaps": 143,
+   "saturday_h": 76,
+   "late_h": 86,
+   "extended_h": 0,
+   "room_changes": 157,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.176,
+   "seconds": 77.6,
+   "budget_s": 60
+  },
+  {
+   "method": "GA memetic",
+   "seed": 1,
+   "coverage_pct": 98.66,
+   "scheduled_h": 665,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2845,
+   "idle_gaps": 111,
+   "saturday_h": 63,
+   "late_h": 88,
+   "extended_h": 0,
+   "room_changes": 255,
+   "faculty_consec": 16,
+   "weekday_imbalance": 0.1,
+   "seconds": 60.8,
+   "budget_s": 60
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 99.85,
+   "scheduled_h": 673,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 1938,
+   "idle_gaps": 110,
+   "saturday_h": 91,
+   "late_h": 70,
+   "extended_h": 0,
+   "room_changes": 128,
+   "faculty_consec": 3,
+   "weekday_imbalance": 0.103,
+   "seconds": 234.2,
+   "budget_s": 240
+  },
+  {
+   "method": "GA memetic",
+   "seed": 1,
+   "coverage_pct": 99.41,
+   "scheduled_h": 670,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2986,
+   "idle_gaps": 120,
+   "saturday_h": 68,
+   "late_h": 84,
+   "extended_h": 0,
+   "room_changes": 273,
+   "faculty_consec": 21,
+   "weekday_imbalance": 0.091,
+   "seconds": 240.3,
+   "budget_s": 240
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 99.26,
+   "scheduled_h": 669,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2321,
+   "idle_gaps": 149,
+   "saturday_h": 73,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 126,
+   "faculty_consec": 6,
+   "weekday_imbalance": 0.084,
+   "seconds": 183.9,
+   "budget_s": 120.0
+  },
+  {
+   "method": "GA memetic",
+   "seed": 1,
+   "coverage_pct": 98.52,
+   "scheduled_h": 664,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2855,
+   "idle_gaps": 119,
+   "saturday_h": 62,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 241,
+   "faculty_consec": 21,
+   "weekday_imbalance": 0.083,
+   "seconds": 120.2,
+   "generations": 103,
+   "budget_s": 120.0
+  }
+ ],
+ "D_tradeoff": [
+  {
+   "method": "repair kw=0",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2663,
+   "idle_gaps": 129,
+   "saturday_h": 84,
+   "late_h": 90,
+   "extended_h": 0,
+   "room_changes": 194,
+   "faculty_consec": 13,
+   "weekday_imbalance": 0.076,
+   "seconds": 2.4,
+   "keep_weight": 0,
+   "faculty": "RAVI",
+   "day": "Sat",
+   "displaced": 2,
+   "re_placed": 2,
+   "moved_other": 53,
+   "moved": 55,
+   "moved_pct": 9.7,
+   "resolved": true,
+   "soft_change": 172
+  },
+  {
+   "method": "repair kw=0",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2557,
+   "idle_gaps": 129,
+   "saturday_h": 82,
+   "late_h": 89,
+   "extended_h": 0,
+   "room_changes": 174,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.068,
+   "seconds": 8.8,
+   "keep_weight": 0,
+   "faculty": "ARYA",
+   "day": "Mon",
+   "displaced": 1,
+   "re_placed": 1,
+   "moved_other": 12,
+   "moved": 13,
+   "moved_pct": 2.29,
+   "resolved": true,
+   "soft_change": 66
+  },
+  {
+   "method": "repair kw=0",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2663,
+   "idle_gaps": 132,
+   "saturday_h": 82,
+   "late_h": 88,
+   "extended_h": 0,
+   "room_changes": 185,
+   "faculty_consec": 12,
+   "weekday_imbalance": 0.076,
+   "seconds": 18.8,
+   "keep_weight": 0,
+   "faculty": "AKD",
+   "day": "Mon",
+   "displaced": 3,
+   "re_placed": 3,
+   "moved_other": 74,
+   "moved": 77,
+   "moved_pct": 13.58,
+   "resolved": true,
+   "soft_change": 172
+  },
+  {
+   "method": "repair kw=0",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2635,
+   "idle_gaps": 128,
+   "saturday_h": 83,
+   "late_h": 87,
+   "extended_h": 0,
+   "room_changes": 194,
+   "faculty_consec": 13,
+   "weekday_imbalance": 0.076,
+   "seconds": 0.9,
+   "keep_weight": 0,
+   "faculty": "SG",
+   "day": "Mon",
+   "displaced": 2,
+   "re_placed": 2,
+   "moved_other": 48,
+   "moved": 50,
+   "moved_pct": 8.82,
+   "resolved": true,
+   "soft_change": 144
+  },
+  {
+   "method": "repair kw=10",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2591,
+   "idle_gaps": 130,
+   "saturday_h": 81,
+   "late_h": 88,
+   "extended_h": 0,
+   "room_changes": 182,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.059,
+   "seconds": 2.6,
+   "keep_weight": 10,
+   "faculty": "RAVI",
+   "day": "Sat",
+   "displaced": 2,
+   "re_placed": 2,
+   "moved_other": 27,
+   "moved": 29,
+   "moved_pct": 5.11,
+   "resolved": true,
+   "soft_change": 100
+  },
+  {
+   "method": "repair kw=10",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2644,
+   "idle_gaps": 131,
+   "saturday_h": 82,
+   "late_h": 89,
+   "extended_h": 0,
+   "room_changes": 191,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.042,
+   "seconds": 12.5,
+   "keep_weight": 10,
+   "faculty": "ARYA",
+   "day": "Mon",
+   "displaced": 1,
+   "re_placed": 1,
+   "moved_other": 44,
+   "moved": 45,
+   "moved_pct": 7.94,
+   "resolved": true,
+   "soft_change": 153
+  },
+  {
+   "method": "repair kw=10",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2587,
+   "idle_gaps": 126,
+   "saturday_h": 82,
+   "late_h": 87,
+   "extended_h": 0,
+   "room_changes": 185,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.084,
+   "seconds": 16.9,
+   "keep_weight": 10,
+   "faculty": "AKD",
+   "day": "Mon",
+   "displaced": 3,
+   "re_placed": 3,
+   "moved_other": 38,
+   "moved": 41,
+   "moved_pct": 7.23,
+   "resolved": true,
+   "soft_change": 96
+  },
+  {
+   "method": "repair kw=10",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2627,
+   "idle_gaps": 129,
+   "saturday_h": 82,
+   "late_h": 88,
+   "extended_h": 0,
+   "room_changes": 194,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.068,
+   "seconds": 1.6,
+   "keep_weight": 10,
+   "faculty": "SG",
+   "day": "Mon",
+   "displaced": 2,
+   "re_placed": 2,
+   "moved_other": 36,
+   "moved": 38,
+   "moved_pct": 6.7,
+   "resolved": true,
+   "soft_change": 136
+  },
+  {
+   "method": "repair kw=40",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2603,
+   "idle_gaps": 130,
+   "saturday_h": 81,
+   "late_h": 88,
+   "extended_h": 0,
+   "room_changes": 185,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.059,
+   "seconds": 3.2,
+   "keep_weight": 40,
+   "faculty": "RAVI",
+   "day": "Sat",
+   "displaced": 2,
+   "re_placed": 2,
+   "moved_other": 26,
+   "moved": 28,
+   "moved_pct": 4.94,
+   "resolved": true,
+   "soft_change": 112
+  },
+  {
+   "method": "repair kw=40",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2628,
+   "idle_gaps": 133,
+   "saturday_h": 82,
+   "late_h": 89,
+   "extended_h": 0,
+   "room_changes": 180,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.051,
+   "seconds": 11.9,
+   "keep_weight": 40,
+   "faculty": "ARYA",
+   "day": "Mon",
+   "displaced": 1,
+   "re_placed": 1,
+   "moved_other": 28,
+   "moved": 29,
+   "moved_pct": 5.11,
+   "resolved": true,
+   "soft_change": 137
+  },
+  {
+   "method": "repair kw=40",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2589,
+   "idle_gaps": 126,
+   "saturday_h": 82,
+   "late_h": 87,
+   "extended_h": 0,
+   "room_changes": 184,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.084,
+   "seconds": 16.5,
+   "keep_weight": 40,
+   "faculty": "AKD",
+   "day": "Mon",
+   "displaced": 3,
+   "re_placed": 3,
+   "moved_other": 40,
+   "moved": 43,
+   "moved_pct": 7.58,
+   "resolved": true,
+   "soft_change": 98
+  },
+  {
+   "method": "repair kw=40",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2603,
+   "idle_gaps": 127,
+   "saturday_h": 82,
+   "late_h": 88,
+   "extended_h": 0,
+   "room_changes": 192,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.068,
+   "seconds": 1.6,
+   "keep_weight": 40,
+   "faculty": "SG",
+   "day": "Mon",
+   "displaced": 2,
+   "re_placed": 2,
+   "moved_other": 34,
+   "moved": 36,
+   "moved_pct": 6.35,
+   "resolved": true,
+   "soft_change": 112
+  },
+  {
+   "method": "repair kw=160",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2547,
+   "idle_gaps": 130,
+   "saturday_h": 81,
+   "late_h": 88,
+   "extended_h": 0,
+   "room_changes": 171,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.059,
+   "seconds": 3.2,
+   "keep_weight": 160,
+   "faculty": "RAVI",
+   "day": "Sat",
+   "displaced": 2,
+   "re_placed": 2,
+   "moved_other": 7,
+   "moved": 9,
+   "moved_pct": 1.59,
+   "resolved": true,
+   "soft_change": 56
+  },
+  {
+   "method": "repair kw=160",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2607,
+   "idle_gaps": 131,
+   "saturday_h": 82,
+   "late_h": 88,
+   "extended_h": 0,
+   "room_changes": 188,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.051,
+   "seconds": 6.8,
+   "keep_weight": 160,
+   "faculty": "ARYA",
+   "day": "Mon",
+   "displaced": 1,
+   "re_placed": 1,
+   "moved_other": 40,
+   "moved": 41,
+   "moved_pct": 7.23,
+   "resolved": true,
+   "soft_change": 116
+  },
+  {
+   "method": "repair kw=160",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2569,
+   "idle_gaps": 126,
+   "saturday_h": 82,
+   "late_h": 87,
+   "extended_h": 0,
+   "room_changes": 179,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.084,
+   "seconds": 16.2,
+   "keep_weight": 160,
+   "faculty": "AKD",
+   "day": "Mon",
+   "displaced": 3,
+   "re_placed": 3,
+   "moved_other": 33,
+   "moved": 36,
+   "moved_pct": 6.35,
+   "resolved": true,
+   "soft_change": 78
+  },
+  {
+   "method": "repair kw=160",
+   "seed": null,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2631,
+   "idle_gaps": 128,
+   "saturday_h": 82,
+   "late_h": 88,
+   "extended_h": 0,
+   "room_changes": 197,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.076,
+   "seconds": 1.3,
+   "keep_weight": 160,
+   "faculty": "SG",
+   "day": "Mon",
+   "displaced": 2,
+   "re_placed": 2,
+   "moved_other": 41,
+   "moved": 43,
+   "moved_pct": 7.58,
+   "resolved": true,
+   "soft_change": 140
+  }
+ ],
+ "E_per_semester": [
+  {
+   "method": "Published grid",
+   "semester": 1,
+   "coverage_pct": 100.0,
+   "required_h": 286
+  },
+  {
+   "method": "Published grid",
+   "semester": 3,
+   "coverage_pct": 99.41,
+   "required_h": 170
+  },
+  {
+   "method": "Published grid",
+   "semester": 5,
+   "coverage_pct": 100.0,
+   "required_h": 158
+  },
+  {
+   "method": "Published grid",
+   "semester": 7,
+   "coverage_pct": 90.0,
+   "required_h": 60
+  },
+  {
+   "method": "VBA macro (port)",
+   "semester": 1,
+   "coverage_pct": 91.61,
+   "required_h": 286
+  },
+  {
+   "method": "VBA macro (port)",
+   "semester": 3,
+   "coverage_pct": 98.24,
+   "required_h": 170
+  },
+  {
+   "method": "VBA macro (port)",
+   "semester": 5,
+   "coverage_pct": 84.18,
+   "required_h": 158
+  },
+  {
+   "method": "VBA macro (port)",
+   "semester": 7,
+   "coverage_pct": 53.33,
+   "required_h": 60
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "semester": 1,
+   "coverage_pct": 98.6,
+   "required_h": 286
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "semester": 3,
+   "coverage_pct": 100.0,
+   "required_h": 170
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "semester": 5,
+   "coverage_pct": 99.37,
+   "required_h": 158
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "semester": 7,
+   "coverage_pct": 100.0,
+   "required_h": 60
+  },
+  {
+   "method": "GA memetic",
+   "semester": 1,
+   "coverage_pct": 100.0,
+   "required_h": 286
+  },
+  {
+   "method": "GA memetic",
+   "semester": 3,
+   "coverage_pct": 98.82,
+   "required_h": 170
+  },
+  {
+   "method": "GA memetic",
+   "semester": 5,
+   "coverage_pct": 94.94,
+   "required_h": 158
+  },
+  {
+   "method": "GA memetic",
+   "semester": 7,
+   "coverage_pct": 100.0,
+   "required_h": 60
+  }
+ ],
+ "E_heatmaps": {
+  "1B1|Published grid": [
+   [
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0
+   ],
+   [
+    1,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "1B1|CP-SAT pipeline": [
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "1B1|GA memetic": [
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "3B1|Published grid": [
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   [
+    1,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "3B1|CP-SAT pipeline": [
+   [
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0
+   ],
+   [
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "3B1|GA memetic": [
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "5B1|Published grid": [
+   [
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    2
+   ],
+   [
+    1,
+    0,
+    1,
+    2,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    0,
+    1,
+    1,
+    0,
+    2,
+    1,
+    1
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1
+   ],
+   [
+    1,
+    0,
+    1,
+    2,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "5B1|CP-SAT pipeline": [
+   [
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    2,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    2,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    2,
+    2,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    2,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "5B1|GA memetic": [
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    2,
+    2,
+    0
+   ],
+   [
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    0,
+    1,
+    1,
+    2,
+    0,
+    2,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    1,
+    2,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "7B1|Published grid": [
+   [
+    3,
+    1,
+    1,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    0,
+    1,
+    1,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    3,
+    3,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    1,
+    3,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0
+   ],
+   [
+    3,
+    3,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   [
+    3,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "7B1|CP-SAT pipeline": [
+   [
+    0,
+    2,
+    2,
+    0,
+    0,
+    2,
+    1,
+    0
+   ],
+   [
+    2,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    2,
+    2,
+    1,
+    2,
+    0,
+    0,
+    1,
+    0
+   ],
+   [
+    2,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    3,
+    2,
+    1,
+    1,
+    0,
+    3,
+    0,
+    0
+   ],
+   [
+    1,
+    2,
+    2,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ],
+  "7B1|GA memetic": [
+   [
+    1,
+    2,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    1,
+    0,
+    1,
+    3,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    2,
+    1,
+    2,
+    1,
+    0,
+    1,
+    3,
+    0
+   ],
+   [
+    1,
+    2,
+    3,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   [
+    2,
+    1,
+    1,
+    2,
+    0,
+    1,
+    0,
+    0
+   ],
+   [
+    0,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+   ]
+  ]
+ },
+ "finished": "2026-11-03 19:22",
+ "D_base_seed": 2
+}

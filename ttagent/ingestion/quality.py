@@ -31,6 +31,16 @@ def build_quality_report(ds: Dataset, issues: list[dict]) -> dict[str, Any]:
                        "message": f"token {tok}: requirement says {what} {req_v}, published grid uses {pub_v} ({n} cell(s))",
                        "location": ""})
 
+    for bk in ds.baskets:
+        if bk.confidence != "high":
+            issues.append({"severity": "warning" if bk.confidence == "low" else "info", "category": "elective_basket_confidence",
+                           "message": f"basket {bk.basket_id} ({', '.join(bk.courses)}) inferred from only {bk.evidence} co-scheduled cell(s) "
+                                      f"[{bk.confidence} confidence] -- confirm in data/processed/electives.yaml", "location": ""})
+    if not any(r.seats for r in ds.rooms.values()):
+        issues.append({"severity": "info", "category": "room_capacity_proxy",
+                       "message": "no config/rooms.yaml: room capacity uses the observed-batches proxy; add real seat counts to tighten room suitability",
+                       "location": ""})
+
     macro_unplaced = [r for r in ds.requirements if (r.macro_scheduled or 0) < r.per_week]
     published_validation = validate(ds, ds.published, grid)
     strict = capacity_analysis(ds, grid, basket_aware=False)
