@@ -27,6 +27,14 @@ LangGraph multi-agent workflow.
           +------| repairer         |  LNS ladder via MCP   (<= max_repair_iterations)
                  +------------------+
 
+v4 safeguards (each one measured by scripts/run_agent_eval.py, which can switch it off):
+  * validator  -- every decision (repair? publish?) uses an independent re-validation, never the
+                  scheduler's self-report; a mismatch is logged, and "publish" requests are re-checked too;
+  * repairer   -- also frees the sessions involved in hard violations (repair_timetable fix_violations=True);
+  * scheduler  -- recovery plan when the tool fails or returns nothing: retry, then switch to the GA;
+  * approval   -- a human (or the evaluation's simulated officer) decides every publication;
+  * memory     -- each conversation remembers its own version, so other users' versions are not touched.
+
 Deterministic nodes call MCP tools directly (the workflow is the contract);
 LLMs are used only for understanding (supervisor), free-form Q&A (assistant)
 and wording (explainer). State is checkpointed to SQLite per thread_id, so a
@@ -66,11 +74,26 @@ SOLVE_ACTIONS = {"generate", "what_if_unavailable", "repair"}
 SIMPLE_ACTIONS = {"view", "validate", "explain_unplaced", "move", "compare", "quality", "capacity", "export", "publish"}
 
 
+AGENT_COMPONENTS = ("validator", "repair", "fallback", "approval", "memory")
+
+
 def build_graph(bridge, llm=None, *, require_approval: bool | None = None, max_repairs: int | None = None,
                 solve_time_s: float = 60, known_faculty: set[str] | None = None, known_rooms: set[str] | None = None,
-                assistant_tools: list | None = None):
+                assistant_tools: list | None = None, ablate: set[str] | frozenset = frozenset(),
+                approver=None):
+    """`ablate` switches agent components off for the evaluation (see AGENT_COMPONENTS):
+    validator -- trust the scheduler's self-report instead of an independent re-validation;
+    repair    -- no diagnoser/repairer loop;     fallback -- no retry/alternative method when a solve fails;
+    approval  -- publish without asking a human; memory   -- forget the previous version between turns.
+    `approver(question) -> bool` answers approvals automatically (simulated human in the evaluation)."""
+    ablate = set(ablate)
+    unknown = ablate - set(AGENT_COMPONENTS)
+    if unknown:
+        raise ValueError(f"unknown components to ablate: {unknown}")
     acfg = settings()["agent"]
     require_approval = acfg["require_approval"] if require_approval is None else require_approval
+    if "approval" in ablate:
+        require_approval = False
     max_repairs = acfg["max_repair_iterations"] if max_repairs is None else max_repairs
     react = None
     if llm is not None:
@@ -142,14 +165,24 @@ def build_graph(bridge, llm=None, *, require_approval: bool | None = None, max_r
     async def scheduler(state: AgentState) -> dict:
         it, trace = state["intent"], list(state.get("trace") or [])
         result = dict(state["result"])
-        if it["action"] in ("what_if_unavailable", "repair") and state.get("last_solution_id"):
-            sol = await mcp(trace, "scheduler", "timetable", "repair_timetable",
-                            solution_id=state["last_solution_id"], time_limit_s=max(20, solve_time_s / 2))
+        last = None if "memory" in ablate else state.get("last_solution_id")
+        if it["action"] in ("what_if_unavailable", "repair") and last:
+            attempts = [("repair_timetable", {"solution_id": last, "time_limit_s": max(20, solve_time_s / 2)})]
         else:
-            sol = await mcp(trace, "scheduler", "timetable", "generate_timetable", semesters=it.get("semesters"),
-                            time_limit_s=solve_time_s, repair=False,
-                            stability_weight=20.0 if it.get("stability") else None,
-                            label=state["request"][:60])
+            base = {"semesters": it.get("semesters"), "time_limit_s": solve_time_s, "repair": False,
+                    "stability_weight": 20.0 if it.get("stability") else None, "label": state["request"][:60]}
+            attempts = [("generate_timetable", base)]
+            if "fallback" not in ablate:   # recovery plan: retry once, then switch to the GA (always returns a timetable)
+                attempts += [("generate_timetable", base), ("generate_timetable", base | {"method": "ga"})]
+        sol: dict = {}
+        for n, (tool, args) in enumerate(attempts):
+            sol = await mcp(trace, "scheduler", "timetable", tool, **args)
+            failed = bool(sol.get("error")) or (sol.get("scheduled_hours") == 0 and sol.get("required_hours"))
+            if not failed:
+                if n:
+                    result["recovered"] = {"attempts": n + 1, "via": args.get("method", "decomposed")}
+                break
+            trace.append({"node": "scheduler", "note": f"attempt {n + 1} failed: {sol.get('error') or 'empty timetable'}"})
         result["solution"] = sol
         return {"result": result, "trace": trace, "solution_id": sol.get("solution_id"),
                 "last_solution_id": sol.get("solution_id") or state.get("last_solution_id")}
@@ -158,17 +191,33 @@ def build_graph(bridge, llm=None, *, require_approval: bool | None = None, max_r
     async def validator(state: AgentState) -> dict:
         trace = list(state.get("trace") or [])
         result = dict(state["result"])
-        if state.get("solution_id"):
-            result["validation"] = await mcp(trace, "validator", "timetable", "validate_timetable", solution_id=state["solution_id"])
+        if state.get("solution_id") and "validator" not in ablate:
+            v = await mcp(trace, "validator", "timetable", "validate_timetable", solution_id=state["solution_id"])
+            result["validation"] = v
+            claimed = (result.get("solution") or {}).get("hard_violations") or {}
+            if v.get("hard_violation_total") and not sum(claimed.values()):
+                result["self_report_mismatch"] = {"claimed_hard": 0, "found_hard": v["hard_violation_total"]}
+                trace.append({"node": "validator", "note": f"self-report mismatch: scheduler claimed 0 hard violations, "
+                                                           f"independent check found {v['hard_violation_total']}"})
         return {"result": result, "trace": trace}
+
+    def _hard(state: AgentState) -> int:
+        """Hard violations as the deciding authority sees them: the independent validator, or (ablated) the self-report."""
+        r = state["result"]
+        if "validator" not in ablate and r.get("validation") and "hard_violation_total" in r["validation"]:
+            return int(r["validation"]["hard_violation_total"] or 0)
+        return int(sum(((r.get("solution") or {}).get("hard_violations") or {}).values()))
 
     def route_validation(state: AgentState) -> str:
         sol = state["result"].get("solution") or {}
         if sol.get("error") or not state.get("solution_id"):
             return "explainer"
+        if "repair" in ablate:
+            return "approval"
         log = state["result"].get("repair_log") or []
+        problems = (sol.get("unplaced_count") or 0) + _hard(state)
         stalled = bool(log) and log[-1]["after"] is not None and log[-1]["after"] >= (log[-1]["before"] or 0)
-        if sol.get("unplaced_count") and state.get("repair_iterations", 0) < max_repairs and not stalled:
+        if problems and state.get("repair_iterations", 0) < max_repairs and not stalled:
             return "diagnoser"
         return "approval"
 
@@ -182,12 +231,14 @@ def build_graph(bridge, llm=None, *, require_approval: bool | None = None, max_r
     async def repairer(state: AgentState) -> dict:
         trace = list(state.get("trace") or [])
         result = dict(state["result"])
-        before = (result.get("solution") or {}).get("unplaced_count")
+        hard_before = _hard(state)
+        before = ((result.get("solution") or {}).get("unplaced_count") or 0) + hard_before
         sol = await mcp(trace, "repairer", "timetable", "repair_timetable", solution_id=state["solution_id"],
-                        time_limit_s=max(20, solve_time_s / 2))
+                        time_limit_s=max(20, solve_time_s / 2), fix_violations=bool(hard_before))
         n = state.get("repair_iterations", 0) + 1
+        after = None if sol.get("error") else (sol.get("unplaced_count") or 0) + int(sum((sol.get("hard_violations") or {}).values()))
         result["repair_log"] = (result.get("repair_log") or []) + [
-            {"iteration": n, "before": before, "after": sol.get("unplaced_count"), "rounds": sol.get("repair_rounds")}]
+            {"iteration": n, "before": before, "after": after, "fixed_violations": hard_before, "rounds": sol.get("repair_rounds")}]
         if not sol.get("error"):
             result["solution"] = sol
         return {"result": result, "trace": trace, "repair_iterations": n,
@@ -198,25 +249,36 @@ def build_graph(bridge, llm=None, *, require_approval: bool | None = None, max_r
     async def approval(state: AgentState) -> dict:
         result = dict(state["result"])
         sol = result.get("solution") or {}
-        if not require_approval or not sol.get("valid"):
+        v = result.get("validation") if "validator" not in ablate else None
+        hard = _hard(state)
+        coverage = (v or {}).get("allocation", {}).get("coverage_pct", sol.get("coverage_pct"))
+        ok = (v.get("valid") if v else sol.get("valid")) and not hard
+        if not ok or not sol.get("solution_id"):
             return {"result": result}
-        decision = interrupt({
-            "question": f"Publish timetable {sol['solution_id']}? coverage {sol.get('coverage_pct')}%, "
-                        f"hard violations {sum((sol.get('hard_violations') or {}).values())}, "
-                        f"soft penalty {(sol.get('quality') or {}).get('soft_penalty')}",
-            "solution_id": sol["solution_id"]})
-        approved = bool(decision.get("approve")) if isinstance(decision, dict) else bool(decision)
+        question = (f"Publish timetable {sol['solution_id']}? coverage {coverage}%, hard violations {hard}, "
+                    f"soft penalty {(sol.get('quality') or {}).get('soft_penalty')}"
+                    + ("" if v else " (as reported by the scheduler; not independently checked)"))
         trace = list(state.get("trace") or [])
+        if require_approval:
+            if approver is not None:
+                approved = bool(approver(question))
+                trace.append({"node": "approval", "note": f"simulated human: {'approve' if approved else 'reject'}"})
+            else:
+                decision = interrupt({"question": question, "solution_id": sol["solution_id"]})
+                approved = bool(decision.get("approve")) if isinstance(decision, dict) else bool(decision)
+        else:
+            approved = True
+            trace.append({"node": "approval", "note": "auto-published (no human approval)"})
         if approved:
             result["publish"] = await mcp(trace, "approval", "timetable", "publish_timetable", solution_id=sol["solution_id"])
-        result["approval"] = {"approved": approved, "solution_id": sol["solution_id"]}
+        result["approval"] = {"approved": approved, "solution_id": sol["solution_id"], "asked_human": require_approval}
         return {"result": result, "trace": trace}
 
     # ------------------------------------------------------------------ single-call action agent
     async def action(state: AgentState) -> dict:
         it, trace = state["intent"], list(state.get("trace") or [])
         a = it["action"]
-        sid = state.get("last_solution_id") or "latest"
+        sid = (None if "memory" in ablate else state.get("last_solution_id")) or "latest"
         result: dict[str, Any] = {}
         if a == "view":
             if not it.get("kind"):
@@ -246,6 +308,13 @@ def build_graph(bridge, llm=None, *, require_approval: bool | None = None, max_r
             result["export"] = await mcp(trace, "action", "timetable", "export_timetable", solution_id=await _existing(trace, sid),
                                          fmt=it.get("fmt") or "xlsx", entity=it.get("entity"))
         elif a == "publish":
+            if "validator" not in ablate:      # never publish without an independent re-check
+                v = await mcp(trace, "action", "timetable", "validate_timetable", solution_id=sid)
+                result["validation"] = v
+                if v.get("hard_violation_total"):
+                    result["error"] = (f"Not published: the independent validator found {v['hard_violation_total']} hard "
+                                       f"violation(s) in {v.get('solution_id', sid)}. Ask me to repair it first.")
+                    return {"result": result, "trace": trace}
             result["publish"] = await mcp(trace, "action", "timetable", "publish_timetable", solution_id=sid)
         return {"result": result, "trace": trace}
 

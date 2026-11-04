@@ -3,7 +3,8 @@ ITC-2007 Track 3 (CB-CTT, UD2) benchmark: CP-SAT vs memetic GA vs published resu
 
     python -m scripts.run_benchmark_itc --time 120            # all 21 instances
     python -m scripts.run_benchmark_itc --instances comp01 comp07 --time 60
-    python -m scripts.run_benchmark_itc --only-lns --time 120  # add the CP-SAT+LNS column to the saved results
+    python -m scripts.run_benchmark_itc --only-lns --time 120     # add the CP-SAT+LNS column to the saved results
+    python -m scripts.run_benchmark_itc --only-decomp --time 120  # add the time-then-room decomposition column
 """
 from __future__ import annotations
 
@@ -15,29 +16,39 @@ import time
 from ttagent.benchmarks.ctt import BEST_KNOWN, TIME_LIMITED, load
 from ttagent.benchmarks.ctt_cpsat import solve_ctt_cpsat
 from ttagent.benchmarks.ctt_ga import solve_ctt_ga
+from ttagent.benchmarks.ctt_decomp import solve_ctt_decomposed
 from ttagent.benchmarks.ctt_lns import solve_ctt_lns
 from ttagent.config import ROOT
 
 OUT = ROOT / "experiments" / "results"
 
 
-def add_lns(instances: list[str], T: float, workers: int, seed: int) -> None:
-    """Run CP-SAT+LNS and merge its columns into the saved itc2007_results.json/.csv."""
+def add_method(key: str, instances: list[str], T: float, workers: int, seed: int) -> None:
+    """Run one more method (key: lns | decomp) and merge its columns into the saved itc2007_results.json/.csv."""
+    fn = {"lns": solve_ctt_lns, "decomp": solve_ctt_decomposed}[key]
     path = OUT / "itc2007_results.json"
     data = json.loads(path.read_text())
     by = {r["instance"]: r for r in data["rows"]}
     for name in instances:
-        r = solve_ctt_lns(load(name), time_limit_s=T, workers=workers, seed=seed)
         row = by[name]
+        if row.get(f"{key}_cost") is not None:
+            continue
+        r = fn(load(name), time_limit_s=T, workers=workers, seed=seed)
         ub = row["best_known_ub"]
-        row |= {"lns_cost": r["cost"] if r["feasible"] else None, "lns_feasible": r["feasible"], "lns_status": r["status"],
-                "lns_iterations": r.get("iterations"),
-                "lns_gap_pct": round(100 * (r["cost"] - ub) / max(ub, 1), 1) if r["feasible"] else None}
-        print(time.strftime("%H:%M:%S"), json.dumps({"instance": name, "ub": ub, "cpsat": row["cpsat_cost"], "lns": row["lns_cost"],
-                                                      "iters": row["lns_iterations"]}), flush=True)
-        data["lns_time_limit_s"] = T
+        row |= {f"{key}_cost": r["cost"] if r["feasible"] else None, f"{key}_feasible": r["feasible"],
+                f"{key}_gap_pct": round(100 * (r["cost"] - ub) / max(ub, 1), 1) if r["feasible"] else None}
+        print(time.strftime("%H:%M:%S"), json.dumps({"instance": name, "ub": ub, "cpsat": row["cpsat_cost"], key: row[f"{key}_cost"]}), flush=True)
+        data[f"{key}_time_limit_s"] = T
         path.write_text(json.dumps(data, indent=1))
     _write_csv(data["rows"])
+
+
+def add_lns(instances, T, workers, seed):
+    add_method("lns", instances, T, workers, seed)
+
+
+def add_decomp(instances, T, workers, seed):
+    add_method("decomp", instances, T, workers, seed)
 
 
 def _write_csv(rows):
@@ -80,5 +91,6 @@ if __name__ == "__main__":
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--only-lns", action="store_true")
+    ap.add_argument("--only-decomp", action="store_true", help="add the time-then-room decomposition column")
     a = ap.parse_args()
-    (add_lns if a.only_lns else main)(a.instances, a.time, a.workers, a.seed)
+    (add_lns if a.only_lns else add_decomp if a.only_decomp else main)(a.instances, a.time, a.workers, a.seed)

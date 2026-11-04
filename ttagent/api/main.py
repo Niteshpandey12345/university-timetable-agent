@@ -10,6 +10,7 @@ through the full LangGraph agent, which talks to the four MCP servers.
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -108,6 +109,14 @@ async def ingest_upload(request: Request, filename: str = "uploaded.xlsm") -> di
     for k in ("pseudo:published", "pseudo:vba"):
         svc.store.put(k, None)
     return out
+
+
+@app.get("/api/agent-eval")
+def agent_eval(tag: str = "rules") -> dict:
+    p = RESULTS / "agent_eval" / f"agent_eval_{tag}.json"
+    if not p.exists():
+        raise HTTPException(404, "no agent evaluation yet: run `ttagent agent-eval`")
+    return json.loads(p.read_text(encoding="utf-8"))
 
 
 @app.get("/api/version")

@@ -1,4 +1,4 @@
-# v3 analysis: GA comparison, public benchmark, qualitative study
+# Solver analysis: GA comparison, public benchmark, qualitative study (v3, extended in v4)
 
 This document reports the v3 experiments. It answers three questions from the project review:
 
@@ -142,7 +142,9 @@ The GA is single-threaded, so CP-SAT was also run with `num_workers = 1`. **With
 feasible solution for the time phase of the whole university** (status UNKNOWN when its share of the budget
 ran out after 43 s), and the repair ladder could not start from an empty timetable, so the result was 0 %.
 
-This is an honest limitation: the pipeline relies on CP-SAT's parallel portfolio (feasibility-jump and LNS
+*Fixed in v4 (section F): the pipeline now falls back to a short GA start and reaches 100 % on one core.*
+
+This was an honest limitation: the pipeline relies on CP-SAT's parallel portfolio (feasibility-jump and LNS
 workers find first solutions; the default single worker does not, on a 567-session model). On a 2-core
 laptop the 8-worker portfolio still works, as all the other results show. A GA does not have this cliff:
 it always returns something, which is its main practical advantage.
@@ -165,25 +167,28 @@ More time mostly improves CP-SAT's soft quality (2895 → 1938); more time mostl
 
 ## D. What-if repair: disruption versus quality
 
-Four scenarios (a teacher becomes unavailable for a whole day; 1–3 sessions displaced each) were repaired
-from the best CP-SAT timetable with the stay-put weight *w* from 0 to 160. Every repair placed all displaced
-sessions, with 0 hard violations and 100 % coverage, in 7–8 s on average.
+Four scenarios (a teacher becomes unavailable for a whole day; 1–2 sessions displaced each) were repaired from the
+best CP-SAT timetable with the stay-put weight *w* from 0 to 160. Every repair placed all displaced sessions, with
+0 hard violations and 100 % coverage. (Re-run in v4, after repair also learned to keep each session's room.)
 
 | Stay-put weight *w* | Sessions moved (mean) | % of timetable | Soft penalty change | Mean time |
 |---:|---:|---:|---:|---:|
-| 0 | 48.8 | 8.6 % | +138.5 | 7.7 s |
-| 10 | 38.3 | 6.8 % | +121.3 | 8.4 s |
-| 40 (default) | 34.0 | 6.0 % | +114.8 | 8.3 s |
-| 160 | 32.3 | 5.7 % | +97.5 | 6.9 s |
+| 0 | 76.8 | 13.5 % | +281.8 | 12.3 s |
+| 10 | 4.8 | 0.84 % | +28.0 | 5.9 s |
+| 40 (default) | 4.8 | 0.84 % | +30.5 | 5.7 s |
+| 160 | 4.3 | 0.75 % | +30.5 | 7.5 s |
 
 ![trade-off](media/v3/fig_v3_disruption_tradeoff.png)
 
 Lindahl et al. (2019) found that forcing a repaired timetable to stay close to the original can cost quality.
-Here the opposite happens: **a higher stay-put weight gives both fewer changes and a smaller loss of
-quality.** The reason is that repair optimises feasibility and stability only (soft terms are switched off for
-speed), so any session it moves without need lands in an arbitrary legal slot, usually a worse one. When the
-starting timetable is already optimised, staying close to it is the best way to keep its quality. The
-default *w* = 40 is a reasonable middle; *w* = 160 is better on both axes in this sample of four scenarios.
+Here the opposite happens: **any positive stay-put weight cuts both the disruption (from 13.5 % to under 1 % of
+sessions) and the loss of quality (by about 90 %).** Repair optimises feasibility and stability only (soft terms
+are off for speed), so a session moved without need lands in an arbitrary legal slot, usually a worse one. When
+the starting timetable is already optimised, staying close to it is the best way to keep its quality. Beyond
+*w* = 10 the curve is flat.
+
+*v3 note:* before v4, repair kept each session's time but not its room; with that version, *w* = 0…160 gave 8.6 %
+to 5.7 % of sessions moved, mostly room changes.
 
 ## E. Public benchmark: ITC-2007 Track 3
 
@@ -293,15 +298,96 @@ The tool checked all 34 possible start slots and reported:
 A timetabling officer can act on this directly. Neither the macro nor the GA can produce it: the macro has no
 model of why it failed, and a GA only knows a penalty total.
 
+## F. v4: wider evidence
+
+Results in `experiments/results/v4/analysis_v4.json` (`python -m scripts.run_analysis_v4`).
+
+**Ten seeds.** Seeds 6–10 were added for CP-SAT and the GA (120 s each, whole university):
+
+| Method | Seeds | Hours scheduled | Soft penalty | Soft / scheduled h | Room changes | Teacher >3 h run |
+|---|---:|---:|---:|---:|---:|---:|
+| Memetic GA | 10 | 98.47 ± 0.70 % | 2822 ± 70 | 4.25 | 251 | 18.9 |
+| **CP-SAT pipeline** | 10 | **99.85 ± 0.25 %** | **2198 ± 262** | **3.27** | **141** | **9.8** |
+
+Mann–Whitney U: coverage p = 0.0002 (Cliff's δ = 0.97), soft penalty p = 0.0003 (δ = −0.96).
+
+**GA tuning race.** Stage 1 sampled 10 configurations (population 8–40, tournament 2–5, crossover 0.5–0.95,
+mutation 0.01–0.1, local-search iterations 60–500, sample 30–120) on the GA's two hardest sub-instances
+(semesters 5 and 3; 30 s, 2 seeds each). Stage 2 raced the best 3 and the hand-set default on the whole
+university with the real budget (120 s, 2 seeds). **The hand-set configuration won** (mean coverage 99.48 % on
+the race seeds, against 99.26 %, 98.44 % and 94.96 %). The stage-1 winner transferred poorly: on the full
+instance it scored 95.25 % on seed 1 and 97.18–99.70 % on the race seeds, because its larger population spends
+more of the budget on seeding. Tuning budget: 40 runs × 30 s + 8 runs × 120 s ≈ 36 CPU-minutes. The GA baseline
+is therefore not weakened by hand tuning.
+
+**Instance family.** Seven instances derived from the real data, 60 s, 2 seeds each:
+
+| Instance | CP-SAT coverage | GA coverage | CP-SAT soft | GA soft |
+|---|---:|---:|---:|---:|
+| Semester 1 alone | 100 % | 100 % | **417** | 597 |
+| Semester 3 alone | 100 % | 100 % | **193** | 309 |
+| Semester 5 alone | **100 %** | 98.11 % | **357** | 692 |
+| Semester 7 alone | 100 % | 100 % | 34 | **10** |
+| +10 % teaching load | **98.85 %** | 89.09 % | 3578 | 2968 |
+| Lecture theatres LT1 and LT11 closed | **97.92 %** | 97.10 % | **2680** | 2750 |
+| Teachers SMB, RAVI, REENU each absent one day | **99.62 %** | 98.74 % | **2589** | 2880 |
+
+CP-SAT is better on 6 of 7 (coverage first, then soft penalty). On semester 7, the smallest instance, both
+schedule everything and the GA finds the lower soft penalty. With 10 % more teaching, the GA loses 10 points of
+coverage and CP-SAT about one. Under room closures the gap narrows (97.9 % vs 97.1 %).
+
+**One core.** With `num_workers = 1` the CP-SAT time phase still returns nothing (status UNKNOWN), but the v4
+pipeline now falls back to a short GA start and repairs from there: **100 % coverage, 0 hard violations, in 128 s**
+(v3: 0 %).
+
+**ITC-2007 with the time-then-room decomposition.** The decomposition that makes the real instance tractable
+(periods first with a Hall-type room-capacity estimate, then rooms, then a warm-started polish of the full
+model; `ttagent/benchmarks/ctt_decomp.py`) was run on all 21 instances at the same budget.
+
+On all 21 instances, at the same 120 s on 2 cores, the decomposition improved on plain CP-SAT on 18 and equalled it on
+the other 3, and cut the **median gap to the best-known value from 106 % to 37.5 %** (the GA: 357 %). It reaches the
+best-known value on 5 instances (comp01, comp04, comp08, comp11, comp14) and is at or below the time-limited average of Kiefer et al. [25] on
+7 of 19 (comp01, comp04, comp08, comp10, comp13, comp14, comp19). The largest gains are on instances where plain CP-SAT struggled most: comp07 (253 → 60),
+comp10 (190 → 10) and comp20 (293 → 46). It remains behind the dedicated metaheuristics on the instances with many
+curricula (comp05, comp12, comp18) and on comp07 and comp20, whose optima are very small. The same idea that makes
+the institution's instance tractable therefore transfers to the public benchmark; we still do not claim
+state-of-the-art results.
+
+| Inst. | Best known | GA | CP-SAT | Time-then-room | Kiefer [25] avg |
+|---|---|---|---|---|---|
+| comp01 | 5 | 27 | **5** (opt) | **5** | 5.0 |
+| comp02 | 24 | 272 | 101 | **51** | 41.5 |
+| comp03 | 64 | 272 | 129 | **92** | 71.7 |
+| comp04 | 35 | 160 | **35** (opt) | **35** | 35.1 |
+| comp05 | 284 | 1034 | 464 | **380** | 305.2 |
+| comp06 | 27 | 352 | 184 | **73** | 47.8 |
+| comp07 | 6 | 412 | 253 | **60** | 14.5 |
+| comp08 | 37 | 194 | 92 | **37** | 41.0 |
+| comp09 | 96 | 254 | 142 | **107** | 102.8 |
+| comp10 | 4 | 270 | 190 | **10** | 14.3 |
+| comp11 | 0 | 10 | **0** (opt) | **0** | – |
+| comp12 | 294 | 849 | 431 | **390** | 319.4 |
+| comp13 | 59 | 229 | 111 | **60** | 60.7 |
+| comp14 | 51 | 218 | 105 | **51** | 54.1 |
+| comp15 | 64 | 237 | 153 | **88** | – |
+| comp16 | 18 | 281 | 148 | **34** | 33.8 |
+| comp17 | 56 | 309 | 191 | **98** | 75.7 |
+| comp18 | 61 | 169 | 105 | **87** | 66.9 |
+| comp19 | 57 | 250 | 116 | **62** | 62.6 |
+| comp20 | 4 | 493 | 293 | **46** | 27.2 |
+| comp21 | 74 | 313 | 249 | **103** | 97.0 |
+
+![ITC v4](media/v4/fig_itc_costs.png)
+
 ## Threats to validity
 
 * **Compute.** Two cores only; CP-SAT's portfolio is sensitive to cores (section B), so results on a
   4–8-core laptop should be better, and the GA would not benefit.
-* **Seeds.** Five seeds for the main comparison and one seed for the anytime and per-semester studies. The
+* **Seeds.** Ten seeds for the main comparison (v4), two per instance in the family, one seed for the anytime and per-semester studies. The
   significance tests have the smallest sample that can reach p < 0.05; the effect sizes are maximal, but
   more seeds would tighten the confidence intervals.
-* **GA tuning.** The GA parameters (population 24, mutation 0.03, local-search sample 60) were set by hand
-  on semester 3, not tuned by an automatic configurator such as irace. A tuned GA could narrow the gap.
+* **GA tuning.** v4 ran a two-stage tuning race (section F), a light substitute for irace with a small budget
+  (≈ 36 CPU-minutes). It kept the hand-set configuration; a much larger tuning budget might still find better.
 * **Soft-penalty weights** are the institution's settings, not validated preferences of staff or students.
 * **ITC budget.** 120 s per instance on 2 cores is short compared with the competition setting (several minutes per run, scaled by a machine benchmark) and with
   the long runs behind most best-known values; the gaps to the state of the art are partly a budget effect.

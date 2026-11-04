@@ -74,11 +74,12 @@ def move_session(session_id: str, day: str, start: int, room: str | None = None,
 
 @mcp.tool()
 @A
-def repair_timetable(solution_id: str = "latest", time_limit_s: float = 30) -> dict:
+def repair_timetable(solution_id: str = "latest", time_limit_s: float = 30, fix_violations: bool = False) -> dict:
     """Repair a timetable after new constraints (unavailability, pins) or with unplaced sessions:
     frees a neighbourhood around the problems and re-solves it with CP-SAT, escalating
-    (local -> wider -> extended 16:00 slot). Stores a new version."""
-    return service().repair(solution_id, time_limit_s)
+    (local -> wider -> extended 16:00 slot). With fix_violations=True, every session involved in a hard
+    violation found by an independent re-validation is also freed. Stores a new version."""
+    return service().repair(solution_id, time_limit_s, fix_violations=fix_violations)
 
 
 @mcp.tool()

@@ -243,7 +243,7 @@ def solve(ds: Dataset, opts: SolveOptions | None = None) -> dict[str, Any]:
                     if grid.day_index(d) == fd:
                         m.Add(v == 0)
 
-    keep_terms = []
+    keep_terms, room_keep_terms = [], []
     for h in opts.hints:
         xs_h = X.get(h["session_id"], [])
         for v, d, t, room in xs_h:
@@ -254,6 +254,11 @@ def solve(ds: Dataset, opts: SolveOptions | None = None) -> dict[str, Any]:
             stay = m.NewBoolVar("")
             m.Add(sum(same) >= stay) if same else m.Add(stay == 0)
             keep_terms.append(stay)
+            # also keep the room when possible (a room change is a change for students and staff too)
+            same_room = [v for v, d, t, room in xs_h if d == h["day"] and t == h["start"] and room == h["room"]]
+            stay_r = m.NewBoolVar("")
+            m.Add(sum(same_room) >= stay_r) if same_room else m.Add(stay_r == 0)
+            room_keep_terms.append(stay_r)
 
     # ------------------------------------------------------------ resource constraints
     for vs in room_cov.values():
@@ -330,6 +335,7 @@ def solve(ds: Dataset, opts: SolveOptions | None = None) -> dict[str, Any]:
     if W.get("stability"):
         obj += [W["stability"] * (1 - s) for s in stab_terms]
     obj += [opts.keep_weight * (1 - s) for s in keep_terms]
+    obj += [max(1, opts.keep_weight / 4) * (1 - s) for s in room_keep_terms]
     m.Minimize(sum(obj))
 
     build_s = time.time() - t0

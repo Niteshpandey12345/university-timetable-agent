@@ -97,6 +97,7 @@ svg.flow{width:100%;height:auto}
     <button data-p="overview" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Overview</button>
     <button data-p="timetable"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Timetable</button>
     <button data-p="studio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7.3 11 16.7 6M7.3 13l9.4 5"/></svg>Agent Studio</button>
+    <button data-p="agenteval"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>Agent evaluation</button>
     <button data-p="system"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="6" rx="1"/><rect x="3" y="15" width="18" height="6" rx="1"/><path d="M7 6h.01M7 18h.01M12 9v6"/></svg>System &amp; MCP</button>
     <button data-p="quality"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v5M12 18h.01"/></svg>Data quality</button>
     <button data-p="methods"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h12M3 18h6"/></svg>Methods &amp; compare</button>
@@ -202,6 +203,21 @@ svg.flow{width:100%;height:auto}
     <div class="card"><h3>All timetable versions</h3><div id="methodsTable" style="overflow-x:auto"></div></div>
   </section>
 
+  <!-- AGENT EVALUATION -->
+  <section class="page" id="p-agenteval">
+    <div class="card"><h3>What each agent contributes <span class="pill">ttagent agent-eval</span> <span class="pill" id="aeMeta"></span></h3>
+      <p class="small muted" style="margin-top:-4px">Every task runs end-to-end through the LangGraph workflow and the four MCP server processes, on a fresh database.
+      Some tasks inject a fault into the scheduling tool: <b>silent corruption</b> (it reports a valid timetable that has clashes),
+      a <b>starved solver</b> (1 s budget) or a <b>tool outage</b> (the first calls fail). A simulated officer approves whatever the system shows.
+      Success and safety are judged by an independent validation of the final database, never by the agent's own answer.</p>
+      <div class="kpis" id="aeKpis"></div></div>
+    <div class="grid2">
+      <div class="card"><h3>Variants</h3><div id="aeVariants" style="overflow-x:auto"></div></div>
+      <div class="card"><h3>Remove one agent component: what breaks</h3><div id="aeContrib"></div></div>
+    </div>
+    <div class="card"><h3>Task × variant <span class="legend"><span><i style="background:var(--ok)"></i>success</span><span><i style="background:var(--bad)"></i>published a timetable with clashes</span><span><i style="background:var(--warn)"></i>failed safely</span></span></h3><div id="aeMatrix" style="overflow-x:auto"></div></div>
+  </section>
+
   <!-- SETTINGS -->
   <section class="page" id="p-settings">
     <div class="card"><h3>Solver &amp; agent settings <span class="pill">saved to config/overrides.yaml</span></h3><div id="settingsForm"></div>
@@ -226,11 +242,11 @@ let ENT={},SYS=null,thread=store.get('tt_thread',null);if(!thread){thread=Math.r
 document.documentElement.dataset.theme=store.get('tt_theme','dark');
 $('#themeBtn').onclick=()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;store.set('tt_theme',t)};
 const SRV_COLOR={data:'var(--s-data)',academic:'var(--s-academic)',resource:'var(--s-resource)',timetable:'var(--s-timetable)'};
-const TITLES={overview:'Overview',timetable:'Timetable explorer',studio:'Agent Studio',system:'System & MCP connections',quality:'Data quality',experiments:'Research results',methods:'Methods & comparison',settings:'Settings'};
+const TITLES={overview:'Overview',timetable:'Timetable explorer',studio:'Agent Studio',system:'System & MCP connections',quality:'Data quality',experiments:'Research results',methods:'Methods & comparison',settings:'Settings',agenteval:'Agent evaluation'};
 
 // ---------- navigation
 function go(p){$$('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));$('#pageTitle').textContent=TITLES[p];store.set('tt_page',p);
-  if(p==='system')loadSystem();if(p==='quality')loadQuality();if(p==='experiments')loadFigs();if(p==='methods')loadMethods();if(p==='settings')loadSettings();if(p==='timetable')grid()}
+  if(p==='system')loadSystem();if(p==='quality')loadQuality();if(p==='experiments')loadFigs();if(p==='methods')loadMethods();if(p==='settings')loadSettings();if(p==='agenteval')loadAgentEval();if(p==='timetable')grid()}
 $$('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.p));
 
 // ---------- init
@@ -309,12 +325,12 @@ async function animate(r){resetFlow();const path=[];for(const t of r.trace||[]){
   if(solve&&path.includes('validator')&&!path.includes('approval')){const i=path.lastIndexOf('validator');path.splice(i+1,0,'approval')}
   if(path[path.length-1]!=='respond')path.push('respond');
   $('#intentPill').textContent='intent: '+(r.intent?.action||'?');
-  const tl=$('#timeline');tl.innerHTML='';
+  const tl=$('#timeline');tl.innerHTML='';const shown=new Set();
   for(let i=0;i<path.length;i++){const n=$('#n-'+path[i]);if(!n)continue;$$('#flow .n.active').forEach(x=>x.classList.remove('active'));n.classList.add('done','active');
     if(i)$(`#e-${path[i-1]}-${path[i]}`)?.classList.add('done');
-    for(const t of (r.trace||[]).filter(t=>t.node===path[i])){
+    for(const t of (r.trace||[]).filter(t=>t.node===path[i]&&!shown.has(t))){shown.add(t);
       if(t.mcp){const[sv,tool]=t.mcp.split('.');hitServer(sv);tl.insertAdjacentHTML('beforeend',`<div class="t"><span class="tag" style="background:${SRV_COLOR[sv]}">${sv}</span><span class="mono">${esc(tool)} <span class="muted">${esc(JSON.stringify(t.args||{})).slice(0,70)}</span></span><span class="muted">${t.ms??''} ms</span></div>`)}
-      else tl.insertAdjacentHTML('beforeend',`<div class="t"><span class="tag" style="background:var(--accent)">${t.node}</span><span class="small">${esc(Object.entries(t).filter(([k])=>!['node','t'].includes(k)).map(([k,v])=>k+'='+v).join(' · '))}</span><span></span></div>`)}
+      else tl.insertAdjacentHTML('beforeend',`<div class="t"><span class="tag" style="background:var(--accent)">${t.node}</span><span class="small" style="${String(t.note||'').includes('mismatch')||String(t.note||'').includes('failed')?'color:var(--warn);font-weight:600':''}">${esc(Object.entries(t).filter(([k])=>!['node','t'].includes(k)).map(([k,v])=>k+'='+v).join(' · '))}</span><span></span></div>`)}
     await sleep(420)}
   $$('#flow .n.active').forEach(x=>x.classList.remove('active'))}
 function drawServers(){const m=SYS?.mcp||{};$('#srvRow').innerHTML=['data','academic','resource','timetable'].map(k=>`<div class="srv" id="srv-${k}" style="--hc:${SRV_COLOR[k]}"><b><span class="sw" style="background:${SRV_COLOR[k]}"></span>${k}<span class="dot ${m[k]?.connected?'on':'off'}" style="margin-left:auto"></span></b><small>${m[k]?.tools?.length??'?'} tools · ${m[k]?.connected?'connected':'starts with agent'}</small><small id="srvl-${k}" class="mono"></small></div>`).join('')}
@@ -386,6 +402,23 @@ $('#runCmp').onclick=async()=>{const ms=$$('.mchk').filter(c=>c.checked).map(c=>
   $('#cmpProgress').textContent='Done.';$('#runCmp').disabled=false;await loadSolutions();loadMethods()};
 // ---------- settings
 let SET=null;
+
+// ---------- agent evaluation
+const VLABEL={'full':'Full multi-agent system','-validator':'− validator agent','-repair':'− diagnoser/repairer','-fallback':'− scheduler fallback','-approval':'− human approval','-memory':'− conversation memory','single_call':'Single tool call (all off)'};
+async function loadAgentEval(){let d;try{d=await api('/api/agent-eval')}catch(e){$('#aeKpis').innerHTML='<p class="muted">Run <code>ttagent agent-eval</code> to produce results.</p>';return}
+  const S=d.summary.by_variant,V=Object.keys(VLABEL).filter(v=>S[v]);const f=S.full||{},b=S.single_call||{};
+  $('#aeMeta').textContent=`${d.supervisor==='llm'?'LLM':'rule-based'} supervisor · ${d.solve_time_s}s solver budget`;
+  $('#aeKpis').innerHTML=[[`${f.success}/${f.tasks}`,'tasks solved, full system','good'],[`${b.success}/${b.tasks}`,'tasks solved, single tool call','badc'],
+    [f.unsafe_publications,'invalid timetables published, full system','good'],[b.unsafe_publications,'invalid timetables published, single call','badc'],
+    [f.fault_success,'fault scenarios recovered, full',''],[b.fault_success,'fault scenarios recovered, single call','']].map(([v,l,c])=>`<div class="kpi"><b class="${c}">${v}</b><span>${l}</span></div>`).join('');
+  $('#aeVariants').innerHTML=`<table><tr><th>Variant</th><th>Solved</th><th>Faults recovered</th><th>Unsafe publications</th><th>Tool calls / task</th><th>Human decisions</th></tr>`+
+    V.map(v=>`<tr><td>${VLABEL[v]}</td><td><b>${S[v].success}/${S[v].tasks}</b></td><td>${S[v].fault_success}</td><td class="${S[v].unsafe_publications?'badc':'good'}">${S[v].unsafe_publications}</td><td>${S[v].mean_tool_calls}</td><td>${S[v].human_decisions}</td></tr>`).join('')+'</table>';
+  const C=d.summary.component_contribution,mx=Math.max(1,...Object.values(C).map(c=>c.tasks_lost_without_it));
+  $('#aeContrib').innerHTML='<div class="bars">'+Object.entries(C).map(([k,c])=>`<div class="row"><span>${esc(VLABEL['-'+k].replace('− ',''))}</span><div class="track"><div class="bar b" style="width:${100*c.tasks_lost_without_it/mx}%"></div><span class="small muted">${c.tasks_lost_without_it} task(s) lost${c.unsafe_publications_without_it?` · <b class="badc">${c.unsafe_publications_without_it} unsafe publication(s)</b>`:''}${c.which.length?' · '+c.which.join(', '):''}</span></div></div>`).join('')+'</div>';
+  const sc=d.scenarios,R={};d.rows.forEach(r=>R[r.variant+'|'+r.scenario]=r);
+  $('#aeMatrix').innerHTML=`<table><tr><th>Task</th><th>Category</th>${V.map(v=>`<th>${esc(v)}</th>`).join('')}</tr>`+sc.map(s=>`<tr><td><b>${s.id}</b> <span class="small muted">${esc(s.turns.join(' → '))}${s.fault?` <span class="pill">${s.fault}</span>`:''}</span></td><td class="small">${esc(s.cat)}</td>`+
+    V.map(v=>{const r=R[v+'|'+s.id];if(!r)return'<td class="muted">–</td>';const col=r.success?'var(--ok)':(r.unsafe_published?'var(--bad)':'var(--warn)');return`<td title="${esc(r.why)}"><span class="dot" style="background:${col};box-shadow:none"></span> <span class="small muted">${r.tool_calls} calls</span></td>`}).join('')+'</tr>').join('')+'</table>';
+}
 async function loadSettings(){SET=await api('/api/settings');const f=[];
   for(const [sec,obj] of Object.entries(SET))for(const [k,v] of Object.entries(obj)){
     if(v&&typeof v==='object')for(const [kk,vv] of Object.entries(v))f.push(`<label class="small" style="display:grid;grid-template-columns:260px 160px;gap:8px;margin:4px 0"><span>${sec}.${k}.${kk}</span><input data-p="${sec}.${k}.${kk}" value="${vv}"></label>`);

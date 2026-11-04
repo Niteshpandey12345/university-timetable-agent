@@ -1,5 +1,19 @@
 # Demo
 
+🎬 **v4 video:** [`media/demo_v4.mp4`](media/demo_v4.mp4) (1 min 5 s). The dashboard was started with a faulty
+scheduling tool (`TTAGENT_FAULT=corrupt:3`). In Agent Studio, *"Generate timetable for semester 7"* runs
+supervisor → requirements → scheduler → **validator**: the scheduler reported 0 hard violations, the independent
+validator found 11, the **repairer** fixed them, and only then did the approval request appear. The video ends on
+the **Agent evaluation** page (17 tasks × 7 system variants).
+
+Record it yourself:
+
+```powershell
+$env:TTAGENT_FAULT="corrupt:3"; ttagent serve     # then ask: Generate timetable for semester 7
+```
+
+The earlier 2-minute tour of every page (v2):
+
 🎬 **Video:** [`media/demo.mp4`](media/demo.mp4) (2 min 9 s, recorded from the dashboard, offline mode, no LLM key)
 
 ![Agent Studio](media/agent_studio.gif)

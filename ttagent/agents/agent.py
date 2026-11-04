@@ -24,7 +24,10 @@ from ttagent.config import CHECKPOINT_DB, ensure_dirs
 
 class TimetableAgent:
     def __init__(self, *, use_llm: bool = True, require_approval: bool | None = None, solve_time_s: float = 60,
-                 checkpoint_path: str | None = None) -> None:
+                 checkpoint_path: str | None = None, ablate: set[str] | None = None, approver=None, llm=None) -> None:
+        self.ablate = set(ablate or ())
+        self.approver = approver
+        self._llm = llm
         self.use_llm = use_llm
         self.require_approval = require_approval
         self.solve_time_s = solve_time_s
@@ -37,14 +40,15 @@ class TimetableAgent:
     async def __aenter__(self) -> "TimetableAgent":
         ensure_dirs()
         self.bridge = await MCPBridge().__aenter__()
-        llm = build_llm() if self.use_llm else None
+        llm = self._llm if self._llm is not None else (build_llm() if self.use_llm else None)
         self.model = describe() if llm else "offline (rule-based)"
         ov = await self.bridge.call("academic", "get_overview")
         fac = await self.bridge.call("resource", "list_faculty")
         rooms = await self.bridge.call("resource", "list_rooms")
         builder = build_graph(self.bridge, llm, require_approval=self.require_approval, solve_time_s=self.solve_time_s,
                               known_faculty={f["code"] for f in fac.get("faculty", [])},
-                              known_rooms={r["room_id"] for r in rooms.get("rooms", [])})
+                              known_rooms={r["room_id"] for r in rooms.get("rooms", [])},
+                              ablate=self.ablate, approver=self.approver)
         self._saver_cm = AsyncSqliteSaver.from_conn_string(self.checkpoint_path)
         saver = await self._saver_cm.__aenter__()
         self.graph = builder.compile(checkpointer=saver)

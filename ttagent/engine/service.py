@@ -193,8 +193,8 @@ class TimetableService:
         return {"id": uid, "kind": kind, "code": code, "day": day, "slot": slot,
                 "affected_sessions_in_latest": self._affected(kind, code, day, slot)}
 
-    def _affected(self, kind, code, day, slot) -> list[str]:
-        sol = self.store.load_solution("latest")
+    def _affected(self, kind, code, day, slot, sol: dict | None = None) -> list[str]:
+        sol = sol or self.store.load_solution("latest")
         if not sol:
             return []
         ds = self.dataset()
@@ -223,6 +223,12 @@ class TimetableService:
               workers: int = 8, repair_time_s: float | None = None, parent: str | None = None,
               extra_forbid: list[dict] | None = None) -> dict[str, Any]:
         ds = self.dataset()
+        faults = _faults()
+        if faults.get("crash") and _FAULT_STATE["crashes"] < faults["crash"]:
+            _FAULT_STATE["crashes"] += 1
+            raise ServiceError("solver process crashed (injected fault)")
+        if faults.get("budget"):          # degraded compute: tiny budget, one core, no internal repair
+            time_limit_s, repair, workers = float(faults["budget"]), False, 1
         pins = [{"token": p["token"], "day": p["day"], "start": p["start"], "room": p["room"]} for p in self.store.pins()]
         forbid = [{u["kind"]: u["code"], "day": u["day"], "slot": u["slot"]} for u in self.store.unavailability()] + (extra_forbid or [])
         opts = SolveOptions(semesters=semesters, time_limit_s=time_limit_s, use_baskets=use_baskets, room_mode=room_mode,
@@ -237,8 +243,7 @@ class TimetableService:
             from ttagent.engine.cpsat import solve
             res = solve(ds, opts)
         elif method == "decomposed":
-            from ttagent.engine.decomposed import solve_decomposed
-            res = solve_decomposed(ds, opts)
+            res = robust_pipeline(ds, opts, repair=False)
         elif method in ("ga", "ga_plain"):
             from ttagent.engine.ga import GAOptions, solve_ga
             res = solve_ga(ds, GAOptions(time_limit_s=time_limit_s, seed=seed, semesters=semesters,
@@ -259,6 +264,13 @@ class TimetableService:
         res["validation"] = _compact_validation(v)
         res["metrics"] = compute_metrics(ds, bookings, grid) | {"stability": stability(ds, res["assignments"])}
         res.setdefault("stats", {})["total_wall_s"] = round(wall, 2)
+        k = _faults().get("corrupt")
+        if k and not label.startswith("move ") and not _FAULT_STATE["corrupted"]:
+            _FAULT_STATE["corrupted"] = 1                  # once per server process (one evaluation task / session)
+            # evaluation only: silently corrupt k sessions AFTER the self-check, so the stored self-report
+            # says "valid" while the timetable has clashes (a buggy or compromised scheduling tool)
+            res["assignments"] = _corrupt(ds, res["assignments"], int(k), seed=len(res["assignments"]))
+            res["stats"]["fault_injected"] = f"corrupt:{k}"
         sid = self.store.save_solution(res, label=label, parent=parent)
         return self.solution_summary(sid)
 
@@ -402,16 +414,29 @@ class TimetableService:
             result["new_solution"] = self._finalise(res, f"move {session_id} -> {day}:{start}", sol["id"], 0)["solution_id"]
         return result
 
-    def repair(self, solution_id: str = "latest", time_limit_s: float = 30, free_sessions: list[str] | None = None) -> dict[str, Any]:
+    def violating_sessions(self, solution_id: str = "latest") -> list[str]:
+        """Solver-placed sessions involved in any hard violation, from a fresh, independent validation."""
+        sol = self._load(solution_id)
+        ds = self.dataset()
+        grid = TimeGrid.from_settings(use_extended=bool(sol["options"].get("use_extended")))
+        v = validate(ds, self.bookings(solution_id), grid, max_examples=100000,
+                     scope_tokens={a["token"] for a in sol["assignments"]} | {u["token"] for u in sol["unplaced"]})
+        mine = {a["session_id"] for a in sol["assignments"]}
+        return sorted({sid for x in v["violations"] if x["rule"].startswith("H") for sid in x.get("sessions", []) if sid in mine})
+
+    def repair(self, solution_id: str = "latest", time_limit_s: float = 30, free_sessions: list[str] | None = None,
+               fix_violations: bool = False) -> dict[str, Any]:
         from ttagent.engine.repair import lns_repair
         sol = self._load(solution_id)
         ds = self.dataset()
+        if fix_violations:
+            free_sessions = sorted(set(free_sessions or []) | set(self.violating_sessions(solution_id)))
         pins = [{"token": p["token"], "day": p["day"], "start": p["start"], "room": p["room"]} for p in self.store.pins()]
         forbid = [{u["kind"]: u["code"], "day": u["day"], "slot": u["slot"]} for u in self.store.unavailability()]
         # sessions that now violate a what-if unavailability must move
         broken = set(free_sessions or [])
         for u in self.store.unavailability():
-            broken.update(self._affected(u["kind"], u["code"], u["day"], u["slot"]) if sol["id"] == self.store.load_solution("latest")["id"] else [])
+            broken.update(self._affected(u["kind"], u["code"], u["day"], u["slot"], sol=sol))   # the version being repaired
         assigns = [a for a in sol["assignments"] if a["session_id"] not in broken]
         unplaced = sol["unplaced"] + [{"session_id": a["session_id"], "token": a["token"], "code": ds.req(a["token"]).code,
                                        "reason": "displaced by new constraint"} for a in sol["assignments"] if a["session_id"] in broken]
@@ -480,6 +505,66 @@ class TimetableService:
 
     def list_solutions(self, limit: int = 15) -> list[dict[str, Any]]:
         return self.store.list_solutions(limit)
+
+
+_FAULT_STATE = {"crashes": 0, "corrupted": 0}
+
+
+def _faults() -> dict[str, float]:
+    """Fault injection for the agent evaluation, e.g. TTAGENT_FAULT="corrupt:3,crash:1,budget:2". Off by default."""
+    import os
+    out = {}
+    for part in filter(None, os.getenv("TTAGENT_FAULT", "").split(",")):
+        k, _, v = part.partition(":")
+        out[k.strip()] = float(v or 1)
+    return out
+
+
+def _corrupt(ds, assigns: list[dict], k: int, seed: int = 0) -> list[dict]:
+    """Move k solver-placed sessions onto a slot used by another session of the same teacher or batch."""
+    import random
+    rng = random.Random(seed)
+    out = [dict(a) for a in assigns]
+    idx = [i for i, a in enumerate(out) if a.get("origin", "solver") == "solver"]
+    rng.shuffle(idx)
+    done = 0
+    for i in idx:
+        if done >= k:
+            break
+        a = out[i]
+        ra = ds.req(a["token"])
+        people = {f for f in ra.faculty if not ds.is_placeholder(f)} | set(ra.batches)
+        mates = [b for b in out if b["token"] != a["token"] and b["day"] != a["day"]
+                 and people & ({f for f in ds.req(b["token"]).faculty if not ds.is_placeholder(f)} | set(ds.req(b["token"]).batches))
+                 and ds.req(b["token"]).duration == ra.duration
+                 and not (ra.basket_id and ra.basket_id == ds.req(b["token"]).basket_id)]
+        if mates:
+            b = rng.choice(mates)
+            a["day"], a["start"] = b["day"], b["start"]
+            done += 1
+    return out
+
+
+def robust_pipeline(ds, opts: SolveOptions, repair: bool = True, repair_time_s: float | None = None) -> dict[str, Any]:
+    """Decomposed CP-SAT with a fallback: if the time phase returns no solution at all (e.g. a single CP-SAT
+    worker that cannot find a first solution in time), start from a short GA run instead, then repair."""
+    from ttagent.engine.decomposed import solve_decomposed
+    res = solve_decomposed(ds, opts)
+    if not res["assignments"] and res["status"] not in ("INFEASIBLE", "MODEL_INVALID"):
+        from ttagent.engine.ga import GAOptions, solve_ga
+        g = solve_ga(ds, GAOptions(time_limit_s=max(10.0, opts.time_limit_s * 0.4), seed=opts.seed,
+                                   semesters=opts.semesters, tokens=opts.tokens, use_baskets=opts.use_baskets,
+                                   forbid=list(opts.forbid or [])))
+        g.setdefault("stats", {})["fallback"] = f"time phase {res['status']} -> GA start"
+        g["options"] = res.get("options", {})
+        res = g
+    if repair and res["unplaced"]:
+        from ttagent.engine.repair import lns_repair
+        fb = (res.get("stats") or {}).get("fallback")
+        res = lns_repair(ds, res, opts, time_limit_s=repair_time_s or max(15, opts.time_limit_s / 3))
+        if fb:
+            res.setdefault("stats", {})["fallback"] = fb
+    return res
 
 
 def _compact_validation(v: dict[str, Any], max_violations: int = 25) -> dict[str, Any]:
