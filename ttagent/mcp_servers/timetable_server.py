@@ -22,7 +22,8 @@ def generate_timetable(semesters: list[int] | None = None, method: str = "decomp
                        label: str = "") -> dict:
     """Generate a timetable with the constraint solver and store it as a new version.
     semesters: e.g. [3] or [1,3]; None = whole university (semesters 1,3,5,7).
-    method: decomposed (default, time-then-room CP-SAT) | exact (single CP-SAT model, small scopes) | vba (macro baseline).
+    method: decomposed (default, time-then-room CP-SAT) | exact (single CP-SAT model, small scopes) |
+    ga (memetic genetic algorithm) | ga_plain (GA without local search) | vba (macro baseline).
     repair: run the LNS repair ladder if anything is left unplaced.
     stability_weight > 0 keeps sessions where the published timetable has them (minimal disruption).
     Returns coverage, hard violations, quality metrics and unplaced sessions."""

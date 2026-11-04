@@ -76,8 +76,14 @@ def compute_metrics(ds: Dataset, bookings: list[Booking], grid: TimeGrid | None 
     req_by_tok = {r.token: r for r in ds.requirements}
     room_changes = sum(1 for b in bookings if b.token in req_by_tok and b.room != req_by_tok[b.token].venue
                        and b.origin != "published")
+    pref_viol = 0
+    for b in bookings:
+        for f in b.faculty:
+            fac = ds.faculty.get(f)
+            if fac and fac.avoid:
+                pref_viol += sum(1 for s in b.slots for d0, s0 in fac.avoid if d0 == b.day and (s0 is None or s0 == s))
     w = scfg["weights"]
-    penalty = (w["batch_gap"] * gaps + w["batch_day_overload"] * over_cap + w["faculty_consecutive"] * fac_consec
+    penalty = w.get("faculty_preference", 5) * pref_viol + (w["batch_gap"] * gaps + w["batch_day_overload"] * over_cap + w["faculty_consecutive"] * fac_consec
                + w["faculty_day_overload"] * fac_over + w["saturday_hour"] * sat_h + w["late_hour"] * late_h
                + w["extended_hour"] * ext_h + w["room_change"] * room_changes)
     return {
@@ -92,6 +98,7 @@ def compute_metrics(ds: Dataset, bookings: list[Booking], grid: TimeGrid | None 
         "late_hours_slot7plus": late_h,
         "extended_hours_slot8plus": ext_h,
         "room_changes": room_changes,
+        "faculty_preference_violations": pref_viol,
         "weekday_imbalance": round((max(weekday_loads) - min(weekday_loads)) / max(1, statistics.mean(weekday_loads)), 3) if weekday_loads else 0,
         "hours_by_day": {d: day_hours[d] for d in grid.days},
         "hours_by_slot": {s: slot_hours[s] for s in sorted(slot_hours)},

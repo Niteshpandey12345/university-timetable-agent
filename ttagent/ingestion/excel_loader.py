@@ -127,11 +127,12 @@ def load_workbook_dataset(path: str | Path | None = None) -> Dataset:
     placeholder_res = [re.compile(p) for p in cfg["faculty"]["placeholder_patterns"]]
     fac_codes = {f for r in reqs for f in r.faculty} | {f for b in published for f in b.faculty}
     faculty = {f: Faculty(code=f, is_placeholder=any(p.match(f) for p in placeholder_res)) for f in sorted(fac_codes)}
-    for code, rules in (cfg["faculty"].get("unavailable") or {}).items():
-        if code in faculty:
-            for rule in rules:
-                d, _, s = str(rule).partition(":")
-                faculty[code].unavailable.append((d, int(s) if s else None))
+    for key, attr in (("unavailable", "unavailable"), ("avoid", "avoid")):
+        for code, rules in (cfg["faculty"].get(key) or {}).items():
+            if code in faculty:
+                for rule in rules:
+                    d, _, s = str(rule).partition(":")
+                    getattr(faculty[code], attr).append((d, int(s) if s else None))
 
     room_ids = {r.venue for r in reqs} | {b.room for b in published}
     rooms: dict[str, Room] = {}
@@ -141,11 +142,22 @@ def load_workbook_dataset(path: str | Path | None = None) -> Dataset:
         rooms[rid] = Room(room_id=rid, category=cat, lab_type=lab, observed_batch_capacity=cap,
                           used_by_requirements=sum(1 for r in reqs if r.venue == rid))
 
+    # optional real-world data: seat counts per room, students per batch
+    from ttagent.config import ROOT
+    import yaml as _yaml
+    seats_file, sizes_file = ROOT / "config" / "rooms.yaml", ROOT / "config" / "batches.yaml"
+    if seats_file.exists():
+        for rid, seats in (_yaml.safe_load(seats_file.read_text()) or {}).items():
+            if str(rid).upper() in rooms and seats:
+                rooms[str(rid).upper()].seats = int(seats)
+    sizes = (_yaml.safe_load(sizes_file.read_text()) or {}) if sizes_file.exists() else {}
+
     all_batches = req_batches | {b for bk in published for b in bk.batches}
     batches = {}
     for b in sorted(all_batches):
         sem, prog, _ = batch_parts(b)
-        batches[b] = Batch(code=b, semester=sem, program=prog, in_requirements=b in req_batches)
+        batches[b] = Batch(code=b, semester=sem, program=prog, in_requirements=b in req_batches,
+                           size=int(sizes[b]) if b in sizes else None)
 
     # ------------------------------------------------------------------ fixed external bookings
     fixed = [b.model_copy(update={"origin": "fixed"}) for b in published
@@ -203,8 +215,9 @@ def infer_baskets(internal: list[Booking], reqs: list[Requirement], ecfg: dict) 
             continue
         sem = int(next(iter(comp)).split(":")[0])
         courses = sorted(n.split(":")[1] for n in comp)
+        conf = "high" if ev >= 6 else ("medium" if ev >= 3 else "low")
         out.append(ElectiveBasket(basket_id=f"S{sem}-E{len([b for b in out if b.semester == sem]) + 1}",
-                                  semester=sem, courses=courses, evidence=ev,
+                                  semester=sem, courses=courses, evidence=ev, confidence=conf,
                                   note="inferred: co-scheduled for overlapping batches in published grid"))
     return out
 

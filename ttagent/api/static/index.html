@@ -92,13 +92,15 @@ svg.flow{width:100%;height:auto}
 </head>
 <body>
 <aside class="side">
-  <div class="brand"><div class="logo">TT</div><div><b>Timetable Agent</b><span>LangGraph · MCP · CP-SAT</span></div></div>
+  <div class="brand"><div class="logo">TT</div><div><b>Timetable Agent</b><span id="verTxt">LangGraph · MCP · CP-SAT · GA</span></div></div>
   <nav class="nav">
     <button data-p="overview" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Overview</button>
     <button data-p="timetable"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Timetable</button>
     <button data-p="studio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7.3 11 16.7 6M7.3 13l9.4 5"/></svg>Agent Studio</button>
     <button data-p="system"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="6" rx="1"/><rect x="3" y="15" width="18" height="6" rx="1"/><path d="M7 6h.01M7 18h.01M12 9v6"/></svg>System &amp; MCP</button>
     <button data-p="quality"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v5M12 18h.01"/></svg>Data quality</button>
+    <button data-p="methods"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h12M3 18h6"/></svg>Methods &amp; compare</button>
+    <button data-p="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.8 1.2V21a2 2 0 0 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 1.2 14H1a2 2 0 0 1 0-4h.1A1.7 1.7 0 0 0 4.6 7a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 1.2V1a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 2.8 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 22.8 10H23a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>Settings</button>
     <button data-p="experiments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Research results</button>
   </nav>
   <div class="status" id="sideStatus">
@@ -114,6 +116,7 @@ svg.flow{width:100%;height:auto}
     <h1 id="pageTitle">Overview</h1>
     <select id="solSel" title="Timetable version"></select>
     <select id="semSel"><option value="">All semesters</option></select>
+    <select id="methodSel" title="Allocation method"><option value="decomposed">CP-SAT (decomposed + repair)</option><option value="ga">Genetic algorithm (memetic)</option><option value="ga_plain">Genetic algorithm (plain)</option><option value="exact">CP-SAT (exact, small scopes)</option><option value="vba">VBA macro baseline</option></select>
     <select id="tlSel"><option value="30">30 s</option><option value="60" selected>60 s</option><option value="120">120 s</option><option value="300">5 min</option></select>
     <button class="btn primary" id="genBtn">⚡ Generate</button>
   </div>
@@ -177,12 +180,32 @@ svg.flow{width:100%;height:auto}
 
   <!-- QUALITY -->
   <section class="page" id="p-quality">
-    <div class="card"><h3>Workbook</h3><div class="kpis" id="qKpis"></div></div>
+    <div class="card"><h3>Workbook <span style="margin-left:auto;display:flex;gap:8px;align-items:center"><input type="file" id="wbFile" accept=".xlsm,.xlsx" style="max-width:240px"><button class="btn primary" id="wbUpload">Upload &amp; ingest</button></span></h3><div class="kpis" id="qKpis"></div></div>
     <div class="grid2">
       <div class="card"><h3>Elective baskets (learned from the published grid)</h3><div id="baskets"></div></div>
       <div class="card"><h3>Capacity proof (pigeonhole)</h3><div id="capacity"></div></div>
     </div>
     <div class="card"><h3>Issues <select id="sevSel" style="margin-left:auto"><option value="">all</option><option>warning</option><option>info</option></select></h3><div id="issues" style="max-height:420px;overflow:auto"></div></div>
+  </section>
+
+  <!-- METHODS -->
+  <section class="page" id="p-methods">
+    <div class="card"><h3>Head-to-head run <span class="pill">same scope · same time budget</span></h3>
+      <div class="controls"><label class="small muted">Methods</label>
+        <label><input type="checkbox" class="mchk" value="decomposed" checked> CP-SAT</label>
+        <label><input type="checkbox" class="mchk" value="ga" checked> GA (memetic)</label>
+        <label><input type="checkbox" class="mchk" value="ga_plain"> GA (plain)</label>
+        <label><input type="checkbox" class="mchk" value="vba" checked> VBA macro</label>
+        <span style="flex:1"></span><button class="btn primary" id="runCmp">Run comparison</button></div>
+      <div class="small muted">Uses the semester and time budget from the top bar. GA and VBA runs are reported without LNS repair, so each method is measured on its own.</div>
+      <div id="cmpProgress" class="small" style="margin-top:8px"></div></div>
+    <div class="card"><h3>All timetable versions</h3><div id="methodsTable" style="overflow-x:auto"></div></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="page" id="p-settings">
+    <div class="card"><h3>Solver &amp; agent settings <span class="pill">saved to config/overrides.yaml</span></h3><div id="settingsForm"></div>
+      <div style="margin-top:12px;display:flex;gap:8px"><button class="btn primary" id="saveSettings">Save</button><span class="small muted" id="setMsg"></span></div></div>
   </section>
 
   <!-- EXPERIMENTS -->
@@ -203,11 +226,11 @@ let ENT={},SYS=null,thread=store.get('tt_thread',null);if(!thread){thread=Math.r
 document.documentElement.dataset.theme=store.get('tt_theme','dark');
 $('#themeBtn').onclick=()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;store.set('tt_theme',t)};
 const SRV_COLOR={data:'var(--s-data)',academic:'var(--s-academic)',resource:'var(--s-resource)',timetable:'var(--s-timetable)'};
-const TITLES={overview:'Overview',timetable:'Timetable explorer',studio:'Agent Studio',system:'System & MCP connections',quality:'Data quality',experiments:'Research results'};
+const TITLES={overview:'Overview',timetable:'Timetable explorer',studio:'Agent Studio',system:'System & MCP connections',quality:'Data quality',experiments:'Research results',methods:'Methods & comparison',settings:'Settings'};
 
 // ---------- navigation
 function go(p){$$('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='p-'+p));$('#pageTitle').textContent=TITLES[p];store.set('tt_page',p);
-  if(p==='system')loadSystem();if(p==='quality')loadQuality();if(p==='experiments')loadFigs();if(p==='timetable')grid()}
+  if(p==='system')loadSystem();if(p==='quality')loadQuality();if(p==='experiments')loadFigs();if(p==='methods')loadMethods();if(p==='settings')loadSettings();if(p==='timetable')grid()}
 $$('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.p));
 
 // ---------- init
@@ -266,7 +289,7 @@ $('#kindSel').onchange=()=>{fillCodes();grid()};$('#codeIn').onchange=grid;$('#s
 $('#xlsxBtn').onclick=()=>location.href=`/api/solutions/${$('#solSel').value}/export?fmt=xlsx`;
 $('#icsBtn').onclick=()=>{const k=$('#kindSel').value;if(k==='semester')return toast('Pick a batch, faculty or room');location.href=`/api/solutions/${$('#solSel').value}/export?fmt=ics&entity=${k}:${$('#codeIn').value}`};
 $('#genBtn').onclick=async()=>{const b=$('#genBtn');b.disabled=true;b.textContent='⏳ Solving…';const sem=$('#semSel').value;
-  try{const r=await post('/api/solve',{semesters:sem?[+sem]:null,time_limit_s:+$('#tlSel').value});await loadSolutions(r.solution_id);await refresh();toast(`Solved: ${r.coverage_pct}% · ${r.valid?'valid':'invalid'}`)}catch(e){toast(e.message)}b.disabled=false;b.textContent='⚡ Generate'};
+  try{const r=await post('/api/solve',{semesters:sem?[+sem]:null,time_limit_s:+$('#tlSel').value,method:$('#methodSel').value,repair:!$('#methodSel').value.startsWith('ga')});await loadSolutions(r.solution_id);await refresh();toast(`Solved: ${r.coverage_pct}% · ${r.valid?'valid':'invalid'}`)}catch(e){toast(e.message)}b.disabled=false;b.textContent='⚡ Generate'};
 
 // ---------- LangGraph flow
 const NODES={supervisor:[390,34,'Supervisor'],requirements:[130,112,'Requirements'],action:[390,112,'Action agent'],assistant:[650,112,'ReAct assistant'],
@@ -349,6 +372,33 @@ async function loadQuality(){const q=await api('/api/quality');const s=q.summary
   const render=()=>{const sev=$('#sevSel').value;$('#issues').innerHTML='<table><tr><th>severity</th><th>category</th><th>message</th><th>where</th></tr>'+q.issues_sample.filter(i=>!sev||i.severity===sev).map(i=>`<tr><td><span class="pill ${i.severity==='warning'?'warnc':''}">${i.severity}</span></td><td class="mono">${i.category}</td><td>${esc(i.message)}</td><td class="mono">${i.location}</td></tr>`).join('')+'</table>'};
   $('#sevSel').onchange=render;render()}
 async function loadFigs(){if(!SYS)await refreshSystem();const f=SYS?.experiments||[];$('#figs').innerHTML=f.length?f.map(x=>`<figure style="margin:0"><img src="/results/${x}" alt="${x}"><figcaption class="small muted">${x}</figcaption></figure>`).join(''):'<p class="muted">Run <code>python -m scripts.run_experiments</code> to generate figures.</p>'}
+
+// ---------- methods
+async function loadMethods(){const sols=await api('/api/solutions?limit=60');
+  const rows=await Promise.all(sols.map(async x=>{try{const s=await api('/api/solutions/'+x.id);return s}catch(e){return null}}));
+  const pub=await api('/api/solutions/published').catch(()=>null),vba=await api('/api/solutions/vba').catch(()=>null);
+  const all=[pub,vba,...rows].filter(Boolean);
+  $('#methodsTable').innerHTML='<table><tr><th>Version</th><th>Method</th><th>Scope</th><th>Coverage</th><th>Hard viol.</th><th>Soft penalty</th><th>Idle gaps</th><th>Sat h</th><th>16:00+ h</th><th>Room changes</th><th>Time</th><th></th></tr>'+
+   all.map(s=>{const q=s.quality||{},hv=Object.values(s.hard_violations||{}).reduce((a,b)=>a+b,0);return `<tr><td class="mono">${esc(s.solution_id)}</td><td>${esc(s.method)}</td><td class="small">${s.required_hours??'?'} h</td><td><b class="${s.coverage_pct==100?'good':''}">${s.coverage_pct??'–'}%</b></td><td class="${hv?'badc':'good'}">${hv}</td><td>${q.soft_penalty??'–'}</td><td>${q.batch_idle_gaps??'–'}</td><td>${q.saturday_hours??'–'}</td><td>${q.extended_hours_slot8plus??'–'}</td><td>${q.room_changes??'–'}</td><td>${s.seconds??'–'}</td><td><button class="btn" onclick="document.querySelector('#solSel').value='${s.solution_id}';go('overview');refresh()">open</button></td></tr>`}).join('')+'</table>'}
+$('#runCmp').onclick=async()=>{const ms=$$('.mchk').filter(c=>c.checked).map(c=>c.value);if(!ms.length)return;const sem=$('#semSel').value,T=+$('#tlSel').value;$('#runCmp').disabled=true;
+  for(const [i,m] of ms.entries()){$('#cmpProgress').textContent=`Running ${m} (${i+1}/${ms.length}) for up to ${T}s…`;
+    try{const r=await post('/api/solve',{semesters:sem?[+sem]:null,time_limit_s:T,method:m,repair:m==='decomposed',label:`compare: ${m} sem=${sem||'all'} ${T}s`});$('#cmpProgress').textContent=`${m}: ${r.coverage_pct}% coverage, ${r.valid?'valid':'not valid'}`}catch(e){toast(e.message)}}
+  $('#cmpProgress').textContent='Done.';$('#runCmp').disabled=false;await loadSolutions();loadMethods()};
+// ---------- settings
+let SET=null;
+async function loadSettings(){SET=await api('/api/settings');const f=[];
+  for(const [sec,obj] of Object.entries(SET))for(const [k,v] of Object.entries(obj)){
+    if(v&&typeof v==='object')for(const [kk,vv] of Object.entries(v))f.push(`<label class="small" style="display:grid;grid-template-columns:260px 160px;gap:8px;margin:4px 0"><span>${sec}.${k}.${kk}</span><input data-p="${sec}.${k}.${kk}" value="${vv}"></label>`);
+    else f.push(`<label class="small" style="display:grid;grid-template-columns:260px 160px;gap:8px;margin:4px 0"><span>${sec}.${k}</span><input data-p="${sec}.${k}" value="${v}"></label>`)}
+  $('#settingsForm').innerHTML=f.join('')}
+$('#saveSettings').onclick=async()=>{const body={};$$('#settingsForm input').forEach(i=>{const ps=i.dataset.p.split('.');let o=body;ps.slice(0,-1).forEach(k=>o=o[k]=o[k]||{});
+  const v=i.value.trim();o[ps[ps.length-1]]=v==='true'?true:v==='false'?false:(v!==''&&!isNaN(+v)?+v:v)});
+  try{SET=await api('/api/settings',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});$('#setMsg').textContent='Saved. New solves use these values.'}catch(e){toast(e.message)}};
+// ---------- upload
+$('#wbUpload').onclick=async()=>{const f=$('#wbFile').files[0];if(!f)return toast('Choose an .xlsm workbook first');$('#wbUpload').disabled=true;$('#wbUpload').textContent='Ingesting…';
+  try{const r=await api('/api/ingest/upload?filename='+encodeURIComponent(f.name),{method:'POST',body:await f.arrayBuffer()});toast(`Loaded ${r.summary.requirements} requirements`);ENT=await api('/api/entities');fillCodes();loadQuality()}catch(e){toast(e.message)}
+  $('#wbUpload').disabled=false;$('#wbUpload').textContent='Upload & ingest'};
+api('/api/version').then(v=>$('#verTxt').textContent=`v${v.version} · ${v.llm}`).catch(()=>{});
 
 init().catch(e=>toast('init failed: '+e.message));
 </script>

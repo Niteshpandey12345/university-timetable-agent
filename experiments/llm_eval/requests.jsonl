@@ -1,0 +1,77 @@
+{"query": "Generate timetable for Year 3.", "action": "generate", "semesters": [5]}
+{"query": "Create the timetable for semester 1", "action": "generate", "semesters": [1]}
+{"query": "build a schedule for all semesters", "action": "generate", "semesters": null}
+{"query": "make the 4th year timetable", "action": "generate", "semesters": [7]}
+{"query": "please prepare 2nd year schedule", "action": "generate", "semesters": [3]}
+{"query": "Can you schedule semester 5 classes for me?", "action": "generate", "semesters": [5]}
+{"query": "allocate slots for sem 3", "action": "generate", "semesters": [3]}
+{"query": "solve the whole university timetable", "action": "generate", "semesters": null}
+{"query": "I need a fresh timetable for first year students", "action": "generate", "semesters": [1]}
+{"query": "regenerate year 1 with minimal changes to the published one", "action": "generate", "semesters": [1]}
+{"query": "generate sem 7 timetable", "action": "generate", "semesters": [7]}
+{"query": "pls make timetable for 3rd yr", "action": "generate", "semesters": [5]}
+{"query": "create a new timetable for every semester", "action": "generate", "semesters": null}
+{"query": "build the time table for semester three", "action": "generate", "semesters": [3]}
+{"query": "schedule year two lectures and labs", "action": "generate", "semesters": [3]}
+{"query": "Show all conflicts in the current timetable.", "action": "validate"}
+{"query": "check the timetable for clashes", "action": "validate"}
+{"query": "are there any violations?", "action": "validate"}
+{"query": "validate the latest version", "action": "validate"}
+{"query": "is the current schedule clash free?", "action": "validate"}
+{"query": "any double booking of teachers?", "action": "validate"}
+{"query": "run a validation on the timetable", "action": "validate"}
+{"query": "does the timetable break any rule?", "action": "validate"}
+{"query": "Why could you not schedule the DBMS lab?", "action": "explain_unplaced", "token": null}
+{"query": "why is token 104 unplaced", "action": "explain_unplaced", "token": 104}
+{"query": "what could not be scheduled and why", "action": "explain_unplaced", "token": null}
+{"query": "explain why some sessions are missing", "action": "explain_unplaced", "token": null}
+{"query": "why couldn't you place the CP lecture?", "action": "explain_unplaced", "token": null}
+{"query": "which classes were not scheduled?", "action": "explain_unplaced", "token": null}
+{"query": "Show timetable of batch 1B1", "action": "view", "kind": "batch", "code": "1B1"}
+{"query": "show faculty RAVI timetable", "action": "view", "kind": "faculty", "code": "RAVI"}
+{"query": "display room LT1", "action": "view", "kind": "room", "code": "LT1"}
+{"query": "view semester 5 timetable", "action": "view", "kind": "semester", "code": "5"}
+{"query": "what does 3B21 have on Monday?", "action": "view", "kind": "batch", "code": "3B21"}
+{"query": "show me JP's weekly schedule", "action": "view", "kind": "faculty", "code": "JP"}
+{"query": "list the classes in LT4", "action": "view", "kind": "room", "code": "LT4"}
+{"query": "timetable for 5B1 please", "action": "view", "kind": "batch", "code": "5B1"}
+{"query": "show schedule of teacher DKV", "action": "view", "kind": "faculty", "code": "DKV"}
+{"query": "display the timetable of batch 7B3", "action": "view", "kind": "batch", "code": "7B3"}
+{"query": "when does AKD teach?", "action": "view", "kind": "faculty", "code": "AKD"}
+{"query": "show room CL3 bookings", "action": "view", "kind": "room", "code": "CL3"}
+{"query": "RAVI is on leave on Monday", "action": "what_if_unavailable", "kind": "faculty", "code": "RAVI", "day": "Mon"}
+{"query": "JP is unavailable on Tuesday", "action": "what_if_unavailable", "kind": "faculty", "code": "JP", "day": "Tue"}
+{"query": "LT1 is not available on Friday", "action": "what_if_unavailable", "kind": "room", "code": "LT1", "day": "Fri"}
+{"query": "DKV can't come on Wednesday", "action": "what_if_unavailable", "kind": "faculty", "code": "DKV", "day": "Wed"}
+{"query": "batch 3B1 is absent on Saturday for an industrial visit", "action": "what_if_unavailable", "kind": "batch", "code": "3B1", "day": "Sat"}
+{"query": "SMB will be out of office on thursday", "action": "what_if_unavailable", "kind": "faculty", "code": "SMB", "day": "Thu"}
+{"query": "room CL4 unavailable monday due to maintenance", "action": "what_if_unavailable", "kind": "room", "code": "CL4", "day": "Mon"}
+{"query": "AKD is not available on friday", "action": "what_if_unavailable", "kind": "faculty", "code": "AKD", "day": "Fri"}
+{"query": "move R104#0 to Friday slot 2", "action": "move", "session_id": "R104#0", "day": "Fri", "start": 2}
+{"query": "reschedule R12#1 to Wed slot 3", "action": "move", "session_id": "R12#1", "day": "Wed", "start": 3}
+{"query": "shift R50#0 to Monday slot 1", "action": "move", "session_id": "R50#0", "day": "Mon", "start": 1}
+{"query": "Compare with the published timetable", "action": "compare"}
+{"query": "is it better than the macro?", "action": "compare"}
+{"query": "compare the new timetable with the old one", "action": "compare"}
+{"query": "how does ours compare to the VBA baseline", "action": "compare"}
+{"query": "how good is the data in the excel workbook", "action": "quality"}
+{"query": "show me data issues", "action": "quality"}
+{"query": "are there errors in the input data?", "action": "quality"}
+{"query": "what problems did you find in the excel data", "action": "quality"}
+{"query": "Is it even possible to schedule everything?", "action": "capacity"}
+{"query": "do we have enough rooms", "action": "capacity"}
+{"query": "is the problem feasible?", "action": "capacity"}
+{"query": "check capacity of the week for all batches", "action": "capacity"}
+{"query": "export to excel", "action": "export"}
+{"query": "download the calendar for batch 3B1", "action": "export"}
+{"query": "give me the xlsx file", "action": "export"}
+{"query": "export ics for faculty RAVI", "action": "export"}
+{"query": "publish it", "action": "publish"}
+{"query": "publish the latest timetable", "action": "publish"}
+{"query": "repair the timetable", "action": "repair"}
+{"query": "fix the current timetable", "action": "repair"}
+{"query": "hello", "action": "chat"}
+{"query": "what can you do", "action": "chat"}
+{"query": "which teacher has the heaviest Friday?", "action": "chat"}
+{"query": "how many lecture theatres does the university have?", "action": "chat"}
+{"query": "thanks!", "action": "chat"}

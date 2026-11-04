@@ -6,3 +6,6 @@ __pycache__/
 data/exports/
 data/state/*
 !data/state/.gitkeep
+config/overrides.yaml
+data/raw/uploads/
+*.egg-info/

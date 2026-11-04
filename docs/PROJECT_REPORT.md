@@ -30,12 +30,17 @@ hours/week, 54 batches, 38 rooms, 78 faculty codes), the study makes four findin
 4. **Minimal-perturbation repair absorbs a teacher's sudden unavailability by moving only 0.5–7.2 % of
    sessions.**
 
+Version 3 adds a memetic genetic algorithm as a comparison method. Over 5 seeds, CP-SAT beats it in every
+run on both coverage (99.76 % vs 98.10 %) and soft quality (Mann–Whitney p < 0.012, Cliff's δ = 1). The same
+ranking holds on all 21 instances of the public ITC-2007 curriculum-based benchmark, where CP-SAT also proves
+three instances optimal, although both methods remain well behind the state of the art at a 120 s budget.
+
 The system includes a web dashboard that visualises the agent graph and every MCP call live, a
-human-in-the-loop approval step, persistent conversational memory, Excel/iCalendar export, 35 automated
-tests and a reproducible experiment suite.
+human-in-the-loop approval step, persistent conversational memory, Excel/iCalendar export, a one-command
+installer and launcher, 45 automated tests and a reproducible experiment suite.
 
 **Keywords:** agentic AI, LangGraph, Model Context Protocol, constraint programming, CP-SAT, university
-course timetabling, large neighbourhood search, explainable AI, human-in-the-loop.
+course timetabling, large neighbourhood search, genetic algorithm, ITC-2007, explainable AI, human-in-the-loop.
 
 <!-- pagebreak -->
 
@@ -85,8 +90,9 @@ This process has four weaknesses:
 Section 2 reviews related work. Section 3 analyses the existing Excel/VBA system and Section 4 the real
 data. Sections 5–9 describe the proposed system: architecture, agents, MCP servers, constraint engine and
 interface. Section 10 compares the new system with Excel scripting, and Section 11 reports the
-experiments. Section 12 states the contributions and novelty, and Section 13 documents the
-implementation and file structure. Sections 14–15 cover limitations and conclusions.
+experiments. Section 12 reports version 3: the GA comparison, the ITC-2007 benchmark, the qualitative
+comparison and the limitations addressed. Section 13 states the contributions and novelty, and Section 14
+documents the implementation and file structure. Sections 15–16 cover limitations and conclusions.
 
 <!-- pagebreak -->
 
@@ -109,8 +115,13 @@ parallel portfolio of search strategies, and is state-of-the-art for scheduling.
 Search** (LNS) [7] repeatedly frees part of a solution and re-optimises it. It is the basis of the repair
 agent here. When a published timetable must change, the **minimal perturbation problem** [8] asks for a
 new feasible solution that differs as little as possible from the old one; this project adopts that
-objective for what-if repairs. The room-capacity cuts used in the decomposition follow **Hall's marriage
-theorem** [9].
+objective for what-if repairs. Lindahl et al. [26] show that pure minimal perturbation can lower quality,
+which Section 12.3 tests. The room-capacity cuts used in the decomposition follow **Hall's marriage
+theorem** [9]; the time-then-room decomposition with Hall-type inequalities was introduced for curriculum-based
+timetabling by Lach and Lübbecke [27]. On the public ITC-2007 curriculum-based benchmark [20], the strongest
+time-limited methods are hybrid metaheuristics [24][25]; Ceschia et al. [23] survey the current bounds.
+Genetic algorithms were among the first timetabling metaheuristics, but comparative studies found plain
+GAs weak on highly constrained instances [21][22].
 
 ## 2.3 LLM agents and tool use
 
@@ -637,9 +648,202 @@ trajectory: `capacity_report → get_requirements → generate_timetable → val
 
 <!-- pagebreak -->
 
-# 12. Contributions and Novelty
+# 12. Version 3: GA Comparison, Public Benchmark and Strengthening
 
-## 12.1 Contributions
+The project review asked for three additions: a genetic-algorithm (GA) allocator to compare against, a
+qualitative and quantitative comparison with the existing approach, and work on the limitations of version 2
+(now listed, with their status, in Section 15). This chapter reports all three, together with a public benchmark and
+the packaging of the system as installable software. Full details are in `docs/V3_ANALYSIS.md`.
+
+## 12.1 The GA allocator
+
+Plain GAs are known to be weak on highly constrained timetabling. Lewis and Paechter found that their
+grouping GA worked best with its crossover removed [21], and Rossi-Doria et al. found that no metaheuristic
+was best on every instance [22]. The GA was therefore built as a *strong* memetic baseline rather than a
+straw man, and it shares the data, rules and soft weights of the CP-SAT engine.
+
+| Component | Design |
+|---|---|
+| Encoding | One gene (day, start slot, room) per weekly session, drawn only from legal candidates: lunch, lab-block contiguity, Saturday cut-off, fixed bookings and unavailability are already filtered |
+| Seeding | Randomised most-constrained-first greedy construction, capped at 30 % of the budget |
+| Crossover | Requirement-level uniform crossover: all sessions of one requirement come from the same parent |
+| Mutation | Re-sample a session's gene (rate 0.03 per requirement) |
+| Local search | Conflict-directed best-improvement moves; once feasible, soft-improving moves (the "memetic" part) |
+| Selection | Tournament (k = 3), steady-state replacement of the worst, elitism, duplicate rejection |
+| Fitness | 10 000 × hard conflicts + soft penalty, with the same weights as CP-SAT |
+| Evaluation | Incremental occupancy counters; a test checks that it always equals full re-scoring |
+| Output | Sessions still in conflict are un-placed, so the result is clash-free |
+
+A *plain GA* without local search serves as an ablation. The GA is available everywhere the other methods are:
+`ttagent solve --method ga`, the dashboard's method selector, and the `generate_timetable` MCP tool.
+
+## 12.2 Quantitative comparison on the real workbook
+
+Each method ran 5 times (seeds 1–5) for 120 s on the whole university. Table values are mean ± standard
+deviation. Soft penalty per scheduled hour is reported because unscheduled sessions carry no soft penalty.
+
+| Method | Coverage | Hard viol. | Soft penalty | Soft / scheduled h | Idle gaps | Room changes | Teacher >3 h run |
+|---|---|---|---|---|---|---|---|
+| Published grid | 98.96 % | 20 | 2,762 | 4.14 | 170 | 0 | 17 |
+| VBA macro (port) | 88.13 % | 4 | 2,586 | 4.35 | 238 | 0 | 19 |
+| GA, plain (3 runs) | 94.17 ± 1.09 % | 0 | 2,553 ± 220 | 4.02 | 112 | 209 | 20 |
+| GA, memetic | 98.10 ± 0.57 % | 0 | 2,870 ± 42 | 4.34 | 124 | 242 | 20 |
+| **CP-SAT pipeline (ours)** | **99.76 ± 0.31 %** | **0** | **2,271 ± 269** | **3.38** | **116** | 143 | **9** |
+
+Two-sided Mann–Whitney U tests [28] with Cliff's δ [29] as the effect size:
+
+| Comparison | U | p | Cliff's δ |
+|---|---|---|---|
+| Coverage, CP-SAT vs memetic GA | 25 | 0.011 | +1.0 |
+| Soft penalty, CP-SAT vs memetic GA | 0 | 0.008 | −1.0 |
+| Coverage, memetic vs plain GA | 15 | 0.036 | +1.0 |
+
+![Figure 13. Coverage and soft penalty over seeds for each method.](media/v3/fig_v3_methods_box.png)
+
+Every CP-SAT run beat every GA run on both coverage and soft quality (|δ| = 1). The memetic GA is
+nevertheless a credible baseline: it is clash-free, beats the VBA macro by 10 points of coverage, and its local
+search adds 3.9 points over the plain GA. Its weaknesses are structural. It never removed all conflicts within
+120 s, so 6–12 sessions are dropped at the end (Figure 14). Its single-session moves also lead to many room
+changes and long teaching runs, because it has no global view of a teacher's day.
+
+![Figure 14. GA convergence: hard conflicts of the best individual over time (5 seeds).](media/v3/fig_v3_ga_convergence.png)
+
+**Per semester** (seed 1), the VBA macro collapses on semester 7 (53.3 %), the case the capacity proof shows to
+be infeasible without elective baskets. CP-SAT and the GA both schedule semester 7 completely. The GA's weakest
+semester is 5 (94.9 %), the one with the most lab blocks.
+
+**Fairness and anytime behaviour.** The GA is single-threaded. With CP-SAT also restricted to one worker, the
+time phase found **no feasible solution** within its share of the 120 s budget, so the pipeline returned
+nothing. The pipeline relies on CP-SAT's parallel portfolio, whose feasibility-jump and LNS workers find first
+solutions. This is a real limitation; a GA always returns something. With the normal 8-worker portfolio on the
+same 2 cores, CP-SAT stays ahead at every budget: at about 77 s of wall time it reaches 99.85–100 %, while the
+GA reaches 98.66 % at 61 s and 99.41 % at 240 s (Figure 15). The CP-SAT pipeline needs at least about 77 s,
+because the room phase and the repair ladder come on top of the time budget.
+
+![Figure 15. Coverage against actual wall-clock time for budgets of 30, 60, 120 and 240 s.](media/v3/fig_v3_anytime.png)
+
+## 12.3 Disruption versus quality in what-if repair
+
+Lindahl et al. [26] warn that minimal-perturbation repair can damage timetable quality. Four disruptions (a
+teacher absent for a whole day) were repaired from the best CP-SAT timetable with the stay-put weight *w*
+from 0 to 160. Every repair placed all displaced sessions with zero hard violations, in 7–8 s on average.
+
+| Stay-put weight *w* | Sessions moved | % of timetable | Soft penalty change |
+|---|---|---|---|
+| 0 | 48.8 | 8.6 % | +138.5 |
+| 10 | 38.3 | 6.8 % | +121.3 |
+| 40 (default) | 34.0 | 6.0 % | +114.8 |
+| 160 | 32.3 | 5.7 % | +97.5 |
+
+![Figure 16. What-if repair: disruption against change in soft penalty for each stay-put weight.](media/v3/fig_v3_disruption_tradeoff.png)
+
+Here the trade-off does not appear: **a higher stay-put weight gives both fewer changes and a smaller loss of
+quality.** Repair optimises feasibility and stability only, so a session moved without need lands in an
+arbitrary legal slot, usually a worse one. When the starting timetable is already optimised, staying close to
+it is the best way to keep its quality.
+
+## 12.4 Public benchmark: ITC-2007 Track 3
+
+To test whether the results hold beyond one institution, the engine and the GA were adapted to the
+curriculum-based course timetabling (CB-CTT) track of ITC-2007 under the standard UD2 formulation [20][23].
+All 21 instances were taken from the competition winner's repository. Every solution was re-scored by an
+independent UD2 scorer. Each method had 120 s per instance on 2 cores (seed 7). Best-known values and the
+time-limited results of Abdullah & Turabieh [24] and Kiefer et al. [25] come from the survey of Ceschia et al. [23].
+
+| Inst. | Best known | GA | CP-SAT | CP-SAT bound | Kiefer [25] avg |
+|---|---|---|---|---|---|
+| comp01 | 5 | 27 | **5** (optimal) | 5 | 5.0 |
+| comp02 | 24 | 272 | **101** | 10 | 41.5 |
+| comp03 | 64 | 272 | **129** | 24 | 71.7 |
+| comp04 | 35 | 160 | **35** (optimal) | 35 | 35.1 |
+| comp05 | 284 | 1034 | **464** | 80 | 305.2 |
+| comp06 | 27 | 352 | **184** | 8 | 47.8 |
+| comp07 | 6 | 412 | **253** | 0 | 14.5 |
+| comp08 | 37 | 194 | **92** | 36 | 41.0 |
+| comp09 | 96 | 254 | **142** | 30 | 102.8 |
+| comp10 | 4 | 270 | **190** | 4 | 14.3 |
+| comp11 | 0 | 10 | **0** (optimal) | 0 | – |
+| comp12 | 294 | 849 | **431** | 82 | 319.4 |
+| comp13 | 59 | 229 | **111** | 58 | 60.7 |
+| comp14 | 51 | 218 | **105** | 50 | 54.1 |
+| comp15 | 64 | 237 | **153** | 26 | – |
+| comp16 | 18 | 281 | **148** | 12 | 33.8 |
+| comp17 | 56 | 309 | **191** | 26 | 75.7 |
+| comp18 | 61 | 169 | **105** | 22 | 66.9 |
+| comp19 | 57 | 250 | **116** | 42 | 62.6 |
+| comp20 | 4 | 493 | **293** | 0 | 27.2 |
+| comp21 | 74 | 313 | **249** | 14 | 97.0 |
+
+![Figure 17. ITC-2007 penalties (log scale) of the GA, CP-SAT and Kiefer et al., with best-known values.](media/v3/fig_itc_costs.png)
+
+CP-SAT beats the GA on **all 21 instances**, the same ranking as on the institution's data. It proves
+optimality on comp01, comp04 and comp11, and on comp08, comp13 and comp14 its lower bound is within 1 of the best
+known. On the other instances, both methods are far from the state of the art at this budget: the median gap to
+the best known value is 106 % for CP-SAT and 357 % for the GA, and the dedicated metaheuristics of [24] and [25]
+are much better. A pilot outer LNS around CP-SAT (free a day, a group of curricula or some rooms; re-solve the
+rest fixed) reached 102 on comp02 against 101 for plain CP-SAT, so it gave no gain at this budget. **The project
+therefore does not claim state-of-the-art results on ITC-2007.** The benchmark shows that the model is correct
+and general, and that the CP-SAT > GA ranking is not an artefact of one data set.
+
+## 12.5 Qualitative comparison with the existing approach
+
+| Property | Excel + VBA macro | Memetic GA | This system |
+|---|---|---|---|
+| Hard constraints guaranteed | No: 4 violations (port), 20 in the published grid | Only by dropping conflicting sessions | Yes, and re-checked by an independent validator |
+| Detects an impossible problem | No: rows silently left empty | No: a high penalty looks the same | Yes: capacity proof plus per-slot blocker report |
+| Quality bound | None | None | Lower bound reported by the solver |
+| Explains a missing class | No | No | Yes: blockers of every candidate slot, and room changes that would fix it |
+| Teacher becomes unavailable | Re-run, then fix by hand | Re-run; the result can change completely | Minimal-change repair, 6 % of sessions moved |
+| Reproducibility and audit | Deterministic, no log | Depends on the seed, no log | Versions with parents; every MCP call logged |
+| Human control | Manual editing | Parameters only | Natural language, approval before publishing, pins, settings page |
+| Works without an LLM | Yes | Yes | Yes (rule-based supervisor) |
+
+**Explainability example (real output).** The `explain_unplaced` tool was run on the *published* timetable.
+One of the two weekly CMD lectures of batches 3B7–3B9 (teacher NEEJ, room LT2) is missing. The tool checked
+all 34 possible start slots: the batch was busy in 32, room LT2 in 30 and the teacher in 11. No slot had LT2
+free, but **Monday 11:00–12:00 works in LT4 or LT9**, where LT2 (taken by the 3B4–3B6 DS lecture) was the
+only obstacle. A timetabling officer can act on this directly; neither the macro nor the GA can produce it.
+
+**Case study.** The weekly heatmaps for one batch per year (Figure 18) show the character of each method.
+For first-year batch 1B1, the GA packs all teaching into mornings (four classes in a row every morning)
+because its local search removes idle gaps first. CP-SAT and the published grid use full days with lunch free.
+The dark cells in years 3 and 4 are parallel electives taught to different sub-groups in the same slot, which
+all three timetables use by design.
+
+![Figure 18. Weekly occupancy of one batch per year: published grid, CP-SAT and GA.](media/v3/fig_v3_heatmaps.png)
+
+## 12.6 Limitations addressed
+
+| Limitation (v2) | What v3 does |
+|---|---|
+| Room capacity was a proxy | Optional `config/rooms.yaml` (seats) and `config/batches.yaml` (students). When both are known, a room is suitable only if seats ≥ students |
+| Elective baskets inferred from one term | Each basket has a confidence (high, medium, low) from its supporting evidence; non-high baskets are flagged for confirmation |
+| No teacher preferences | Soft "avoid" preferences per teacher (day or day and slot), penalised by CP-SAT and the GA and reported as a metric |
+| Quality depends on time and cores | Anytime study and a single-worker run (Section 12.2) |
+| No public benchmark | ITC-2007 Track 3, all 21 instances (Section 12.4) |
+| Minimal change may hurt quality | Disruption-versus-quality study (Section 12.3) |
+| LLM evaluation on a small set | A held-out set of 77 phrasings over 13 intents (offline router: 92.2 % action accuracy, 88.3 % exact match), an automatic check of the numbers in LLM explanations, and an LLM-only scheduling baseline (`ttagent llm-eval`, run with the user's own API key) |
+
+The offline router's accuracy fell from 100 % on the 32 requests it was developed with (Section 11.6) to 92.2 %
+on new phrasings. Typical misses are *"any double booking of teachers?"* (sent to chat instead of a conflict
+check) and *"show me JP's weekly schedule"* (sent to generate). The router was deliberately not tuned on this set,
+so the figure stays an honest held-out estimate; with an LLM key, such requests fall through to the ReAct assistant.
+
+## 12.7 Packaging as software
+
+* An installable Python package (`pyproject.toml`, version 3.0.0) with one `ttagent` command and the
+  subcommands `serve`, `ingest`, `solve`, `validate`, `chat`, `demo`, `benchmark`, `experiments`, `llm-eval` and `mcp-tools`.
+* A double-click Windows launcher, `TimetableAgent.bat`, which installs on first run, loads the workbook and
+  opens the browser (`run.sh` on macOS and Linux).
+* Dashboard additions: a method selector; a *Methods & compare* page that runs methods head-to-head on the
+  same scope and budget; a *Settings* page saved to `config/overrides.yaml`; workbook upload; the version and LLM status.
+* Ten new automated tests (45 in total), including incremental-evaluation checks for both GAs and the ITC scorer.
+
+<!-- pagebreak -->
+
+# 13. Contributions and Novelty
+
+## 13.1 Contributions
 
 1. **A diagnosis of a real institutional timetabling process.** It includes a pigeonhole proof that the
    existing macro's constraint model is infeasible (23 batches over capacity) and a validation of the
@@ -658,11 +862,16 @@ trajectory: `capacity_report → get_requirements → generate_timetable → val
 6. **Explainability by construction.** Capacity proofs, contrastive blocker analysis, grounded
    explanations, a live execution trace and an audit log, surfaced in a dashboard.
 7. **A reproducible research artefact.** A faithful port of the institution's macro as a baseline, an
-   experiment suite (RQ1–RQ6), 35 tests and CI.
+   experiment suite (RQ1–RQ6), 45 tests and CI.
+8. **A fair GA-versus-CP-SAT comparison on identical real and benchmark instances** (version 3). A strong
+   memetic GA shares the data, rules and weights; CP-SAT wins every run on the real workbook (Cliff's δ = 1)
+   and every ITC-2007 instance. The literature review found no earlier head-to-head study of this kind.
+9. **An empirical answer to the minimal-perturbation critique.** On an optimised timetable, a stronger
+   stay-put weight reduced both disruption and quality loss, so staying close was not costly here.
 
-## 12.2 Novelty and positioning
+## 13.2 Novelty and positioning
 
-The individual techniques are established: CP-SAT [6], LNS [7], minimal perturbation [8], ReAct [10],
+The individual techniques are established: CP-SAT [6][30], time-then-room decomposition with Hall-type cuts [27], LNS [7], minimal perturbation [8], ReAct [10],
 LangGraph [16], MCP [15]. Prior LLM-plus-optimisation work focuses on *formulating* models from text
 [12][13] or *explaining* schedules [14]. The novelty of this project lies in:
 
@@ -674,14 +883,14 @@ LangGraph [16], MCP [15]. Prior LLM-plus-optimisation work focuses on *formulati
 * **minimal-change repair exposed as a conversational what-if**.
 
 The claim is therefore *a novel integration, validated on real data with measured improvements over the
-existing process*. It is not a claim of state-of-the-art performance on public timetabling benchmarks;
-that comparison is future work (Section 14).
+existing process and over a strong GA*. It is not a claim of state-of-the-art performance on public timetabling benchmarks;
+Section 12.4 now reports it, and Section 15 lists what remains.
 
 <!-- pagebreak -->
 
-# 13. Implementation and Project Structure
+# 14. Implementation and Project Structure
 
-## 13.1 Technology stack
+## 14.1 Technology stack
 
 | Component | Technology (version) |
 |---|---|
@@ -693,9 +902,11 @@ that comparison is future work (Section 14).
 | Data | openpyxl 3.1.5, pandas, networkx 3.7, Pydantic 2.13 |
 | API / UI | FastAPI 0.141, Uvicorn 0.52, vanilla JavaScript + SVG |
 | Storage | SQLite (WAL) |
-| Quality | pytest (35 tests), GitHub Actions CI |
+| Statistics | SciPy (Mann–Whitney U), Matplotlib |
+| Packaging | pyproject.toml, `ttagent` command, Windows launcher |
+| Quality | pytest (45 tests), GitHub Actions CI |
 
-## 13.2 File structure
+## 14.2 File structure
 
 ```
 university-timetable-agent/
@@ -705,9 +916,11 @@ university-timetable-agent/
 ├── .env.example                  optional LLM keys
 ├── .github/workflows/ci.yml      runs the tests on every push
 ├── config/
-│   └── settings.yaml             slots, lunch, weights, approval, LLM
+│   ├── settings.yaml             slots, lunch, weights, approval, LLM
+│   └── *.example.yaml            templates for seat counts and batch sizes (v3)
 ├── data/
 │   ├── raw/                      Master_TimeTable_July-Dec-2026.xlsm (input)
+│   ├── benchmarks/itc2007/       comp01–comp21.ctt (v3)
 │   ├── processed/                dataset, quality report, electives (generated)
 │   └── state/                    timetable.db, agent_memory.db (generated)
 ├── ttagent/                      the application package
@@ -725,10 +938,13 @@ university-timetable-agent/
 │   │   ├── cpsat.py              exact CP-SAT model (rooms inside)
 │   │   ├── repair.py             LNS repair ladder, minimal perturbation
 │   │   ├── greedy_vba.py         Python port of the VBA Allot macro
+│   │   ├── ga.py                 memetic genetic algorithm (v3)
 │   │   ├── validator.py          independent rules H1–H9 + allocation
 │   │   ├── metrics.py            soft-quality metrics
 │   │   ├── diagnosis.py          capacity proof, blocker analysis
 │   │   └── service.py            facade used by MCP servers, API, scripts
+│   ├── benchmarks/               ITC-2007: ctt (parser, UD2 scorer), ctt_cpsat, ctt_ga, ctt_lns (v3)
+│   ├── cli.py                    the `ttagent` command (v3)
 │   ├── store/db.py               SQLite persistence
 │   ├── export/
 │   │   ├── excel.py              institution-format workbook
@@ -750,14 +966,18 @@ university-timetable-agent/
 │   └── api/
 │       ├── main.py               FastAPI endpoints
 │       └── static/index.html     dashboard
-├── scripts/                      ingest, solve, chat, run_demo, run_experiments
-├── tests/                        35 tests on the real workbook
-├── experiments/results/          CSV, JSON and figures for RQ1–RQ6
+├── scripts/                      ingest, solve, chat, run_demo, run_experiments,
+│                                 run_analysis_v3, run_benchmark_itc, report_itc, run_llm_eval
+├── tests/                        45 tests on the real workbook and ITC-2007
+├── experiments/llm_eval/         77 labelled requests (v3)
+├── experiments/results/          CSV, JSON and figures for RQ1–RQ6; v3/ and itc2007_* (v3)
+├── pyproject.toml                package definition and `ttagent` entry point (v3)
+├── TimetableAgent.bat, run.sh    one-click launchers (v3)
 ├── samples/                      solved full-university timetable (.xlsx)
 └── docs/                         reports, user guide, demo, media/
 ```
 
-## 13.3 Code size
+## 14.3 Code size
 
 | Package | Lines of Python | Files |
 |---|---|---|
@@ -771,22 +991,25 @@ university-timetable-agent/
 | scripts | 445 | ingest, solve, chat, run_demo, run_experiments |
 | tests | 293 | 4 test modules + fixtures |
 
-## 13.4 How to run
+## 14.4 How to run
 
 ```
 python -m venv .venv
 .venv\Scripts\Activate.ps1                  (Windows; Linux: source .venv/bin/activate)
-python -m pip install -r requirements.txt
-python -m scripts.ingest                    parse the workbook
-uvicorn ttagent.api.main:app                dashboard at http://127.0.0.1:8000
+python -m pip install -e .                  installs the ttagent command (or double-click TimetableAgent.bat)
+ttagent ingest                              parse the workbook
+ttagent serve                               dashboard at http://127.0.0.1:8000
 python -m scripts.chat --trace              terminal chat with the agents
 python -m scripts.run_demo                  scripted demonstration
 python -m scripts.solve --time 120          solve and export to Excel
-python -m pytest tests -q                   35 tests
+ttagent solve --method ga --time 120       the GA allocator
+python -m pytest tests -q                   45 tests
 python -m scripts.run_experiments           reproduce RQ1–RQ6
+python -m scripts.run_analysis_v3           reproduce Section 12.2–12.3
+ttagent benchmark                           reproduce Section 12.4 (ITC-2007)
 ```
 
-## 13.5 Testing and verification
+## 14.5 Testing and verification
 
 Tests cover:
 
@@ -799,28 +1022,39 @@ Tests cover:
 * an **induced-conflict repair test** (break a valid timetable, forbid the old slots, check the repair);
 * the service layer and exports;
 * a real **MCP stdio round-trip** across all four servers;
-* the **LangGraph agent end-to-end** with approval and persistent memory.
+* the **LangGraph agent end-to-end** with approval and persistent memory;
+* (v3) the GA's incremental evaluation against full re-scoring, its clash-free output, the ITC-2007 parser,
+  scorer, GA and LNS, seat-count suitability, teacher preferences, basket confidence, and the CLI and
+  settings overrides.
 
 GitHub Actions runs the suite on every push.
 
 <!-- pagebreak -->
 
-# 14. Limitations and Future Work
+# 15. Limitations and Future Work
 
-* **Room capacity is a proxy:** the maximum number of batches a room has hosted. Real seat counts would
-  sharpen room suitability.
-* **Elective baskets are inferred from one term.** Curriculum owners should confirm them; the YAML
-  override supports this.
-* **Quality depends on time and cores.** Results above use 60–90 s on 2 cores; more cores give better
-  solutions.
-* **Benchmarking:** evaluate the engine on ITC 2019 [5] and curriculum-based instances [20], and compare
-  with established systems such as UniTime [19].
-* **LLM evaluation:** measure routing and explanation quality with an LLM on a larger set of real, messy
-  staff requests, and run a user study with the timetable office.
-* **Further constraints:** teacher preferences, travel time between buildings, student-level elective
-  enrolment.
+Status of the version-2 limitations after version 3:
 
-# 15. Conclusion
+| Limitation | Status |
+|---|---|
+| Room capacity was a proxy | **Addressed:** real seats and class sizes can be supplied; the department still has to fill in the numbers |
+| Elective baskets inferred from one term | **Mitigated:** confidence levels and flags for confirmation; inferring from several terms needs more workbooks |
+| No teacher preferences | **Addressed:** soft time preferences |
+| Quality depends on time and cores | **Measured:** anytime study; with one worker the CP-SAT pipeline finds no solution in 120 s, which remains a limitation |
+| No public benchmark | **Addressed:** ITC-2007 Track 3; results are far from the state of the art at 120 s |
+| LLM evaluation | **Partly addressed:** held-out request set and evaluation harness; the LLM-based part must be run with the user's own API key |
+
+Remaining work:
+
+* **Solver strength on benchmarks:** longer runs, more seeds (at least 10) and Wilcoxon tests across instances;
+  a stronger warm start for the single-worker case; and an ITC-2019 evaluation [5] with comparison to UniTime [19].
+* **GA tuning:** tune the GA with an automatic configurator (for example irace) and report the tuning budget.
+* **Evaluation with people:** a user study with the timetable office, and disruptions sampled from the
+  institution's own history of changes.
+* **Further constraints:** travel time between buildings and student-level elective enrolment.
+* **Paper:** a research paper based on Chapters 4, 11 and 12, after the department has reviewed the results.
+
+# 16. Conclusion
 
 This project shows that an agentic AI system can replace a fragile spreadsheet-macro process **without
 handing the combinatorics to a language model**. The LLM agents decide which question to ask the engine
@@ -831,6 +1065,13 @@ infeasible problem into one solved at 99.85–100 % with zero violations. The de
 problem tractable, and minimal-perturbation repair made live changes safe. Typed MCP boundaries, a
 LangGraph workflow, audit logs and a transparent dashboard make the system explainable and controllable
 enough to operate during a live semester.
+
+Version 3 tested these claims against a strong genetic algorithm and a public benchmark. The CP-SAT engine won
+every comparison on the institution's data and on all 21 ITC-2007 instances, while the benchmark also showed
+honestly how far a general-purpose model at a short budget remains from dedicated state-of-the-art methods.
+The GA's main advantage, that it always returns a timetable, matters only when the solver has a single core.
+With real seat counts, teacher preferences, confidence-rated elective baskets and a one-click installer, the
+system is ready for a pilot with the timetable office.
 
 <!-- pagebreak -->
 
@@ -875,6 +1116,26 @@ enough to operate during a live semester.
 [19] H. Rudová, T. Müller, and K. Murray, "Complex university course timetabling," *Journal of Scheduling*, vol. 14, no. 2, pp. 187–207, 2011.
 
 [20] A. Bonutti, F. De Cesco, L. Di Gaspero, and A. Schaerf, "Benchmarking curriculum-based course timetabling: formulations, data formats, instances, validation, visualization, and results," *Annals of Operations Research*, vol. 194, pp. 59–70, 2012.
+
+[21] R. Lewis and B. Paechter, "Finding feasible timetables using group-based operators," *IEEE Transactions on Evolutionary Computation*, vol. 11, no. 3, pp. 397–413, 2007.
+
+[22] O. Rossi-Doria et al., "A comparison of the performance of different metaheuristics on the timetabling problem," in *Practice and Theory of Automated Timetabling IV (PATAT 2002)*, LNCS 2740, Springer, 2003, pp. 329–351.
+
+[23] S. Ceschia, L. Di Gaspero, and A. Schaerf, "Educational timetabling: Problems, benchmarks, and state-of-the-art results," *European Journal of Operational Research*, vol. 308, no. 1, pp. 1–18, 2023 (arXiv:2201.07525).
+
+[24] S. Abdullah and H. Turabieh, "On the use of multi neighbourhood structures within a Tabu-based memetic approach to university timetabling problems," *Information Sciences*, vol. 191, pp. 146–168, 2012.
+
+[25] A. Kiefer, R. F. Hartl, and A. Schnell, "Adaptive large neighborhood search for the curriculum-based course timetabling problem," *Annals of Operations Research*, vol. 252, no. 2, pp. 255–282, 2017.
+
+[26] M. Lindahl, T. Stidsen, and M. Sørensen, "Quality recovering of university timetables," *European Journal of Operational Research*, vol. 276, no. 2, pp. 422–435, 2019.
+
+[27] G. Lach and M. E. Lübbecke, "Curriculum based course timetabling: New solutions to Udine benchmark instances," *Annals of Operations Research*, vol. 194, pp. 255–272, 2012.
+
+[28] H. B. Mann and D. R. Whitney, "On a test of whether one of two random variables is stochastically larger than the other," *Annals of Mathematical Statistics*, vol. 18, no. 1, pp. 50–60, 1947.
+
+[29] N. Cliff, "Dominance statistics: Ordinal analyses to answer ordinal questions," *Psychological Bulletin*, vol. 114, no. 3, pp. 494–509, 1993.
+
+[30] L. Perron, F. Didier, and S. Gay, "The CP-SAT-LP solver," in *Proc. 29th Int. Conf. on Principles and Practice of Constraint Programming (CP 2023)*, LIPIcs vol. 280, 2023, pp. 3:1–3:2.
 
 <!-- pagebreak -->
 
