@@ -223,6 +223,8 @@ class TimetableService:
               workers: int = 8, repair_time_s: float | None = None, parent: str | None = None,
               extra_forbid: list[dict] | None = None) -> dict[str, Any]:
         ds = self.dataset()
+        import os
+        seed = int(os.getenv("TTAGENT_SEED", seed))     # evaluation repetitions vary the solver seed
         faults = _faults()
         if faults.get("crash") and _FAULT_STATE["crashes"] < faults["crash"]:
             _FAULT_STATE["crashes"] += 1
@@ -269,7 +271,8 @@ class TimetableService:
             _FAULT_STATE["corrupted"] = 1                  # once per server process (one evaluation task / session)
             # evaluation only: silently corrupt k sessions AFTER the self-check, so the stored self-report
             # says "valid" while the timetable has clashes (a buggy or compromised scheduling tool)
-            res["assignments"] = _corrupt(ds, res["assignments"], int(k), seed=len(res["assignments"]))
+            res["assignments"] = _corrupt(ds, res["assignments"], int(k),
+                                         seed=len(res["assignments"]) + int(__import__("os").getenv("TTAGENT_SEED", "0")))
             res["stats"]["fault_injected"] = f"corrupt:{k}"
         sid = self.store.save_solution(res, label=label, parent=parent)
         return self.solution_summary(sid)

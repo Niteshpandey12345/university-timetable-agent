@@ -151,6 +151,30 @@ system. Normal builds use supervisor → requirements → scheduler → validato
 corruption and starved-solver tasks add one diagnoser and one repairer step; the outage tasks add scheduler
 retries; the unsafe request is handled by the action agent's validation alone.
 
+## Repetitions and significance
+
+The whole protocol was repeated three times (`--seed` 7, 11, 23: different solver seeds and different corrupted
+sessions), giving 51 task runs per variant. Files: `agent_eval_rules.json`, `agent_eval_rep2.json`, `agent_eval_rep3.json`.
+
+| Variant | Solved [runs] | Success rate [%] | 95 % Wilson CI [%] | Unsafe publications [count] | Solved per repetition | McNemar b/c | Exact McNemar p |
+|---|---|---|---|---|---|---|---|
+| Full system | 51/51 | 100.0 | 93.0–100.0 | 0 | 17, 17, 17 | – | – |
+| − validator | 39/51 | 76.5 | 63.2–86.0 | 12 | 13, 13, 13 | 12/0 | 0.00049 |
+| − repair loop | 36/51 | 70.6 | 57.0–81.3 | 0 | 12, 12, 12 | 15/0 | 6.1e-05 |
+| − fallback | 45/51 | 88.2 | 76.6–94.5 | 0 | 15, 15, 15 | 6/0 | 0.031 |
+| − memory | 42/51 | 82.4 | 69.7–90.4 | 0 | 14, 14, 14 | 9/0 | 0.0039 |
+| − approval | 48/51 | 94.1 | 84.1–98.0 | 0 | 16, 16, 16 | 3/0 | 0.25 |
+| Single tool call | 16/51 | 31.4 | 20.3–45.0 | 12 | 6, 5, 5 | 35/0 | 5.8e-11 |
+
+Every ablation lost exactly the same tasks in all three repetitions; the single-tool-call baseline varied only on
+one starved-solver task. b = tasks the full system solved and the variant did not; c = the converse (always 0).
+
+```bash
+ttagent agent-eval                                     # repetition 1 (tag rules)
+python -m scripts.run_agent_eval --tag rep2 --seed 11
+python -m scripts.run_agent_eval --tag rep3 --seed 23
+```
+
 ## Threats to validity
 
 * **Scripted faults.** The faults are injected, not observed. They model real failure classes (a buggy or

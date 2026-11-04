@@ -299,5 +299,8 @@ if __name__ == "__main__":
     ap.add_argument("--time", type=float, default=20)
     ap.add_argument("--llm", action="store_true")
     ap.add_argument("--tag", default="rules")
+    ap.add_argument("--seed", type=int, help="repetition seed: varies the solver seed and the corrupted sessions")
     a = ap.parse_args()
+    if a.seed is not None:
+        os.environ["TTAGENT_SEED"] = str(a.seed)
     asyncio.run(main(a.variants, a.scenarios, a.time, a.llm, a.tag))
