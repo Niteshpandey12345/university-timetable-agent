@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "University Timetable Agent: LangGraph multi-agent orchestration over MCP with a decomposed CP-SAT engine"
+authors:
+  - family-names: Pandey
+    given-names: Nitesh
+version: 4.0.0
+date-released: 2026-11-04
+license: MIT
+repository-code: "https://github.com/Niteshpandey12345/university-timetable-agent"
+keywords: [agentic AI, LangGraph, Model Context Protocol, CP-SAT, university course timetabling, genetic algorithm, ITC-2007]

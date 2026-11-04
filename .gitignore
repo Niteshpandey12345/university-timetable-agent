@@ -9,3 +9,8 @@ data/state/*
 config/overrides.yaml
 data/raw/uploads/
 *.egg-info/
+
+# manuscripts are kept outside the repository
+paper/
+*manuscript*.docx
+*_paper*.docx

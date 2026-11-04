@@ -10,7 +10,7 @@ LangGraph agents · Model Context Protocol (MCP) · OR-Tools CP-SAT**
 ![langgraph](https://img.shields.io/badge/LangGraph-1.2-1C3C3C)
 ![mcp](https://img.shields.io/badge/MCP-4%20servers%20%C2%B7%2030%20tools-6c8cff)
 ![ortools](https://img.shields.io/badge/OR--Tools-CP--SAT%209.15-4285F4)
-![tests](https://img.shields.io/badge/tests-52%20passing-34d399)
+[![tests](https://github.com/Niteshpandey12345/university-timetable-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Niteshpandey12345/university-timetable-agent/actions/workflows/ci.yml)
 ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
 | 🤖 **Agents** | 🛡️ **Safety** | 📅 **Real data** | 🧪 **Benchmarks** |
@@ -237,7 +237,7 @@ Step-by-step guide: **[docs/USAGE.md](docs/USAGE.md)** · study with real users:
 │   ├── results/itc2007_*     # benchmark results
 │   └── llm_eval/             # 77 labelled requests
 ├── data/                # raw workbook · ITC instances · processed dataset · state (SQLite)
-├── docs/                # AGENT_EVALUATION · V3_ANALYSIS · ARCHITECTURE · USAGE · USER_STUDY · DEMO · report
+├── docs/                # index: docs/README.md · AGENT_EVALUATION · V3_ANALYSIS · ARCHITECTURE · USAGE · USER_STUDY · DEMO · report
 ├── tests/               # 52 tests (real workbook, ITC-2007, MCP round-trip, agent end-to-end with faults)
 ├── config/              # settings.yaml · seat/batch-size templates · overrides.yaml (from the Settings page)
 └── TimetableAgent.bat · run.sh · pyproject.toml
@@ -284,7 +284,7 @@ Yes, if it follows the same layout (requirements in `Main!K:V`, grid in `Main!B2
 
 ## 📜 License & citation
 
-MIT; see [LICENSE](LICENSE). The workbook in `data/raw/` belongs to the institution and is not covered by the
+MIT; see [LICENSE](LICENSE). Release notes: [CHANGELOG.md](CHANGELOG.md). Citation metadata: [CITATION.cff](CITATION.cff). The workbook in `data/raw/` belongs to the institution and is not covered by the
 licence. If you use this work, please cite:
 
 ```
