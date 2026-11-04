@@ -8,6 +8,30 @@ and with fewer errors, and how usable they find the system.
 faculty who edit the workbook). Five participants already find most usability problems; for timing statistics,
 8 is better.
 
+## 0. Analytical estimate before the study (Keystroke-Level Model)
+
+Before running the study with people, the five tasks were analysed with the Keystroke-Level Model (KLM; Card,
+Moran & Newell, 1980), which predicts error-free expert time from operator counts: K keystroke 0.28 s, P point
+1.1 s, B button 0.1 s, H home 0.4 s, M mental act / reading one item 1.35 s, plus measured system response time R.
+Excel-side counts come from the real published grid (755 entries in 40 slot segments; 34 legal starts for a
+lecture; the busiest semester-3 teacher NSA has 4 Monday sessions; JP has 21 grid hits and LT1 33). Agent-side
+response times were measured on the running system. Script: `python -m scripts.klm_analysis`; results in
+`experiments/results/klm/`.
+
+| Task | Excel [s] | Agent [s] | Ratio | Range of ratio |
+|---|---:|---:|---:|---:|
+| T1 Find every clash in semester 3 | 1063.2 | 35.8 | 29.7× | 24.6–31.9× |
+| T2 Explain a missing lecture and where it could go | 347.9 | 60.1 | 5.8× | 5.1–6.0× |
+| T3 Teacher absent for a day (4 sessions displaced) | 1299.9 | 22.8 | 57.1× | 47.6–60.1× |
+| T4 Move a lab without creating a clash | 19.4 | 31.3 | 0.6× | 0.5–0.7× |
+| T5 Weekly timetable of a teacher and a room | 79.0 | 31.7 | 2.5× | 2.1–2.7× |
+| **All five** | **2809.4** | **181.7** | **15.5×** | 12.9–16.5× |
+
+The range varies all operator times between "fast" and "slow" settings. The model predicts large savings where
+the workbook offers no support (finding clashes, diagnosing, what-if), a small saving for look-ups, and a *loss*
+for a single simple move, where editing a cell is quicker than typing a request. These are predictions for an
+expert who makes no mistakes; the study below measures real staff, including errors.
+
 ## 1. Before you start
 
 * Get the department's permission. Use the consent text in section 6. No personal data beyond role and years

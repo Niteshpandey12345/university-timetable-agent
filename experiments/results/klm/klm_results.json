@@ -1,0 +1,212 @@
+{
+ "operators": {
+  "low": {
+   "K": 0.2,
+   "P": 1.0,
+   "B": 0.1,
+   "H": 0.36,
+   "M": 1.2
+  },
+  "base": {
+   "K": 0.28,
+   "P": 1.1,
+   "B": 0.1,
+   "H": 0.4,
+   "M": 1.35
+  },
+  "high": {
+   "K": 0.5,
+   "P": 1.2,
+   "B": 0.1,
+   "H": 0.44,
+   "M": 1.5
+  }
+ },
+ "data_counts": {
+  "segments": 40,
+  "entries": 755,
+  "segments_sem3": 40,
+  "entries_in_sem3_segments": 755,
+  "legal_starts_1h_lecture": 34,
+  "resources_lecture": 5,
+  "teacher": "NSA",
+  "teacher_day": "Mon",
+  "displaced_sessions": 4,
+  "lab": "3B1,3B2:P-DSLAB@CL4_KBM,BHASKAR",
+  "lab_hours": 2,
+  "lab_people": 5,
+  "hits_JP": 21,
+  "hits_LT1": 33,
+  "mean_entries_per_segment": 18.9
+ },
+ "tasks": [
+  {
+   "task": "T1 Find every clash in semester 3",
+   "excel_ops": {
+    "P": 40,
+    "M": 755
+   },
+   "agent_ops": {
+    "H": 1,
+    "M": 17,
+    "K": 44
+   },
+   "agent_R_s": 0.1,
+   "low": {
+    "excel_s": 946.0,
+    "agent_s": 29.7,
+    "ratio": 31.9
+   },
+   "base": {
+    "excel_s": 1063.2,
+    "agent_s": 35.8,
+    "ratio": 29.7
+   },
+   "high": {
+    "excel_s": 1180.5,
+    "agent_s": 48.0,
+    "ratio": 24.6
+   }
+  },
+  {
+   "task": "T2 Explain a missing lecture and where it could go",
+   "excel_ops": {
+    "P": 34,
+    "M": 230
+   },
+   "agent_ops": {
+    "H": 1,
+    "M": 35,
+    "K": 44
+   },
+   "agent_R_s": 0.1,
+   "low": {
+    "excel_s": 310.0,
+    "agent_s": 51.3,
+    "ratio": 6.0
+   },
+   "base": {
+    "excel_s": 347.9,
+    "agent_s": 60.1,
+    "ratio": 5.8
+   },
+   "high": {
+    "excel_s": 385.8,
+    "agent_s": 75.0,
+    "ratio": 5.1
+   }
+  },
+  {
+   "task": "T3 Teacher absent for a day (4 sessions displaced)",
+   "excel_ops": {
+    "H": 1,
+    "K": 22,
+    "P": 153,
+    "B": 18,
+    "M": 832
+   },
+   "agent_ops": {
+    "H": 1,
+    "M": 7,
+    "K": 29,
+    "P": 1,
+    "B": 2
+   },
+   "agent_R_s": 3.5,
+   "low": {
+    "excel_s": 1158.0,
+    "agent_s": 19.3,
+    "ratio": 60.1
+   },
+   "base": {
+    "excel_s": 1299.9,
+    "agent_s": 22.8,
+    "ratio": 57.1
+   },
+   "high": {
+    "excel_s": 1444.8,
+    "agent_s": 30.3,
+    "ratio": 47.6
+   }
+  },
+  {
+   "task": "T4 Move a lab without creating a clash",
+   "excel_ops": {
+    "P": 4,
+    "M": 10,
+    "B": 4,
+    "K": 4
+   },
+   "agent_ops": {
+    "H": 2,
+    "M": 11,
+    "K": 56
+   },
+   "agent_R_s": 0.0,
+   "low": {
+    "excel_s": 17.2,
+    "agent_s": 25.1,
+    "ratio": 0.7
+   },
+   "base": {
+    "excel_s": 19.4,
+    "agent_s": 31.3,
+    "ratio": 0.6
+   },
+   "high": {
+    "excel_s": 22.2,
+    "agent_s": 45.4,
+    "ratio": 0.5
+   }
+  },
+  {
+   "task": "T5 Weekly timetable of a teacher and a room",
+   "excel_ops": {
+    "H": 1,
+    "K": 11,
+    "P": 2,
+    "B": 4,
+    "M": 54
+   },
+   "agent_ops": {
+    "H": 2,
+    "M": 14,
+    "K": 43
+   },
+   "agent_R_s": 0.0,
+   "low": {
+    "excel_s": 69.8,
+    "agent_s": 26.1,
+    "ratio": 2.7
+   },
+   "base": {
+    "excel_s": 79.0,
+    "agent_s": 31.7,
+    "ratio": 2.5
+   },
+   "high": {
+    "excel_s": 89.7,
+    "agent_s": 43.4,
+    "ratio": 2.1
+   }
+  }
+ ],
+ "total": {
+  "low": {
+   "excel_s": 2501.0,
+   "agent_s": 151.5,
+   "ratio": 16.5
+  },
+  "base": {
+   "excel_s": 2809.4,
+   "agent_s": 181.7,
+   "ratio": 15.5
+  },
+  "high": {
+   "excel_s": 3123.0,
+   "agent_s": 242.1,
+   "ratio": 12.9
+  }
+ },
+ "note": "KLM predicts error-free expert time; Excel times are lower bounds (no errors, no re-reading)."
+}

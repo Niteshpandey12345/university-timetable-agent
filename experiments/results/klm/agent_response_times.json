@@ -1,0 +1,58 @@
+{
+ "T1": {
+  "q": "Show all conflicts in the current timetable",
+  "seconds": 0.1,
+  "intent": "validate",
+  "answer_lines": 16,
+  "answer_head": "### Validation of published: INVALID\n- Coverage 667/674 h (98.96%), under-allocated requirements: 4\n| rule | count |\n|---|---|\n| H1_batch_clash | 2 |\n| H2_faculty_clash | 3 |\n| H5_outside_hours | 14 |\n| H5_saturday_cutoff | 1 |\n- 3B23,3A1:L-EVS@DLC_JKS at Mon slot 8 is outside teaching hours\n- 5B1,5"
+ },
+ "T2": {
+  "q": "Why could you not schedule the CMD lecture?",
+  "seconds": 0.1,
+  "intent": "explain_unplaced",
+  "answer_lines": 34,
+  "answer_head": "### Why these sessions could not be placed\n**3B7,3B8,3B9:L-CMD@LT2_NEEJ** (1/2 sessions placed, 34 legal start times)\n- blocked by: {'room': 30, 'batch': 32, 'faculty': 11, 'same_day': 4}\n- free slots: none\n- would fit at Mon 11:00-12:00 in another room: LT4, LT9\n  - Mon 09:00-10:00: batch:3B7, batc"
+ },
+ "T3a": {
+  "q": "Generate timetable for semester 3",
+  "seconds": 13.2,
+  "intent": "generate",
+  "answer_lines": 4,
+  "answer_head": "### Timetable S1104110401-80a9 (Generate timetable for semester 3)\n- Coverage: **170/170 h (100.0%)**, hard violations: **0**, valid: **True**\n- Quality: idle gaps 28, faculty >3h-in-a-row 0, Saturday hours 18, 16:00+ hours 0, room changes 6\n- Approval: published"
+ },
+ "T3b": {
+  "q": "RAVI is unavailable on Monday",
+  "seconds": 0.1,
+  "intent": "what_if_unavailable",
+  "answer_lines": 6,
+  "answer_head": "### What-if: faculty RAVI unavailable on Mon\n- Sessions affected in the current timetable: 0\n### Timetable S1104110401-f979 (repair of S1104110401-80a9)\n- Coverage: **170/170 h (100.0%)**, hard violations: **0**, valid: **True**\n- Quality: idle gaps 28, faculty >3h-in-a-row 0, Saturday hours 18, 16:"
+ },
+ "T4a": {
+  "q": "Show timetable of batch 3B1",
+  "seconds": 0.0,
+  "intent": "view",
+  "answer_lines": 9,
+  "answer_head": "### batch 3B1 -- 26 h/week (S1104110401-f979)\n| day | 09:00-10:00 | 10:00-11:00 | 11:00-12:00 | 12:00-13:00 | 14:00-15:00 | 15:00-16:00 |\n|---|---|---|---|---|---|---|\n| Mon | TDM(T) CR11 PGUPTA | DSLAB(P) CL4 KBM/BHASKAR | DSLAB(P) CL4 KBM/BHASKAR | DS(L) LT2 KBM | EVS(L) DLC GANDHI |  |\n| Tue | DB"
+ },
+ "T5a": {
+  "q": "show faculty JP timetable",
+  "seconds": 0.0,
+  "intent": "view",
+  "answer_lines": 9,
+  "answer_head": "### faculty JP -- 21 h/week (S1104110401-f979)\n| day | 09:00-10:00 | 10:00-11:00 | 11:00-12:00 | 12:00-13:00 | 14:00-15:00 | 15:00-16:00 |\n|---|---|---|---|---|---|---|\n| Mon | DBMS(T) CR18 JP [3B2] | DBMS(L) LT2 JP [3B4,3B5,3B6] | DBMS(T) CR18 JP [3B6] |  |  |  |\n| Tue | DBMS(L) LT1 JP [3B1,3B2,3B3"
+ },
+ "T5b": {
+  "q": "display room LT1",
+  "seconds": 0.0,
+  "intent": "view",
+  "answer_lines": 9,
+  "answer_head": "### room LT1 -- 20 h/week (S1104110401-f979)\n| day | 09:00-10:00 | 10:00-11:00 | 11:00-12:00 | 12:00-13:00 | 14:00-15:00 | 15:00-16:00 |\n|---|---|---|---|---|---|---|\n| Mon |  |  | DBMS(L) LT1 AKS [3B21,3B22,3B23,3B31] |  |  |  |\n| Tue | DBMS(L) LT1 JP [3B1,3B2,3B3] | TOC1(L) LT1 AKD [3B1,3B2,3B3] |"
+ },
+ "T4b": {
+  "q": "move R50#0 to Friday slot 6",
+  "seconds": 0.0,
+  "intent": "move",
+  "answer_head": "Moving **3B1,3B2:P-DSLAB@CL4_KBM,BHASKAR** to Fri 14:00-16:00 in CL4 would break: {'H1_batch_clash': 1, 'H2_faculty_clash': 1, 'H3_room_clash': 2}\n- room CL4 double-booked at Fri slot 6: 3B1,3B2:P-DSLAB@CL4_KBM,BHASKAR | 3B7,3B8:P-DBMSLAB@CL4_AKS,PSB\n- batch 3B1,3B2 has DSLAB(P) and DBMS(L) at Fri s"
+ },
+ "T3b_repair_s": 3.5
+}
