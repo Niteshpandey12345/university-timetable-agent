@@ -1,0 +1,1372 @@
+{
+ "seeds_runs": [
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 6,
+   "coverage_pct": 99.85,
+   "scheduled_h": 673,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2057,
+   "idle_gaps": 112,
+   "saturday_h": 81,
+   "late_h": 72,
+   "extended_h": 0,
+   "room_changes": 129,
+   "faculty_consec": 10,
+   "weekday_imbalance": 0.084,
+   "seconds": 102.6
+  },
+  {
+   "method": "GA memetic",
+   "seed": 6,
+   "coverage_pct": 98.22,
+   "scheduled_h": 662,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2738,
+   "idle_gaps": 93,
+   "saturday_h": 64,
+   "late_h": 82,
+   "extended_h": 0,
+   "room_changes": 257,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.05,
+   "seconds": 120.1
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 7,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2247,
+   "idle_gaps": 102,
+   "saturday_h": 79,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 149,
+   "faculty_consec": 14,
+   "weekday_imbalance": 0.151,
+   "seconds": 111.8
+  },
+  {
+   "method": "GA memetic",
+   "seed": 7,
+   "coverage_pct": 98.22,
+   "scheduled_h": 662,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2793,
+   "idle_gaps": 106,
+   "saturday_h": 66,
+   "late_h": 83,
+   "extended_h": 0,
+   "room_changes": 242,
+   "faculty_consec": 17,
+   "weekday_imbalance": 0.042,
+   "seconds": 120.6
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 8,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2205,
+   "idle_gaps": 127,
+   "saturday_h": 80,
+   "late_h": 77,
+   "extended_h": 0,
+   "room_changes": 139,
+   "faculty_consec": 7,
+   "weekday_imbalance": 0.194,
+   "seconds": 110.9
+  },
+  {
+   "method": "GA memetic",
+   "seed": 8,
+   "coverage_pct": 99.11,
+   "scheduled_h": 668,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2853,
+   "idle_gaps": 111,
+   "saturday_h": 70,
+   "late_h": 84,
+   "extended_h": 0,
+   "room_changes": 265,
+   "faculty_consec": 20,
+   "weekday_imbalance": 0.192,
+   "seconds": 120.3
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 9,
+   "coverage_pct": 100.0,
+   "scheduled_h": 674,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 1769,
+   "idle_gaps": 85,
+   "saturday_h": 83,
+   "late_h": 65,
+   "extended_h": 0,
+   "room_changes": 123,
+   "faculty_consec": 9,
+   "weekday_imbalance": 0.093,
+   "seconds": 95.8
+  },
+  {
+   "method": "GA memetic",
+   "seed": 9,
+   "coverage_pct": 99.26,
+   "scheduled_h": 669,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2779,
+   "idle_gaps": 105,
+   "saturday_h": 65,
+   "late_h": 77,
+   "extended_h": 0,
+   "room_changes": 256,
+   "faculty_consec": 16,
+   "weekday_imbalance": 0.166,
+   "seconds": 120.6
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 10,
+   "coverage_pct": 99.85,
+   "scheduled_h": 673,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2350,
+   "idle_gaps": 135,
+   "saturday_h": 73,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 153,
+   "faculty_consec": 12,
+   "weekday_imbalance": 0.067,
+   "seconds": 147.1
+  },
+  {
+   "method": "GA memetic",
+   "seed": 10,
+   "coverage_pct": 99.41,
+   "scheduled_h": 670,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2710,
+   "idle_gaps": 92,
+   "saturday_h": 71,
+   "late_h": 82,
+   "extended_h": 0,
+   "room_changes": 277,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.125,
+   "seconds": 120.4
+  }
+ ],
+ "seeds_summary": {
+  "CP-SAT pipeline": {
+   "n": 10,
+   "coverage_pct": {
+    "mean": 99.85,
+    "sd": 0.25
+   },
+   "soft_penalty": {
+    "mean": 2198.2,
+    "sd": 262.11
+   },
+   "idle_gaps": {
+    "mean": 114,
+    "sd": 21.54
+   },
+   "room_changes": {
+    "mean": 140.7,
+    "sd": 12.01
+   },
+   "faculty_consec": {
+    "mean": 9.8,
+    "sd": 3.65
+   },
+   "seconds": {
+    "mean": 126.99,
+    "sd": 27.94
+   },
+   "soft_per_h": 3.27
+  },
+  "GA memetic": {
+   "n": 10,
+   "coverage_pct": {
+    "mean": 98.47,
+    "sd": 0.7
+   },
+   "soft_penalty": {
+    "mean": 2822.4,
+    "sd": 69.81
+   },
+   "idle_gaps": {
+    "mean": 112.6,
+    "sd": 13.64
+   },
+   "room_changes": {
+    "mean": 250.7,
+    "sd": 12.98
+   },
+   "faculty_consec": {
+    "mean": 18.9,
+    "sd": 1.73
+   },
+   "seconds": {
+    "mean": 120.39,
+    "sd": 0.21
+   },
+   "soft_per_h": 4.25
+  },
+  "GA memetic (tuned)": {
+   "n": 10,
+   "coverage_pct": {
+    "mean": 98.47,
+    "sd": 0.7
+   },
+   "soft_penalty": {
+    "mean": 2822.4,
+    "sd": 69.81
+   },
+   "idle_gaps": {
+    "mean": 112.6,
+    "sd": 13.64
+   },
+   "room_changes": {
+    "mean": 250.7,
+    "sd": 12.98
+   },
+   "faculty_consec": {
+    "mean": 18.9,
+    "sd": 1.73
+   },
+   "seconds": {
+    "mean": 120.39,
+    "sd": 0.21
+   },
+   "soft_per_h": 4.25
+  }
+ },
+ "seeds_tests": {
+  "coverage CP-SAT vs GA (10 seeds)": {
+   "U": 98.5,
+   "p": 0.0002,
+   "cliffs_delta": 0.97
+  },
+  "soft CP-SAT vs GA (10 seeds)": {
+   "U": 2.0,
+   "p": 0.0003,
+   "cliffs_delta": -0.96
+  },
+  "coverage CP-SAT vs tuned GA": {
+   "U": 98.5,
+   "p": 0.0002,
+   "cliffs_delta": 0.97
+  },
+  "soft CP-SAT vs tuned GA": {
+   "U": 2.0,
+   "p": 0.0003,
+   "cliffs_delta": -0.96
+  },
+  "coverage tuned vs hand-set GA": {
+   "U": 50.0,
+   "p": 1.0,
+   "cliffs_delta": 0.0
+  }
+ },
+ "tune_trials": [
+  {
+   "config": {
+    "population": 24,
+    "tournament": 3,
+    "crossover_rate": 0.85,
+    "mutation_rate": 0.03,
+    "ls_iters": 120,
+    "ls_sample": 60
+   },
+   "score": 98250.5,
+   "is_default": true
+  },
+  {
+   "config": {
+    "population": 8,
+    "tournament": 3,
+    "crossover_rate": 0.5,
+    "mutation_rate": 0.03,
+    "ls_iters": 500,
+    "ls_sample": 120
+   },
+   "score": 97097.75,
+   "is_default": false
+  },
+  {
+   "config": {
+    "population": 40,
+    "tournament": 5,
+    "crossover_rate": 0.95,
+    "mutation_rate": 0.03,
+    "ls_iters": 60,
+    "ls_sample": 120
+   },
+   "score": 99251.75,
+   "is_default": false
+  },
+  {
+   "config": {
+    "population": 8,
+    "tournament": 2,
+    "crossover_rate": 0.85,
+    "mutation_rate": 0.01,
+    "ls_iters": 500,
+    "ls_sample": 30
+   },
+   "score": 97914.25,
+   "is_default": false
+  },
+  {
+   "config": {
+    "population": 40,
+    "tournament": 5,
+    "crossover_rate": 0.85,
+    "mutation_rate": 0.03,
+    "ls_iters": 500,
+    "ls_sample": 60
+   },
+   "score": 98265.75,
+   "is_default": false
+  },
+  {
+   "config": {
+    "population": 24,
+    "tournament": 3,
+    "crossover_rate": 0.95,
+    "mutation_rate": 0.01,
+    "ls_iters": 250,
+    "ls_sample": 30
+   },
+   "score": 98920.75,
+   "is_default": false
+  },
+  {
+   "config": {
+    "population": 24,
+    "tournament": 3,
+    "crossover_rate": 0.95,
+    "mutation_rate": 0.03,
+    "ls_iters": 250,
+    "ls_sample": 30
+   },
+   "score": 99023.5,
+   "is_default": false
+  },
+  {
+   "config": {
+    "population": 24,
+    "tournament": 3,
+    "crossover_rate": 0.95,
+    "mutation_rate": 0.1,
+    "ls_iters": 60,
+    "ls_sample": 60
+   },
+   "score": 98993.75,
+   "is_default": false
+  },
+  {
+   "config": {
+    "population": 40,
+    "tournament": 2,
+    "crossover_rate": 0.95,
+    "mutation_rate": 0.1,
+    "ls_iters": 500,
+    "ls_sample": 120
+   },
+   "score": 97930.25,
+   "is_default": false
+  },
+  {
+   "config": {
+    "population": 24,
+    "tournament": 3,
+    "crossover_rate": 0.95,
+    "mutation_rate": 0.01,
+    "ls_iters": 120,
+    "ls_sample": 30
+   },
+   "score": 98708.5,
+   "is_default": false
+  }
+ ],
+ "tuned_config": {
+  "population": 24,
+  "tournament": 3,
+  "crossover_rate": 0.85,
+  "mutation_rate": 0.03,
+  "ls_iters": 120,
+  "ls_sample": 60
+ },
+ "tune_budget": {
+  "stage1_configs": 10,
+  "stage1_runs_each": 4,
+  "stage1_run_s": 30,
+  "stage1_instances": "semesters 5 and 3",
+  "stage2_configs": 4,
+  "stage2_runs_each": 2,
+  "stage2_run_s": 120,
+  "stage2_instance": "whole university",
+  "total_cpu_s": 2160
+ },
+ "tuned_runs": [
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 1,
+   "coverage_pct": 98.52,
+   "scheduled_h": 664,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2855,
+   "idle_gaps": 119,
+   "saturday_h": 62,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 241,
+   "faculty_consec": 21,
+   "weekday_imbalance": 0.083,
+   "seconds": 120.2,
+   "generations": 103
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 2,
+   "coverage_pct": 98.81,
+   "scheduled_h": 666,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2836,
+   "idle_gaps": 127,
+   "saturday_h": 70,
+   "late_h": 81,
+   "extended_h": 0,
+   "room_changes": 243,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.076,
+   "seconds": 120.4,
+   "generations": 104
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 3,
+   "coverage_pct": 97.77,
+   "scheduled_h": 659,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2932,
+   "idle_gaps": 132,
+   "saturday_h": 71,
+   "late_h": 87,
+   "extended_h": 0,
+   "room_changes": 246,
+   "faculty_consec": 20,
+   "weekday_imbalance": 0.094,
+   "seconds": 120.1,
+   "generations": 104
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 4,
+   "coverage_pct": 97.18,
+   "scheduled_h": 655,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2907,
+   "idle_gaps": 123,
+   "saturday_h": 68,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 246,
+   "faculty_consec": 17,
+   "weekday_imbalance": 0.102,
+   "seconds": 120.5,
+   "generations": 96
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 5,
+   "coverage_pct": 98.22,
+   "scheduled_h": 662,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2821,
+   "idle_gaps": 118,
+   "saturday_h": 67,
+   "late_h": 84,
+   "extended_h": 0,
+   "room_changes": 234,
+   "faculty_consec": 21,
+   "weekday_imbalance": 0.151,
+   "seconds": 120.7,
+   "generations": 106
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 6,
+   "coverage_pct": 98.22,
+   "scheduled_h": 662,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2738,
+   "idle_gaps": 93,
+   "saturday_h": 64,
+   "late_h": 82,
+   "extended_h": 0,
+   "room_changes": 257,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.05,
+   "seconds": 120.1
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 7,
+   "coverage_pct": 98.22,
+   "scheduled_h": 662,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2793,
+   "idle_gaps": 106,
+   "saturday_h": 66,
+   "late_h": 83,
+   "extended_h": 0,
+   "room_changes": 242,
+   "faculty_consec": 17,
+   "weekday_imbalance": 0.042,
+   "seconds": 120.6
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 8,
+   "coverage_pct": 99.11,
+   "scheduled_h": 668,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2853,
+   "idle_gaps": 111,
+   "saturday_h": 70,
+   "late_h": 84,
+   "extended_h": 0,
+   "room_changes": 265,
+   "faculty_consec": 20,
+   "weekday_imbalance": 0.192,
+   "seconds": 120.3
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 9,
+   "coverage_pct": 99.26,
+   "scheduled_h": 669,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2779,
+   "idle_gaps": 105,
+   "saturday_h": 65,
+   "late_h": 77,
+   "extended_h": 0,
+   "room_changes": 256,
+   "faculty_consec": 16,
+   "weekday_imbalance": 0.166,
+   "seconds": 120.6
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 10,
+   "coverage_pct": 99.41,
+   "scheduled_h": 670,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2710,
+   "idle_gaps": 92,
+   "saturday_h": 71,
+   "late_h": 82,
+   "extended_h": 0,
+   "room_changes": 277,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.125,
+   "seconds": 120.4
+  }
+ ],
+ "tune_race": [
+  {
+   "config": {
+    "population": 40,
+    "tournament": 5,
+    "crossover_rate": 0.95,
+    "mutation_rate": 0.03,
+    "ls_iters": 60,
+    "ls_sample": 120
+   },
+   "is_default": false,
+   "stage1_score": 99251.75,
+   "coverage": [
+    99.7,
+    97.18
+   ],
+   "soft": [
+    2599,
+    2468
+   ],
+   "score": 95906.5
+  },
+  {
+   "config": {
+    "population": 24,
+    "tournament": 3,
+    "crossover_rate": 0.95,
+    "mutation_rate": 0.03,
+    "ls_iters": 250,
+    "ls_sample": 30
+   },
+   "is_default": false,
+   "stage1_score": 99023.5,
+   "coverage": [
+    99.41,
+    99.11
+   ],
+   "soft": [
+    2982,
+    2930
+   ],
+   "score": 96304.0
+  },
+  {
+   "config": {
+    "population": 24,
+    "tournament": 3,
+    "crossover_rate": 0.95,
+    "mutation_rate": 0.1,
+    "ls_iters": 60,
+    "ls_sample": 60
+   },
+   "is_default": false,
+   "stage1_score": 98993.75,
+   "coverage": [
+    95.7,
+    94.21
+   ],
+   "soft": [
+    2400,
+    2305
+   ],
+   "score": 92602.5
+  },
+  {
+   "config": {
+    "population": 24,
+    "tournament": 3,
+    "crossover_rate": 0.85,
+    "mutation_rate": 0.03,
+    "ls_iters": 120,
+    "ls_sample": 60
+   },
+   "is_default": true,
+   "stage1_score": 98250.5,
+   "coverage": [
+    99.55,
+    99.41
+   ],
+   "soft": [
+    3137,
+    2912
+   ],
+   "score": 96455.5
+  }
+ ],
+ "tuned_is_default": true,
+ "stage1_winner_full_instance": [
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 1,
+   "coverage_pct": 95.25,
+   "scheduled_h": 642,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2318,
+   "idle_gaps": 69,
+   "saturday_h": 68,
+   "late_h": 69,
+   "extended_h": 0,
+   "room_changes": 217,
+   "faculty_consec": 21,
+   "weekday_imbalance": 0.131,
+   "seconds": 120.4
+  }
+ ],
+ "tuned_runs_config": {
+  "population": 24,
+  "tournament": 3,
+  "crossover_rate": 0.85,
+  "mutation_rate": 0.03,
+  "ls_iters": 120,
+  "ls_sample": 60
+ },
+ "family_runs": [
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 100.0,
+   "scheduled_h": 286,
+   "required_h": 286,
+   "hard": 0,
+   "soft_penalty": 410,
+   "idle_gaps": 14,
+   "saturday_h": 39,
+   "late_h": 24,
+   "extended_h": 0,
+   "room_changes": 25,
+   "faculty_consec": 0,
+   "weekday_imbalance": 0.081,
+   "seconds": 35.4,
+   "instance": "semester 1"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 1,
+   "coverage_pct": 100.0,
+   "scheduled_h": 286,
+   "required_h": 286,
+   "hard": 0,
+   "soft_penalty": 628,
+   "idle_gaps": 7,
+   "saturday_h": 31,
+   "late_h": 26,
+   "extended_h": 0,
+   "room_changes": 61,
+   "faculty_consec": 10,
+   "weekday_imbalance": 0.137,
+   "seconds": 60.2,
+   "instance": "semester 1"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 2,
+   "coverage_pct": 100.0,
+   "scheduled_h": 286,
+   "required_h": 286,
+   "hard": 0,
+   "soft_penalty": 424,
+   "idle_gaps": 17,
+   "saturday_h": 34,
+   "late_h": 29,
+   "extended_h": 0,
+   "room_changes": 26,
+   "faculty_consec": 0,
+   "weekday_imbalance": 0.079,
+   "seconds": 35.9,
+   "instance": "semester 1"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 2,
+   "coverage_pct": 100.0,
+   "scheduled_h": 286,
+   "required_h": 286,
+   "hard": 0,
+   "soft_penalty": 566,
+   "idle_gaps": 4,
+   "saturday_h": 33,
+   "late_h": 27,
+   "extended_h": 0,
+   "room_changes": 57,
+   "faculty_consec": 9,
+   "weekday_imbalance": 0.158,
+   "seconds": 60.1,
+   "instance": "semester 1"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 100.0,
+   "scheduled_h": 170,
+   "required_h": 170,
+   "hard": 0,
+   "soft_penalty": 192,
+   "idle_gaps": 18,
+   "saturday_h": 13,
+   "late_h": 14,
+   "extended_h": 0,
+   "room_changes": 2,
+   "faculty_consec": 0,
+   "weekday_imbalance": 0.191,
+   "seconds": 34.3,
+   "instance": "semester 3"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 1,
+   "coverage_pct": 100.0,
+   "scheduled_h": 170,
+   "required_h": 170,
+   "hard": 0,
+   "soft_penalty": 313,
+   "idle_gaps": 8,
+   "saturday_h": 17,
+   "late_h": 14,
+   "extended_h": 0,
+   "room_changes": 27,
+   "faculty_consec": 7,
+   "weekday_imbalance": 0.163,
+   "seconds": 60.3,
+   "instance": "semester 3"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 2,
+   "coverage_pct": 100.0,
+   "scheduled_h": 170,
+   "required_h": 170,
+   "hard": 0,
+   "soft_penalty": 194,
+   "idle_gaps": 18,
+   "saturday_h": 8,
+   "late_h": 14,
+   "extended_h": 0,
+   "room_changes": 5,
+   "faculty_consec": 0,
+   "weekday_imbalance": 0.123,
+   "seconds": 34.3,
+   "instance": "semester 3"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 2,
+   "coverage_pct": 100.0,
+   "scheduled_h": 170,
+   "required_h": 170,
+   "hard": 0,
+   "soft_penalty": 304,
+   "idle_gaps": 5,
+   "saturday_h": 17,
+   "late_h": 15,
+   "extended_h": 0,
+   "room_changes": 23,
+   "faculty_consec": 7,
+   "weekday_imbalance": 0.131,
+   "seconds": 60.3,
+   "instance": "semester 3"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 100.0,
+   "scheduled_h": 158,
+   "required_h": 158,
+   "hard": 0,
+   "soft_penalty": 359,
+   "idle_gaps": 18,
+   "saturday_h": 16,
+   "late_h": 13,
+   "extended_h": 0,
+   "room_changes": 20,
+   "faculty_consec": 1,
+   "weekday_imbalance": 0.387,
+   "seconds": 34.3,
+   "instance": "semester 5"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 1,
+   "coverage_pct": 99.37,
+   "scheduled_h": 157,
+   "required_h": 158,
+   "hard": 0,
+   "soft_penalty": 667,
+   "idle_gaps": 20,
+   "saturday_h": 13,
+   "late_h": 18,
+   "extended_h": 0,
+   "room_changes": 67,
+   "faculty_consec": 1,
+   "weekday_imbalance": 0.243,
+   "seconds": 60.1,
+   "instance": "semester 5"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 2,
+   "coverage_pct": 100.0,
+   "scheduled_h": 158,
+   "required_h": 158,
+   "hard": 0,
+   "soft_penalty": 354,
+   "idle_gaps": 16,
+   "saturday_h": 20,
+   "late_h": 12,
+   "extended_h": 0,
+   "room_changes": 21,
+   "faculty_consec": 0,
+   "weekday_imbalance": 0.217,
+   "seconds": 34.3,
+   "instance": "semester 5"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 2,
+   "coverage_pct": 96.84,
+   "scheduled_h": 153,
+   "required_h": 158,
+   "hard": 0,
+   "soft_penalty": 716,
+   "idle_gaps": 37,
+   "saturday_h": 12,
+   "late_h": 18,
+   "extended_h": 0,
+   "room_changes": 51,
+   "faculty_consec": 2,
+   "weekday_imbalance": 0.142,
+   "seconds": 60.3,
+   "instance": "semester 5"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 100.0,
+   "scheduled_h": 60,
+   "required_h": 60,
+   "hard": 0,
+   "soft_penalty": 68,
+   "idle_gaps": 8,
+   "saturday_h": 0,
+   "late_h": 0,
+   "extended_h": 0,
+   "room_changes": 1,
+   "faculty_consec": 0,
+   "weekday_imbalance": 0.167,
+   "seconds": 2.1,
+   "instance": "semester 7"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 1,
+   "coverage_pct": 100.0,
+   "scheduled_h": 60,
+   "required_h": 60,
+   "hard": 0,
+   "soft_penalty": 11,
+   "idle_gaps": 0,
+   "saturday_h": 3,
+   "late_h": 1,
+   "extended_h": 0,
+   "room_changes": 1,
+   "faculty_consec": 0,
+   "weekday_imbalance": 0.351,
+   "seconds": 60.4,
+   "instance": "semester 7"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 2,
+   "coverage_pct": 100.0,
+   "scheduled_h": 60,
+   "required_h": 60,
+   "hard": 0,
+   "soft_penalty": 0,
+   "idle_gaps": 0,
+   "saturday_h": 0,
+   "late_h": 0,
+   "extended_h": 0,
+   "room_changes": 0,
+   "faculty_consec": 0,
+   "weekday_imbalance": 0.333,
+   "seconds": 1.8,
+   "instance": "semester 7"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 2,
+   "coverage_pct": 100.0,
+   "scheduled_h": 60,
+   "required_h": 60,
+   "hard": 0,
+   "soft_penalty": 8,
+   "idle_gaps": 0,
+   "saturday_h": 4,
+   "late_h": 0,
+   "extended_h": 0,
+   "room_changes": 0,
+   "faculty_consec": 0,
+   "weekday_imbalance": 0.357,
+   "seconds": 60.2,
+   "instance": "semester 7"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 99.19,
+   "scheduled_h": 736,
+   "required_h": 742,
+   "hard": 0,
+   "soft_penalty": 3708,
+   "idle_gaps": 126,
+   "saturday_h": 77,
+   "late_h": 115,
+   "extended_h": 17,
+   "room_changes": 170,
+   "faculty_consec": 9,
+   "weekday_imbalance": 0.03,
+   "seconds": 117.2,
+   "instance": "+10 % teaching load"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 1,
+   "coverage_pct": 88.01,
+   "scheduled_h": 653,
+   "required_h": 742,
+   "hard": 0,
+   "soft_penalty": 2925,
+   "idle_gaps": 110,
+   "saturday_h": 58,
+   "late_h": 81,
+   "extended_h": 0,
+   "room_changes": 267,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.21,
+   "seconds": 60.6,
+   "instance": "+10 % teaching load"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 2,
+   "coverage_pct": 98.52,
+   "scheduled_h": 731,
+   "required_h": 742,
+   "hard": 0,
+   "soft_penalty": 3448,
+   "idle_gaps": 128,
+   "saturday_h": 83,
+   "late_h": 116,
+   "extended_h": 15,
+   "room_changes": 162,
+   "faculty_consec": 10,
+   "weekday_imbalance": 0.131,
+   "seconds": 131.9,
+   "instance": "+10 % teaching load"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 2,
+   "coverage_pct": 90.16,
+   "scheduled_h": 669,
+   "required_h": 742,
+   "hard": 0,
+   "soft_penalty": 3010,
+   "idle_gaps": 127,
+   "saturday_h": 60,
+   "late_h": 91,
+   "extended_h": 0,
+   "room_changes": 259,
+   "faculty_consec": 12,
+   "weekday_imbalance": 0.123,
+   "seconds": 60.7,
+   "instance": "+10 % teaching load"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 98.07,
+   "scheduled_h": 661,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2286,
+   "idle_gaps": 124,
+   "saturday_h": 84,
+   "late_h": 80,
+   "extended_h": 0,
+   "room_changes": 137,
+   "faculty_consec": 12,
+   "weekday_imbalance": 0.104,
+   "seconds": 108.3,
+   "instance": "rooms LT1+LT11 closed"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 1,
+   "coverage_pct": 95.99,
+   "scheduled_h": 647,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2603,
+   "idle_gaps": 98,
+   "saturday_h": 67,
+   "late_h": 75,
+   "extended_h": 0,
+   "room_changes": 227,
+   "faculty_consec": 16,
+   "weekday_imbalance": 0.155,
+   "seconds": 60.2,
+   "instance": "rooms LT1+LT11 closed"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 2,
+   "coverage_pct": 97.77,
+   "scheduled_h": 659,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 3073,
+   "idle_gaps": 171,
+   "saturday_h": 74,
+   "late_h": 99,
+   "extended_h": 0,
+   "room_changes": 171,
+   "faculty_consec": 20,
+   "weekday_imbalance": 0.197,
+   "seconds": 94.6,
+   "instance": "rooms LT1+LT11 closed"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 2,
+   "coverage_pct": 98.22,
+   "scheduled_h": 662,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2897,
+   "idle_gaps": 109,
+   "saturday_h": 64,
+   "late_h": 90,
+   "extended_h": 0,
+   "room_changes": 262,
+   "faculty_consec": 17,
+   "weekday_imbalance": 0.217,
+   "seconds": 60.2,
+   "instance": "rooms LT1+LT11 closed"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 99.7,
+   "scheduled_h": 672,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2602,
+   "idle_gaps": 121,
+   "saturday_h": 70,
+   "late_h": 92,
+   "extended_h": 0,
+   "room_changes": 163,
+   "faculty_consec": 18,
+   "weekday_imbalance": 0.042,
+   "seconds": 106.6,
+   "instance": "teachers SMB, RAVI, REENU absent"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 1,
+   "coverage_pct": 98.96,
+   "scheduled_h": 667,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2973,
+   "idle_gaps": 120,
+   "saturday_h": 68,
+   "late_h": 85,
+   "extended_h": 0,
+   "room_changes": 244,
+   "faculty_consec": 24,
+   "weekday_imbalance": 0.092,
+   "seconds": 60.4,
+   "instance": "teachers SMB, RAVI, REENU absent"
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 2,
+   "coverage_pct": 99.55,
+   "scheduled_h": 671,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2576,
+   "idle_gaps": 130,
+   "saturday_h": 75,
+   "late_h": 90,
+   "extended_h": 0,
+   "room_changes": 144,
+   "faculty_consec": 19,
+   "weekday_imbalance": 0.076,
+   "seconds": 100.1,
+   "instance": "teachers SMB, RAVI, REENU absent"
+  },
+  {
+   "method": "GA memetic (tuned)",
+   "seed": 2,
+   "coverage_pct": 98.52,
+   "scheduled_h": 664,
+   "required_h": 674,
+   "hard": 0,
+   "soft_penalty": 2787,
+   "idle_gaps": 101,
+   "saturday_h": 65,
+   "late_h": 82,
+   "extended_h": 0,
+   "room_changes": 264,
+   "faculty_consec": 23,
+   "weekday_imbalance": 0.159,
+   "seconds": 60.3,
+   "instance": "teachers SMB, RAVI, REENU absent"
+  }
+ ],
+ "family_summary": [
+  {
+   "instance": "semester 1",
+   "method": "CP-SAT pipeline",
+   "coverage_mean": 100.0,
+   "coverage_min": 100.0,
+   "hard_max": 0,
+   "soft_mean": 417,
+   "n": 2
+  },
+  {
+   "instance": "semester 1",
+   "method": "GA memetic (tuned)",
+   "coverage_mean": 100.0,
+   "coverage_min": 100.0,
+   "hard_max": 0,
+   "soft_mean": 597,
+   "n": 2
+  },
+  {
+   "instance": "semester 3",
+   "method": "CP-SAT pipeline",
+   "coverage_mean": 100.0,
+   "coverage_min": 100.0,
+   "hard_max": 0,
+   "soft_mean": 193,
+   "n": 2
+  },
+  {
+   "instance": "semester 3",
+   "method": "GA memetic (tuned)",
+   "coverage_mean": 100.0,
+   "coverage_min": 100.0,
+   "hard_max": 0,
+   "soft_mean": 308.5,
+   "n": 2
+  },
+  {
+   "instance": "semester 5",
+   "method": "CP-SAT pipeline",
+   "coverage_mean": 100.0,
+   "coverage_min": 100.0,
+   "hard_max": 0,
+   "soft_mean": 356.5,
+   "n": 2
+  },
+  {
+   "instance": "semester 5",
+   "method": "GA memetic (tuned)",
+   "coverage_mean": 98.11,
+   "coverage_min": 96.84,
+   "hard_max": 0,
+   "soft_mean": 691.5,
+   "n": 2
+  },
+  {
+   "instance": "semester 7",
+   "method": "CP-SAT pipeline",
+   "coverage_mean": 100.0,
+   "coverage_min": 100.0,
+   "hard_max": 0,
+   "soft_mean": 34,
+   "n": 2
+  },
+  {
+   "instance": "semester 7",
+   "method": "GA memetic (tuned)",
+   "coverage_mean": 100.0,
+   "coverage_min": 100.0,
+   "hard_max": 0,
+   "soft_mean": 9.5,
+   "n": 2
+  },
+  {
+   "instance": "+10 % teaching load",
+   "method": "CP-SAT pipeline",
+   "coverage_mean": 98.85,
+   "coverage_min": 98.52,
+   "hard_max": 0,
+   "soft_mean": 3578,
+   "n": 2
+  },
+  {
+   "instance": "+10 % teaching load",
+   "method": "GA memetic (tuned)",
+   "coverage_mean": 89.09,
+   "coverage_min": 88.01,
+   "hard_max": 0,
+   "soft_mean": 2967.5,
+   "n": 2
+  },
+  {
+   "instance": "rooms LT1+LT11 closed",
+   "method": "CP-SAT pipeline",
+   "coverage_mean": 97.92,
+   "coverage_min": 97.77,
+   "hard_max": 0,
+   "soft_mean": 2679.5,
+   "n": 2
+  },
+  {
+   "instance": "rooms LT1+LT11 closed",
+   "method": "GA memetic (tuned)",
+   "coverage_mean": 97.1,
+   "coverage_min": 95.99,
+   "hard_max": 0,
+   "soft_mean": 2750,
+   "n": 2
+  },
+  {
+   "instance": "teachers SMB, RAVI, REENU absent",
+   "method": "CP-SAT pipeline",
+   "coverage_mean": 99.62,
+   "coverage_min": 99.55,
+   "hard_max": 0,
+   "soft_mean": 2589,
+   "n": 2
+  },
+  {
+   "instance": "teachers SMB, RAVI, REENU absent",
+   "method": "GA memetic (tuned)",
+   "coverage_mean": 98.74,
+   "coverage_min": 98.52,
+   "hard_max": 0,
+   "soft_mean": 2880,
+   "n": 2
+  }
+ ],
+ "family_cpsat_wins": "6/7",
+ "onecore": {
+  "method": "CP-SAT pipeline (1 worker, v4 fallback)",
+  "seed": 1,
+  "coverage_pct": 100.0,
+  "scheduled_h": 674,
+  "required_h": 674,
+  "hard": 0,
+  "soft_penalty": 2917,
+  "idle_gaps": 106,
+  "saturday_h": 63,
+  "late_h": 87,
+  "extended_h": 0,
+  "room_changes": 263,
+  "faculty_consec": 17,
+  "weekday_imbalance": 0.155,
+  "seconds": 128.0,
+  "fallback_used": "time phase UNKNOWN -> GA start"
+ }
+}

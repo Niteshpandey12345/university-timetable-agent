@@ -56,6 +56,22 @@ a session: the only code paths that write assignments are `generate_timetable`,
 and the independent validator. `move_session` refuses to commit a move that breaks
 a hard rule.
 
+## Agent safeguards (v4)
+
+Each safeguard is a property of the workflow, not of the solver, and each can be switched off for the
+evaluation (`build_graph(..., ablate={...})`; results in [AGENT_EVALUATION.md](AGENT_EVALUATION.md)).
+
+| Safeguard | Where | What it prevents |
+|---|---|---|
+| Independent validation gates every decision | `validator` node; `action` node for "publish" | a tool that reports "valid" for a timetable with clashes; publishing a hand-broken version |
+| Violation-driven repair | `repairer` → `repair_timetable(fix_violations=True)` | abandoning a timetable that can be fixed |
+| Recovery plan | `scheduler` node: retry, then GA | one failed tool call ending the task |
+| Conversation memory | checkpointed `last_solution_id` | acting on another user's version in a shared office |
+| Human approval | `approval` node, `interrupt()` | publishing without the officer's consent |
+
+For testing, the MCP timetable server can inject faults: `TTAGENT_FAULT="corrupt:3"` (silent corruption after the
+self-check), `"budget:1"` (1 s, one core, no internal repair) or `"crash:2"` (the first two solves fail).
+
 ## Solver design
 
 **Stage 1 - time assignment** (`engine/decomposed.py`): booleans `y[s,d,t]` only.

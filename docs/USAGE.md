@@ -55,6 +55,7 @@ Open http://127.0.0.1:8000.
 | **Data quality** | Workbook issues, learned elective baskets, and the capacity proof. |
 | **Methods & compare** | Every allocation method (CP-SAT pipeline, exact CP-SAT, memetic GA, plain GA, VBA port) with its scope. **Run head-to-head** solves the same semesters with each chosen method under the same time budget and shows coverage, violations and soft quality side by side. |
 | **Settings** | Change the time budget, soft-constraint weights, Saturday cut-off, approval requirement and default batch size. Changes are saved to `config/overrides.yaml` (your `settings.yaml` is never edited). Upload a new workbook here. |
+| **Agent evaluation** | Results of `ttagent agent-eval`: tasks solved and unsafe publications per system variant, what breaks when each agent is removed, and a task-by-variant matrix. |
 | **Research results** | Figures from `experiments/results/`. |
 
 **⚡ Generate** (top bar) solves directly without the chat, for all semesters or one, using the chosen time budget
@@ -90,7 +91,8 @@ All features are behind one command, `ttagent`:
 | `ttagent demo` | scripted demonstration |
 | `ttagent benchmark --time 120` | ITC-2007 public benchmark (CP-SAT vs GA); `--only-lns` adds CP-SAT+LNS |
 | `ttagent experiments` | research experiments on the real workbook |
-| `ttagent llm-eval` | agent-layer evaluation (uses your LLM key if one is configured) |
+| `ttagent agent-eval [--llm]` | agent evaluation: 17 tasks × 7 system variants × injected faults (~35 min) |
+| `ttagent llm-eval` | LLM routing, faithfulness and LLM-only baseline (uses your LLM key) |
 | `ttagent mcp-tools` | start the 4 MCP servers and list their 30 tools |
 
 The older module commands still work:
@@ -105,6 +107,19 @@ python -m scripts.solve --method vba      # the original macro's behaviour, for 
 python -m scripts.solve --stability 20    # stay close to the published timetable
 python -m scripts.solve --method ga --seed 3   # memetic genetic algorithm, for comparison
 ```
+
+## 5b. See the safeguards live
+
+Start the server with a faulty scheduling tool and watch the agents handle it in **Agent Studio**:
+
+```powershell
+$env:TTAGENT_FAULT="corrupt:3"   # the solver silently corrupts 3 sessions but reports "valid"
+ttagent serve
+```
+
+Ask *"Generate timetable for semester 3"*. The trace shows the validator's independent check finding the clashes,
+the repairer fixing them, and only then the approval request. Other faults: `budget:1` (starved solver),
+`crash:2` (the first two solver calls fail). Remove the variable (`Remove-Item Env:TTAGENT_FAULT`) for normal use. Each fault fires once per server start.
 
 ## 5a. Real seat counts, batch sizes and teacher preferences
 

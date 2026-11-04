@@ -29,15 +29,25 @@ def _r_generate(r):
     lines.append(f"- Quality: {_q(s)}")
     if s.get("used_extended_slot"):
         lines.append("- Note: the repair agent had to use the extended 16:00-17:00 slot for a few sessions.")
+    mm = r.get("self_report_mismatch")
+    if mm:
+        lines.append(f"- ⚠ The scheduler reported {mm['claimed_hard']} hard violations, but the **independent validator found "
+                     f"{mm['found_hard']}**. The repair agent fixed them before anything was offered for publication.")
+    rec = r.get("recovered")
+    if rec:
+        lines.append(f"- The first solver call failed; the scheduler agent recovered on attempt {rec['attempts']} ({rec['via']}).")
     for rd in r.get("repair_log", []):
-        lines.append(f"- Repair round {rd.get('iteration')}: unplaced {rd.get('before')} -> {rd.get('after')}")
+        fixed = rd.get("fixed_violations") or 0
+        what = (f"{fixed} hard violation(s) and {max(0, (rd.get('before') or 0) - fixed)} unplaced session(s)" if fixed
+                else f"{rd.get('before')} unplaced session(s)")
+        lines.append(f"- Repair round {rd.get('iteration')}: {what} -> {rd.get('after')} problems left")
     if s.get("unplaced_count"):
         lines.append(f"- Still unplaced ({s['unplaced_count']}): " + "; ".join(u["code"] for u in s.get("unplaced", [])[:5]))
         for e in (r.get("diagnosis") or {}).get("explanations", [])[:3]:
             lines.append(f"  - {e['requirement']}: blockers {e['blocker_histogram']}; free slots {e['safe_havens'][:3] or 'none'}")
     ap = r.get("approval")
     if ap:
-        lines.append(f"- Approval: {'published' if ap.get('approved') else 'not published (awaiting/declined)'}")
+        lines.append(f"- Approval: {'published' if ap.get('approved') else 'not published (declined by the officer)'}")
     if s.get("valid") and not ap:
         lines.append("- Next: review it (view a batch/faculty), then publish or export to Excel.")
     return "\n".join(lines)

@@ -9,10 +9,13 @@
     ttagent demo                  scripted demonstration with full MCP trace
     ttagent benchmark             ITC-2007 public benchmark (CP-SAT vs CP-SAT+LNS vs GA)
     ttagent experiments           research experiments on the real data
-    ttagent llm-eval              agent-layer evaluation
+    ttagent agent-eval            what each agent contributes: scenarios x ablations x injected faults
+    ttagent llm-eval              LLM routing / faithfulness / LLM-only baseline (needs an LLM key)
     ttagent mcp-tools             start the 4 MCP servers and list their tools
 """
 from __future__ import annotations
+
+import asyncio
 
 import argparse
 import json
@@ -67,7 +70,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--time", type=float, default=60)
     p.add_argument("--quick", action="store_true")
 
-    sub.add_parser("llm-eval", help="agent-layer evaluation (uses an LLM key if configured)")
+    p = sub.add_parser("agent-eval", help="agent-level evaluation: scenarios x ablations x injected faults")
+    p.add_argument("--variants", nargs="+")
+    p.add_argument("--scenarios", nargs="*")
+    p.add_argument("--time", type=float, default=20)
+    p.add_argument("--llm", action="store_true", help="use the configured LLM as supervisor and explainer")
+    sub.add_parser("llm-eval", help="LLM routing, faithfulness and LLM-only baseline (uses an LLM key if configured)")
     sub.add_parser("mcp-tools", help="list MCP servers and tools")
 
     a = ap.parse_args(argv)
@@ -111,6 +119,9 @@ def main(argv: list[str] | None = None) -> int:
     elif a.cmd == "experiments":
         from scripts.run_experiments import main as exp
         exp(a.time, a.quick, 8)
+    elif a.cmd == "agent-eval":
+        from scripts.run_agent_eval import VARIANTS, main as aev
+        asyncio.run(aev(a.variants or list(VARIANTS), a.scenarios, a.time, a.llm, "llm" if a.llm else "rules"))
     elif a.cmd == "llm-eval":
         from scripts.run_llm_eval import main as ev
         ev(["routing", "faithfulness", "llm_only"])

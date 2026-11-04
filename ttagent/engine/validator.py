@@ -85,17 +85,17 @@ def validate(ds: Dataset, bookings: list[Booking], grid: TimeGrid | None = None,
             if b.origin == "fixed" and (s == grid.lunch_slot or s not in legal):
                 add("X_external_outside_hours", f"external booking {b.code} at {b.day} slot {s}", day=b.day, slot=s)
             elif s == grid.lunch_slot:
-                add("H4_lunch", f"{b.code} placed in lunch slot on {b.day}", day=b.day, slot=s, origin=b.origin)
+                add("H4_lunch", f"{b.code} placed in lunch slot on {b.day}", day=b.day, slot=s, origin=b.origin, sessions=[b.session_id] if b.session_id else [])
             elif s not in legal:
                 rule = "H5_saturday_cutoff" if b.day == "Sat" else "H5_outside_hours"
-                add(rule, f"{b.code} at {b.day} slot {s} is outside teaching hours", day=b.day, slot=s, origin=b.origin)
+                add(rule, f"{b.code} at {b.day} slot {s} is outside teaching hours", day=b.day, slot=s, origin=b.origin, sessions=[b.session_id] if b.session_id else [])
         for f in _real_faculty(ds, b):
             fac = ds.faculty.get(f)
             if fac:
                 for d, s in fac.unavailable:
                     if d == b.day and (s is None or s in b.slots):
                         add("H9_faculty_unavailable", f"{f} is unavailable {d}{':' + str(s) if s else ''} but teaches {b.code}",
-                            day=b.day, faculty=f)
+                            day=b.day, faculty=f, sessions=[b.session_id] if b.session_id else [])
 
     # ---- H1-H3 clashes per (day, slot) -----------------------------------
     cell: dict[tuple[str, int], list[Booking]] = defaultdict(list)
@@ -114,14 +114,14 @@ def validate(ds: Dataset, bookings: list[Booking], grid: TimeGrid | None = None,
             shared = set(a.batches) & set(b.batches)
             if shared and not (a.basket_id and a.basket_id == b.basket_id):
                 add("H1_batch_clash", f"batch {','.join(sorted(shared))} has {a.course}({a.kind.value}) and {b.course}({b.kind.value}) at {day} slot {slot}",
-                    day=day, slot=slot, a=a.code, b=b.code)
+                    day=day, slot=slot, a=a.code, b=b.code, sessions=[x for x in (a.session_id, b.session_id) if x], origins=[a.origin, b.origin])
             fshared = _real_faculty(ds, a) & _real_faculty(ds, b)
             if fshared:
                 add("H2_faculty_clash", f"faculty {','.join(sorted(fshared))} double-booked at {day} slot {slot}: {a.code} | {b.code}",
-                    day=day, slot=slot, a=a.code, b=b.code)
+                    day=day, slot=slot, a=a.code, b=b.code, sessions=[x for x in (a.session_id, b.session_id) if x], origins=[a.origin, b.origin])
             if a.room == b.room:
                 add("H3_room_clash", f"room {a.room} double-booked at {day} slot {slot}: {a.code} | {b.code}",
-                    day=day, slot=slot, a=a.code, b=b.code)
+                    day=day, slot=slot, a=a.code, b=b.code, sessions=[x for x in (a.session_id, b.session_id) if x], origins=[a.origin, b.origin])
 
     # ---- H6/H7/H8 requirement-level checks --------------------------------
     hours: Counter = Counter()

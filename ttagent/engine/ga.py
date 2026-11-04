@@ -56,6 +56,7 @@ class GAOptions:
     semesters: list[int] | None = None
     tokens: list[int] | None = None
     use_baskets: bool = True
+    forbid: list = field(default_factory=list)   # [{"faculty"|"room": code, "day": d, "slot": s|None}] (what-ifs)
     log_every_s: float = 5.0
     trace: list = field(default_factory=list)
 
@@ -88,6 +89,12 @@ class _Problem:
         for code, fac in ds.faculty.items():
             for d, s in fac.unavailable:
                 unav.add((code, d, s))
+        room_unav = set()
+        for fb in opts.forbid:
+            if fb.get("faculty"):
+                unav.add((fb["faculty"], fb["day"], fb.get("slot")))
+            if fb.get("room"):
+                room_unav.add((fb["room"], fb["day"], fb.get("slot")))
         self.sessions: list[tuple[str, Requirement, str]] = []     # (sid, req, groupkey)
         self.cands: list[list[tuple[str, int, str]]] = []
         self.req_sessions: dict[int, list[int]] = defaultdict(list)
@@ -104,6 +111,8 @@ class _Problem:
                     if any(self.fixed_batch.get((b, d, s)) for b in r.batches for s in slots):
                         continue
                     for room in rooms:
+                        if (room, d, None) in room_unav or any((room, d, s) in room_unav for s in slots):
+                            continue
                         if not any(self.fixed_room.get((room, d, s)) for s in slots):
                             cand.append((d, t, room))
             if not cand:

@@ -1,6 +1,6 @@
 ---
 title: Agentic University Timetable Allocation System
-subtitle: LangGraph Multi-Agent Orchestration over the Model Context Protocol with a Decomposed CP-SAT Engine, Evaluated on Real Institutional Data
+subtitle: LangGraph Multi-Agent Orchestration over the Model Context Protocol with a Decomposed CP-SAT Engine, Evaluated on Real Institutional Data and by Agent Ablation (Version 4)
 author: Nitesh Pandey
 course: M.Tech (3rd Semester), Deep Learning, Project Report
 date: November 2026
@@ -35,12 +35,23 @@ run on both coverage (99.76 % vs 98.10 %) and soft quality (Mann–Whitney p < 0
 ranking holds on all 21 instances of the public ITC-2007 curriculum-based benchmark, where CP-SAT also proves
 three instances optimal, although both methods remain well behind the state of the art at a 120 s budget.
 
+Version 4 measures what the agents themselves contribute. On 17 realistic timetabling-office tasks, 7 of them
+with a fault injected into the scheduling tool, the full multi-agent system solved **17/17 and never published an
+invalid timetable**, while the same tools used as a single tool call solved 6/17 and published 4 timetables with
+clashes, reporting them as valid. Removing each agent in turn shows a distinct contribution: the validator
+prevents unsafe publication, the repair loop recovers broken and starved solves, the fallback recovers tool
+outages, memory prevents acting on a colleague's version, and approval keeps the officer in control. Version 4
+also widens the solver evidence (10 seeds, a GA tuning race, a 7-instance stress family, a single-core fix) and
+applies the engine's time-then-room decomposition to ITC-2007, cutting the median gap to the best-known results
+from 106 % to 37.5 %.
+
 The system includes a web dashboard that visualises the agent graph and every MCP call live, a
 human-in-the-loop approval step, persistent conversational memory, Excel/iCalendar export, a one-command
-installer and launcher, 45 automated tests and a reproducible experiment suite.
+installer and launcher, 52 automated tests and a reproducible experiment suite.
 
 **Keywords:** agentic AI, LangGraph, Model Context Protocol, constraint programming, CP-SAT, university
-course timetabling, large neighbourhood search, genetic algorithm, ITC-2007, explainable AI, human-in-the-loop.
+course timetabling, large neighbourhood search, genetic algorithm, ITC-2007, agent ablation, fault injection,
+explainable AI, human-in-the-loop.
 
 <!-- pagebreak -->
 
@@ -91,8 +102,10 @@ Section 2 reviews related work. Section 3 analyses the existing Excel/VBA system
 data. Sections 5–9 describe the proposed system: architecture, agents, MCP servers, constraint engine and
 interface. Section 10 compares the new system with Excel scripting, and Section 11 reports the
 experiments. Section 12 reports version 3: the GA comparison, the ITC-2007 benchmark, the qualitative
-comparison and the limitations addressed. Section 13 states the contributions and novelty, and Section 14
-documents the implementation and file structure. Sections 15–16 cover limitations and conclusions.
+comparison and the limitations addressed. Section 13 reports version 4: the agent-level evaluation that measures
+what each agent contributes, wider solver evidence and the improved benchmark results. Section 14 states the
+contributions and novelty, and Section 15 documents the implementation and file structure. Sections 16–17 cover
+limitations and conclusions.
 
 <!-- pagebreak -->
 
@@ -652,7 +665,7 @@ trajectory: `capacity_report → get_requirements → generate_timetable → val
 
 The project review asked for three additions: a genetic-algorithm (GA) allocator to compare against, a
 qualitative and quantitative comparison with the existing approach, and work on the limitations of version 2
-(now listed, with their status, in Section 15). This chapter reports all three, together with a public benchmark and
+(now listed, with their status, in Section 16). This chapter reports all three, together with a public benchmark and
 the packaging of the system as installable software. Full details are in `docs/V3_ANALYSIS.md`.
 
 ## 12.1 The GA allocator
@@ -715,7 +728,7 @@ semester is 5 (94.9 %), the one with the most lab blocks.
 **Fairness and anytime behaviour.** The GA is single-threaded. With CP-SAT also restricted to one worker, the
 time phase found **no feasible solution** within its share of the 120 s budget, so the pipeline returned
 nothing. The pipeline relies on CP-SAT's parallel portfolio, whose feasibility-jump and LNS workers find first
-solutions. This is a real limitation; a GA always returns something. With the normal 8-worker portfolio on the
+solutions. This was a real limitation in version 3 (a GA always returns something); version 4 fixes it (Section 13.4). With the normal 8-worker portfolio on the
 same 2 cores, CP-SAT stays ahead at every budget: at about 77 s of wall time it reaches 99.85–100 %, while the
 GA reaches 98.66 % at 61 s and 99.41 % at 240 s (Figure 15). The CP-SAT pipeline needs at least about 77 s,
 because the room phase and the repair ladder come on top of the time budget.
@@ -726,21 +739,22 @@ because the room phase and the repair ladder come on top of the time budget.
 
 Lindahl et al. [26] warn that minimal-perturbation repair can damage timetable quality. Four disruptions (a
 teacher absent for a whole day) were repaired from the best CP-SAT timetable with the stay-put weight *w*
-from 0 to 160. Every repair placed all displaced sessions with zero hard violations, in 7–8 s on average.
+from 0 to 160. Every repair placed all displaced sessions with zero hard violations and 100 % coverage.
+(The table is from the version-4 re-run, after repair also learned to keep each session's room.)
 
-| Stay-put weight *w* | Sessions moved | % of timetable | Soft penalty change |
-|---|---|---|---|
-| 0 | 48.8 | 8.6 % | +138.5 |
-| 10 | 38.3 | 6.8 % | +121.3 |
-| 40 (default) | 34.0 | 6.0 % | +114.8 |
-| 160 | 32.3 | 5.7 % | +97.5 |
+| Stay-put weight *w* | Sessions moved | % of timetable | Soft penalty change | Mean time |
+|---|---|---|---|---|
+| 0 | 76.8 | 13.5 % | +281.8 | 12.3 s |
+| 10 | 4.8 | 0.84 % | +28.0 | 5.9 s |
+| 40 (default) | 4.8 | 0.84 % | +30.5 | 5.7 s |
+| 160 | 4.3 | 0.75 % | +30.5 | 7.5 s |
 
 ![Figure 16. What-if repair: disruption against change in soft penalty for each stay-put weight.](media/v3/fig_v3_disruption_tradeoff.png)
 
-Here the trade-off does not appear: **a higher stay-put weight gives both fewer changes and a smaller loss of
-quality.** Repair optimises feasibility and stability only, so a session moved without need lands in an
-arbitrary legal slot, usually a worse one. When the starting timetable is already optimised, staying close to
-it is the best way to keep its quality.
+Here the trade-off does not appear: **any positive stay-put weight cuts both the disruption (from 13.5 % to
+under 1 % of sessions) and the loss of quality (by about 90 %).** Repair optimises feasibility and stability
+only, so a session moved without need lands in an arbitrary legal slot, usually a worse one. When the starting
+timetable is already optimised, staying close to it is the best way to keep its quality.
 
 ## 12.4 Public benchmark: ITC-2007 Track 3
 
@@ -841,9 +855,153 @@ so the figure stays an honest held-out estimate; with an LLM key, such requests 
 
 <!-- pagebreak -->
 
-# 13. Contributions and Novelty
+# 13. Version 4: Measuring What the Agents Contribute
 
-## 13.1 Contributions
+Version 3 measured the solver thoroughly but left open the question a reviewer of an *agentic* system asks
+first: **what do the agents add, measured?** Version 4 answers it with an agent-level evaluation, makes each
+agent's role causal so that it can be switched off and measured, widens the evidence for the solver comparison,
+fixes the single-core failure and improves the public-benchmark results. Full details are in
+`docs/AGENT_EVALUATION.md`.
+
+## 13.1 Agent safeguards
+
+Five properties of the workflow were made explicit, and each can be switched off (`ablate=...`) for evaluation:
+
+| Safeguard | Agent | What it prevents |
+|---|---|---|
+| Independent validation gates every decision; a mismatch with the scheduler's self-report is logged; "publish" requests are re-checked | Validator, action agent | publishing a timetable a tool claims is valid but is not |
+| Violation-driven repair: sessions in any hard violation are freed and re-placed | Diagnoser, repairer | abandoning a timetable that can be fixed |
+| Recovery plan: retry the solver, then switch to the GA allocator | Scheduler | one failed tool call ending the task |
+| Conversation memory of the version this user is working on | Checkpointer | acting on another user's version in a shared office |
+| Human approval before publication | Approval | publishing without the officer's consent |
+
+The validator principle follows the separation of generation and verification: the component that checks a
+timetable shares no code with the component that builds it, so a fault in one cannot hide itself.
+
+## 13.2 Evaluation method
+
+Seventeen tasks were written as a timetabling officer would phrase them, in nine categories: building a
+semester; the same under three injected faults (silent corruption of 2–3 sessions *after* the tool's own
+self-check, a starved solver with 1 s on one core, and a tool outage of one or two calls); a what-if absence;
+the same what-if and a look-up while another member of staff generates a different version; a request to
+publish a version broken by an unchecked manual edit; an officer's veto of a draft; and two controls already
+guarded by the tools.
+
+Every task ran end-to-end through the real LangGraph workflow and the four real MCP server processes on a fresh
+copy of the database, for seven variants: the full system, the full system with one component removed (five
+variants), and a *single tool call* baseline with all components removed, which is the common "LLM with
+function calling" pattern. A simulated officer approved every publication it was shown, the worst case for
+safety. Success was judged from the final database by an independent validation, never from the agent's answer.
+**Unsafe publications** counts published timetables with any hard violation. The main run uses the deterministic
+rule-based supervisor.
+
+## 13.3 Results
+
+| Variant | Tasks solved | Fault tasks recovered | Invalid timetables published | Tool calls / task | Mean time / task | Human decisions |
+|---|---|---|---|---|---|---|
+| Full system | 17/17 (100.0 %) | 7/7 | 0 | 5.9 | 17.9 s | 16 |
+| − validator | 13/17 (76.5 %) | 4/7 | 4 | 4.3 | 15.5 s | 16 |
+| − repair loop | 12/17 (70.6 %) | 2/7 | 0 | 4.7 | 14.1 s | 11 |
+| − fallback | 15/17 (88.2 %) | 5/7 | 0 | 5.5 | 14.9 s | 14 |
+| − approval | 16/17 (94.1 %) | 7/7 | 0 | 5.9 | 16.7 s | 0 |
+| − memory | 14/17 (82.4 %) | 7/7 | 0 | 6.6 | 24.7 s | 16 |
+| Single tool call | 6/17 (35.3 %) | 1/7 | 4 | 3.6 | 14.0 s | 0 |
+
+| Component removed | Tasks lost | Which | Unsafe publications |
+|---|---|---|---|
+| validator | 4 | C3, C5, C7, P3 | 4 |
+| repair | 5 | C3, C5, C7, T3, T5 | 0 |
+| fallback | 2 | X3, X7 | 0 |
+| approval | 1 | A7 | 0 |
+| memory | 3 | M5, W3, W5 | 0 |
+
+![Figure 19. Agent ablation: tasks solved and invalid timetables published by each system variant.](media/v4/fig_agent_ablation_rules.png)
+
+![Figure 20. Outcome of every task under every variant (green solved, amber failed safely, red published clashes).](media/v4/fig_agent_matrix_rules.png)
+
+Each component is needed for a different class of task. The **validator** is the only safeguard against a
+tool that misreports: without it, all three corrupted timetables and the hand-broken version were published, and
+the system *told the officer they were valid*. The **repair loop** turns detection into correction: without it the
+validator still blocks the corrupted timetables, so nothing unsafe is published, but nothing useful is either.
+The **fallback** recovers tool outages, **memory** prevents acting on a colleague's version, and **approval** keeps
+the human in control. The single-call baseline solved 6 of 17 tasks and published 4 timetables with clashes; the
+full system solved all 17 and published none. The cost is about two extra tool calls and four seconds per request.
+
+**What-if disruption.** In the what-if tasks the full system's minimal-change repair moved 3.6 % and 11.6 % of the
+semester's sessions, while the stateless baseline, which regenerates the timetable, moved 78–86 % (of the wrong version, since it does not know which version the officer means).
+
+![Figure 21. Full system: how often each agent node acted in each task.](media/v4/fig_agent_activity_rules.png)
+
+## 13.4 Wider evidence for the solver comparison
+
+* **Ten seeds.** With seeds 6–10 added, CP-SAT reaches 99.85 ± 0.25 % coverage against 98.47 ± 0.70 % for the
+  hand-set GA (Mann–Whitney p = 0.0002, Cliff's δ = 0.97) and a lower soft penalty (p = 0.0003, δ = −0.96).
+* **GA tuning.** A two-stage tuning race (10 random configurations on the GA's two hardest
+  sub-instances; then the best three and the hand-set default on the whole university with the real budget)
+  **kept the hand-set configuration**. The configuration that won on the sub-instances transferred poorly to the
+  full instance (95.25–99.70 %), because its larger population spends more of the budget on seeding.
+* **Instance family.** On seven instances derived from the real data (each semester alone, 10 % more
+  teaching, two lecture theatres closed, three busy teachers each absent one day; 60 s, 2 seeds), CP-SAT is better
+  on 6. On semester 7, the smallest, both schedule everything and the GA has the lower soft penalty. With 10 % more
+  teaching the GA drops to 89.1 % coverage and CP-SAT to 98.9 %.
+* **One core.** The pipeline now falls back to a short GA start when the CP-SAT time phase finds nothing, and
+  repairs from there. With one worker the CP-SAT time phase still finds nothing, but the pipeline now
+  reaches **100 % coverage with 0 hard violations in 128 s** (version 3: no solution).
+
+## 13.5 ITC-2007 with the time-then-room decomposition
+
+The decomposition that makes the real instance tractable was applied to the benchmark (periods first with a
+Hall-type room-capacity estimate, then rooms, then a warm-started polish of the full model) [27].
+On all 21 instances, at the same 120 s on 2 cores, the decomposition improved on plain CP-SAT on 18 and equalled it on
+the other 3, and cut the **median gap to the best-known value from 106 % to 37.5 %** (the GA: 357 %). It reaches the
+best-known value on 5 instances (comp01, comp04, comp08, comp11, comp14) and is at or below the time-limited average of Kiefer et al. [25] on
+7 of 19 (comp01, comp04, comp08, comp10, comp13, comp14, comp19). The largest gains are on instances where plain CP-SAT struggled most: comp07 (253 → 60),
+comp10 (190 → 10) and comp20 (293 → 46). It remains behind the dedicated metaheuristics on the instances with many
+curricula (comp05, comp12, comp18) and on comp07 and comp20, whose optima are very small. The same idea that makes
+the institution's instance tractable therefore transfers to the public benchmark; we still do not claim
+state-of-the-art results.
+
+| Inst. | Best known | GA | CP-SAT | Time-then-room | Kiefer [25] avg |
+|---|---|---|---|---|---|
+| comp01 | 5 | 27 | **5** (opt) | **5** | 5.0 |
+| comp02 | 24 | 272 | 101 | **51** | 41.5 |
+| comp03 | 64 | 272 | 129 | **92** | 71.7 |
+| comp04 | 35 | 160 | **35** (opt) | **35** | 35.1 |
+| comp05 | 284 | 1034 | 464 | **380** | 305.2 |
+| comp06 | 27 | 352 | 184 | **73** | 47.8 |
+| comp07 | 6 | 412 | 253 | **60** | 14.5 |
+| comp08 | 37 | 194 | 92 | **37** | 41.0 |
+| comp09 | 96 | 254 | 142 | **107** | 102.8 |
+| comp10 | 4 | 270 | 190 | **10** | 14.3 |
+| comp11 | 0 | 10 | **0** (opt) | **0** | – |
+| comp12 | 294 | 849 | 431 | **390** | 319.4 |
+| comp13 | 59 | 229 | 111 | **60** | 60.7 |
+| comp14 | 51 | 218 | 105 | **51** | 54.1 |
+| comp15 | 64 | 237 | 153 | **88** | – |
+| comp16 | 18 | 281 | 148 | **34** | 33.8 |
+| comp17 | 56 | 309 | 191 | **98** | 75.7 |
+| comp18 | 61 | 169 | 105 | **87** | 66.9 |
+| comp19 | 57 | 250 | 116 | **62** | 62.6 |
+| comp20 | 4 | 493 | 293 | **46** | 27.2 |
+| comp21 | 74 | 313 | 249 | **103** | 97.0 |
+
+![Figure 22. ITC-2007 penalties (log scale) of the GA, plain CP-SAT, the time-then-room decomposition and Kiefer et al.](media/v4/fig_itc_costs.png)
+
+## 13.6 LLM evaluation and user study
+
+The LLM part of the agent layer cannot be measured without a model, and the API was not reachable from the
+build environment. Two one-command harnesses are provided: `ttagent agent-eval --llm` runs the same 17 tasks
+with the LLM as supervisor and explainer, and `ttagent llm-eval` measures intent accuracy on 77 held-out
+phrasings, the faithfulness of the numbers in LLM explanations, and an LLM-only baseline in which the LLM writes
+the timetable itself. A user-study kit (`docs/USER_STUDY.md`) gives a counterbalanced within-subjects protocol for
+5–8 timetabling staff comparing the Excel workbook with the agent system on five matched tasks, with the System
+Usability Scale and an analysis script.
+
+<!-- pagebreak -->
+
+# 14. Contributions and Novelty
+
+## 14.1 Contributions
 
 1. **A diagnosis of a real institutional timetabling process.** It includes a pigeonhole proof that the
    existing macro's constraint model is infeasible (23 batches over capacity) and a validation of the
@@ -862,14 +1020,20 @@ so the figure stays an honest held-out estimate; with an LLM key, such requests 
 6. **Explainability by construction.** Capacity proofs, contrastive blocker analysis, grounded
    explanations, a live execution trace and an audit log, surfaced in a dashboard.
 7. **A reproducible research artefact.** A faithful port of the institution's macro as a baseline, an
-   experiment suite (RQ1–RQ6), 45 tests and CI.
+   experiment suite (RQ1–RQ6), 52 tests and CI.
 8. **A fair GA-versus-CP-SAT comparison on identical real and benchmark instances** (version 3). A strong
    memetic GA shares the data, rules and weights; CP-SAT wins every run on the real workbook (Cliff's δ = 1)
    and every ITC-2007 instance. The literature review found no earlier head-to-head study of this kind.
-9. **An empirical answer to the minimal-perturbation critique.** On an optimised timetable, a stronger
-   stay-put weight reduced both disruption and quality loss, so staying close was not costly here.
+9. **An empirical answer to the minimal-perturbation critique.** On an optimised timetable, any positive
+   stay-put weight cut disruption from 13.5 % to under 1 % and quality loss by about 90 %.
+10. **An agent-level evaluation method and its results** (version 4). Scenario tasks run end-to-end through the
+   real workflow and MCP servers, with injected tool faults, one-component ablations, a single-call baseline, a
+   simulated officer and an independent judge. It shows that each agent prevents a different failure class, and
+   that independent validation by a separate agent is what stops a misreporting tool from publishing clashes.
+11. **The time-then-room decomposition transfers to a public benchmark.** On ITC-2007 it improves plain CP-SAT on
+   18 of 21 instances, reaches the proven optimum on 5, and halves or better the gap on most others.
 
-## 13.2 Novelty and positioning
+## 14.2 Novelty and positioning
 
 The individual techniques are established: CP-SAT [6][30], time-then-room decomposition with Hall-type cuts [27], LNS [7], minimal perturbation [8], ReAct [10],
 LangGraph [16], MCP [15]. Prior LLM-plus-optimisation work focuses on *formulating* models from text
@@ -880,17 +1044,20 @@ LangGraph [16], MCP [15]. Prior LLM-plus-optimisation work focuses on *formulati
 * **the use of real institutional data**, which yields a provable diagnosis of the existing process
   rather than benchmark scores alone;
 * **data-driven recovery of hidden constraints** (elective baskets) from a human-made artefact;
-* **minimal-change repair exposed as a conversational what-if**.
+* **minimal-change repair exposed as a conversational what-if**;
+* **measuring agents by what breaks without them**: an ablation and fault-injection protocol for an agentic
+  optimisation system, in which success is judged by an independent validation of the final state, not by
+  the agent's own answer.
 
 The claim is therefore *a novel integration, validated on real data with measured improvements over the
 existing process and over a strong GA*. It is not a claim of state-of-the-art performance on public timetabling benchmarks;
-Section 12.4 now reports it, and Section 15 lists what remains.
+Section 12.4 now reports it, and Section 16 lists what remains.
 
 <!-- pagebreak -->
 
-# 14. Implementation and Project Structure
+# 15. Implementation and Project Structure
 
-## 14.1 Technology stack
+## 15.1 Technology stack
 
 | Component | Technology (version) |
 |---|---|
@@ -904,9 +1071,9 @@ Section 12.4 now reports it, and Section 15 lists what remains.
 | Storage | SQLite (WAL) |
 | Statistics | SciPy (Mann–Whitney U), Matplotlib |
 | Packaging | pyproject.toml, `ttagent` command, Windows launcher |
-| Quality | pytest (45 tests), GitHub Actions CI |
+| Quality | pytest (52 tests), GitHub Actions CI |
 
-## 14.2 File structure
+## 15.2 File structure
 
 ```
 university-timetable-agent/
@@ -943,7 +1110,7 @@ university-timetable-agent/
 │   │   ├── metrics.py            soft-quality metrics
 │   │   ├── diagnosis.py          capacity proof, blocker analysis
 │   │   └── service.py            facade used by MCP servers, API, scripts
-│   ├── benchmarks/               ITC-2007: ctt (parser, UD2 scorer), ctt_cpsat, ctt_ga, ctt_lns (v3)
+│   ├── benchmarks/               ITC-2007: ctt (parser, UD2 scorer), ctt_cpsat, ctt_ga, ctt_lns (v3), ctt_decomp (v4)
 │   ├── cli.py                    the `ttagent` command (v3)
 │   ├── store/db.py               SQLite persistence
 │   ├── export/
@@ -967,17 +1134,18 @@ university-timetable-agent/
 │       ├── main.py               FastAPI endpoints
 │       └── static/index.html     dashboard
 ├── scripts/                      ingest, solve, chat, run_demo, run_experiments,
-│                                 run_analysis_v3, run_benchmark_itc, report_itc, run_llm_eval
-├── tests/                        45 tests on the real workbook and ITC-2007
+│                                 run_analysis_v3, run_benchmark_itc, report_itc, run_llm_eval,
+│                                 run_agent_eval, report_agent_eval, run_analysis_v4, analyze_user_study (v4)
+├── tests/                        52 tests on the real workbook and ITC-2007 (incl. agent with faults)
 ├── experiments/llm_eval/         77 labelled requests (v3)
-├── experiments/results/          CSV, JSON and figures for RQ1–RQ6; v3/ and itc2007_* (v3)
+├── experiments/results/          CSV, JSON and figures: RQ1–RQ6; v3/; v4/; agent_eval/; itc2007_*
 ├── pyproject.toml                package definition and `ttagent` entry point (v3)
 ├── TimetableAgent.bat, run.sh    one-click launchers (v3)
 ├── samples/                      solved full-university timetable (.xlsx)
 └── docs/                         reports, user guide, demo, media/
 ```
 
-## 14.3 Code size
+## 15.3 Code size
 
 | Package | Lines of Python | Files |
 |---|---|---|
@@ -991,7 +1159,7 @@ university-timetable-agent/
 | scripts | 445 | ingest, solve, chat, run_demo, run_experiments |
 | tests | 293 | 4 test modules + fixtures |
 
-## 14.4 How to run
+## 15.4 How to run
 
 ```
 python -m venv .venv
@@ -1003,13 +1171,15 @@ python -m scripts.chat --trace              terminal chat with the agents
 python -m scripts.run_demo                  scripted demonstration
 python -m scripts.solve --time 120          solve and export to Excel
 ttagent solve --method ga --time 120       the GA allocator
-python -m pytest tests -q                   45 tests
+ttagent agent-eval                          reproduce Section 13 (agent evaluation)
+python -m scripts.run_analysis_v4           reproduce Section 13.4
+python -m pytest tests -q                   52 tests
 python -m scripts.run_experiments           reproduce RQ1–RQ6
 python -m scripts.run_analysis_v3           reproduce Section 12.2–12.3
 ttagent benchmark                           reproduce Section 12.4 (ITC-2007)
 ```
 
-## 14.5 Testing and verification
+## 15.5 Testing and verification
 
 Tests cover:
 
@@ -1023,6 +1193,9 @@ Tests cover:
 * the service layer and exports;
 * a real **MCP stdio round-trip** across all four servers;
 * the **LangGraph agent end-to-end** with approval and persistent memory;
+* (v4) fault parsing; corruption detected by re-validation and removed by violation repair; the single-core
+  fallback; GA what-if forbids; the ITC decomposition; and an end-to-end agent run with a corrupting tool that
+  must never publish a clash;
 * (v3) the GA's incremental evaluation against full re-scoring, its clash-free output, the ITC-2007 parser,
   scorer, GA and LNS, seat-count suitability, teacher preferences, basket confidence, and the CLI and
   settings overrides.
@@ -1031,30 +1204,35 @@ GitHub Actions runs the suite on every push.
 
 <!-- pagebreak -->
 
-# 15. Limitations and Future Work
+# 16. Limitations and Future Work
 
-Status of the version-2 limitations after version 3:
+Status of the version-2 limitations after versions 3 and 4:
 
 | Limitation | Status |
 |---|---|
 | Room capacity was a proxy | **Addressed:** real seats and class sizes can be supplied; the department still has to fill in the numbers |
 | Elective baskets inferred from one term | **Mitigated:** confidence levels and flags for confirmation; inferring from several terms needs more workbooks |
 | No teacher preferences | **Addressed:** soft time preferences |
-| Quality depends on time and cores | **Measured:** anytime study; with one worker the CP-SAT pipeline finds no solution in 120 s, which remains a limitation |
-| No public benchmark | **Addressed:** ITC-2007 Track 3; results are far from the state of the art at 120 s |
-| LLM evaluation | **Partly addressed:** held-out request set and evaluation harness; the LLM-based part must be run with the user's own API key |
+| Quality depends on time and cores | **Addressed:** anytime study; the single-core failure is fixed by a GA start (100 % on one core) |
+| No public benchmark | **Addressed:** ITC-2007 Track 3; with the decomposition the median gap is 37.5 %, still behind the state of the art on the hardest instances |
+| Agents not measured | **Addressed:** agent ablation and fault-injection evaluation (Chapter 13) |
+| GA hand-tuned, 5 seeds | **Addressed:** 10 seeds; a two-stage tuning race kept the hand-set configuration |
+| One instance | **Mitigated:** a 7-instance stress family derived from the real data; a second institution is still needed |
+| LLM evaluation | **Prepared:** held-out request set, `agent-eval --llm` and `llm-eval` harnesses; they must be run with an API key |
+| No user study | **Prepared:** protocol, SUS questionnaire and analysis script (docs/USER_STUDY.md) |
 
 Remaining work:
 
-* **Solver strength on benchmarks:** longer runs, more seeds (at least 10) and Wilcoxon tests across instances;
-  a stronger warm start for the single-worker case; and an ITC-2019 evaluation [5] with comparison to UniTime [19].
-* **GA tuning:** tune the GA with an automatic configurator (for example irace) and report the tuning budget.
-* **Evaluation with people:** a user study with the timetable office, and disruptions sampled from the
-  institution's own history of changes.
+* **Run the prepared LLM evaluation and user study** and add their results.
+* **Solver strength on benchmarks:** longer runs, several seeds per instance and Wilcoxon tests across
+  instances; room stability inside the first stage of the decomposition; and an ITC-2019 evaluation [5] with
+  comparison to UniTime [19].
+* **More real data:** a second term or another department, and disruptions sampled from the institution's own
+  history of changes rather than injected faults.
 * **Further constraints:** travel time between buildings and student-level elective enrolment.
-* **Paper:** a research paper based on Chapters 4, 11 and 12, after the department has reviewed the results.
+* **Paper:** a research paper based on Chapters 4, 11, 12 and 13, after the department has reviewed the results.
 
-# 16. Conclusion
+# 17. Conclusion
 
 This project shows that an agentic AI system can replace a fragile spreadsheet-macro process **without
 handing the combinatorics to a language model**. The LLM agents decide which question to ask the engine
@@ -1072,6 +1250,12 @@ honestly how far a general-purpose model at a short budget remains from dedicate
 The GA's main advantage, that it always returns a timetable, matters only when the solver has a single core.
 With real seat counts, teacher preferences, confidence-rated elective baskets and a one-click installer, the
 system is ready for a pilot with the timetable office.
+
+Version 4 answered the question that matters most for an agentic system: what do the agents add? Measured by
+switching them off, the answer is that they make the solver safe to operate. A single tool call is enough when
+nothing goes wrong; but when a tool misreports, runs out of time, fails, or two people work on the timetable at
+once, only the full workflow kept solving tasks without ever publishing a broken timetable. The independent
+validator, separated from the generator, is the single most important design decision.
 
 <!-- pagebreak -->
 
@@ -1155,5 +1339,7 @@ system is ready for a pilot with the timetable office.
 # Appendix B: Repository and Demonstration
 
 * **Source code:** https://github.com/Niteshpandey12345/university-timetable-agent
-* **Demo video:** `docs/media/demo.mp4` (2 min 9 s)
+* **Demo videos:** `docs/media/demo_v4.mp4` (1 min 5 s: the agents catch a faulty scheduling tool) and
+  `docs/media/demo.mp4` (2 min 9 s: tour of the dashboard)
+* **Agent evaluation:** `docs/AGENT_EVALUATION.md`; **solver analysis:** `docs/V3_ANALYSIS.md`; **user-study kit:** `docs/USER_STUDY.md`
 * **User guide:** `docs/USAGE.md`; **demo script:** `docs/DEMO.md`; **architecture:** `docs/ARCHITECTURE.md`
