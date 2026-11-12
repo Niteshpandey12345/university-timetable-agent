@@ -1,0 +1,362 @@
+{
+ "by_term": {
+  "Jul\u2013Dec 2026 (main, rep. 1)": {
+   "full": {
+    "solved": 17,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [],
+    "gained": []
+   },
+   "-validator": {
+    "solved": 13,
+    "n": 17,
+    "unsafe": 4,
+    "lost": [
+     "C3",
+     "C5",
+     "C7",
+     "P3"
+    ],
+    "gained": []
+   },
+   "-repair": {
+    "solved": 12,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "C3",
+     "C5",
+     "C7",
+     "T3",
+     "T5"
+    ],
+    "gained": []
+   },
+   "-fallback": {
+    "solved": 15,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "X3",
+     "X7"
+    ],
+    "gained": []
+   },
+   "-memory": {
+    "solved": 14,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "M5",
+     "W3",
+     "W5"
+    ],
+    "gained": []
+   },
+   "-approval": {
+    "solved": 16,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "A7"
+    ],
+    "gained": []
+   },
+   "single_call": {
+    "solved": 6,
+    "n": 17,
+    "unsafe": 4,
+    "lost": [
+     "A7",
+     "C3",
+     "C5",
+     "C7",
+     "M5",
+     "P3",
+     "T5",
+     "W3",
+     "W5",
+     "X3",
+     "X7"
+    ],
+    "gained": []
+   }
+  },
+  "Jan\u2013Jun 2026": {
+   "full": {
+    "solved": 17,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [],
+    "gained": []
+   },
+   "-validator": {
+    "solved": 13,
+    "n": 17,
+    "unsafe": 4,
+    "lost": [
+     "C3",
+     "C5",
+     "C7",
+     "P3"
+    ],
+    "gained": []
+   },
+   "-repair": {
+    "solved": 13,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "C3",
+     "C5",
+     "C7",
+     "T3"
+    ],
+    "gained": []
+   },
+   "-fallback": {
+    "solved": 15,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "X3",
+     "X7"
+    ],
+    "gained": []
+   },
+   "-memory": {
+    "solved": 14,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "M5",
+     "W3",
+     "W5"
+    ],
+    "gained": []
+   },
+   "-approval": {
+    "solved": 16,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "A7"
+    ],
+    "gained": []
+   },
+   "single_call": {
+    "solved": 7,
+    "n": 17,
+    "unsafe": 4,
+    "lost": [
+     "A7",
+     "C3",
+     "C5",
+     "C7",
+     "M5",
+     "P3",
+     "W3",
+     "W5",
+     "X3",
+     "X7"
+    ],
+    "gained": []
+   }
+  },
+  "Jul\u2013Dec 2025": {
+   "full": {
+    "solved": 17,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [],
+    "gained": []
+   },
+   "-validator": {
+    "solved": 13,
+    "n": 17,
+    "unsafe": 3,
+    "lost": [
+     "C3",
+     "C5",
+     "C7",
+     "P3"
+    ],
+    "gained": []
+   },
+   "-repair": {
+    "solved": 10,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "C3",
+     "C5",
+     "C7",
+     "G3",
+     "T3",
+     "T5",
+     "X3"
+    ],
+    "gained": []
+   },
+   "-fallback": {
+    "solved": 15,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "X3",
+     "X7"
+    ],
+    "gained": []
+   },
+   "-memory": {
+    "solved": 14,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "M5",
+     "W3",
+     "W5"
+    ],
+    "gained": []
+   },
+   "-approval": {
+    "solved": 16,
+    "n": 17,
+    "unsafe": 0,
+    "lost": [
+     "A7"
+    ],
+    "gained": []
+   },
+   "single_call": {
+    "solved": 4,
+    "n": 17,
+    "unsafe": 3,
+    "lost": [
+     "A7",
+     "C3",
+     "C5",
+     "C7",
+     "G3",
+     "M5",
+     "P3",
+     "T3",
+     "T5",
+     "W3",
+     "W5",
+     "X3",
+     "X7"
+    ],
+    "gained": []
+   }
+  }
+ },
+ "pooled": {
+  "full": {
+   "solved": 51,
+   "n": 51,
+   "rate": 100.0,
+   "wilson": [
+    93.0,
+    100.0
+   ],
+   "unsafe": 0,
+   "b_c": [
+    0,
+    0
+   ],
+   "p": null
+  },
+  "-validator": {
+   "solved": 39,
+   "n": 51,
+   "rate": 76.5,
+   "wilson": [
+    63.2,
+    86.0
+   ],
+   "unsafe": 11,
+   "b_c": [
+    12,
+    0
+   ],
+   "p": 0.00048828125
+  },
+  "-repair": {
+   "solved": 35,
+   "n": 51,
+   "rate": 68.6,
+   "wilson": [
+    55.0,
+    79.7
+   ],
+   "unsafe": 0,
+   "b_c": [
+    16,
+    0
+   ],
+   "p": 3.0517578125e-05
+  },
+  "-fallback": {
+   "solved": 45,
+   "n": 51,
+   "rate": 88.2,
+   "wilson": [
+    76.6,
+    94.5
+   ],
+   "unsafe": 0,
+   "b_c": [
+    6,
+    0
+   ],
+   "p": 0.03125
+  },
+  "-memory": {
+   "solved": 42,
+   "n": 51,
+   "rate": 82.4,
+   "wilson": [
+    69.7,
+    90.4
+   ],
+   "unsafe": 0,
+   "b_c": [
+    9,
+    0
+   ],
+   "p": 0.00390625
+  },
+  "-approval": {
+   "solved": 48,
+   "n": 51,
+   "rate": 94.1,
+   "wilson": [
+    84.1,
+    98.0
+   ],
+   "unsafe": 0,
+   "b_c": [
+    3,
+    0
+   ],
+   "p": 0.25
+  },
+  "single_call": {
+   "solved": 17,
+   "n": 51,
+   "rate": 33.3,
+   "wilson": [
+    22.0,
+    47.0
+   ],
+   "unsafe": 11,
+   "b_c": [
+    34,
+    0
+   ],
+   "p": 1.1641532182693481e-10
+  }
+ }
+}

@@ -1,0 +1,50 @@
+{
+ "Jul\u2013Dec 2026 (main)": {
+  "coverage": {
+   "U": 25.0,
+   "p": 0.0112,
+   "cliffs_delta": 1.0
+  },
+  "soft_per_h": {
+   "U": 0.0,
+   "p": 0.0079,
+   "cliffs_delta": -1.0
+  }
+ },
+ "Jul\u2013Dec 2026, earlier draft": {
+  "coverage": {
+   "U": 25.0,
+   "p": 0.0109,
+   "cliffs_delta": 1.0
+  },
+  "soft_per_h": {
+   "U": 0.0,
+   "p": 0.0079,
+   "cliffs_delta": -1.0
+  }
+ },
+ "Jul\u2013Dec 2025": {
+  "coverage": {
+   "U": 25.0,
+   "p": 0.0109,
+   "cliffs_delta": 1.0
+  },
+  "soft_per_h": {
+   "U": 0.0,
+   "p": 0.0079,
+   "cliffs_delta": -1.0
+  }
+ },
+ "Jan\u2013Jun 2026": {
+  "coverage": {
+   "U": 19.0,
+   "p": 0.1736,
+   "cliffs_delta": 0.52
+  },
+  "soft_per_h": {
+   "U": 0.0,
+   "p": 0.0079,
+   "cliffs_delta": -1.0
+  }
+ }
+}

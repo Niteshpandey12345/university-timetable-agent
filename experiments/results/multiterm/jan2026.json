@@ -1,0 +1,355 @@
+{
+ "workbook": "workbook.xlsm",
+ "time_limit_s": 120.0,
+ "runs": [
+  {
+   "method": "Published grid",
+   "seed": null,
+   "coverage_pct": 93.62,
+   "scheduled_h": 602,
+   "required_h": 643,
+   "hard": 39,
+   "soft_penalty": 2958,
+   "idle_gaps": 201,
+   "saturday_h": 0,
+   "late_h": 0,
+   "extended_h": 0,
+   "room_changes": 0,
+   "faculty_consec": 13,
+   "weekday_imbalance": 0.0,
+   "seconds": 0
+  },
+  {
+   "method": "VBA macro (port)",
+   "seed": null,
+   "coverage_pct": 88.96,
+   "scheduled_h": 572,
+   "required_h": 643,
+   "hard": 10,
+   "soft_penalty": 2576,
+   "idle_gaps": 237,
+   "saturday_h": 50,
+   "late_h": 79,
+   "extended_h": 0,
+   "room_changes": 0,
+   "faculty_consec": 22,
+   "weekday_imbalance": 0.297,
+   "seconds": 0.0
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 1,
+   "coverage_pct": 100.0,
+   "scheduled_h": 643,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 1898,
+   "idle_gaps": 134,
+   "saturday_h": 69,
+   "late_h": 70,
+   "extended_h": 0,
+   "room_changes": 81,
+   "faculty_consec": 12,
+   "weekday_imbalance": 0.078,
+   "seconds": 76.0
+  },
+  {
+   "method": "GA memetic",
+   "seed": 1,
+   "coverage_pct": 99.69,
+   "scheduled_h": 641,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 2659,
+   "idle_gaps": 114,
+   "saturday_h": 70,
+   "late_h": 82,
+   "extended_h": 0,
+   "room_changes": 229,
+   "faculty_consec": 27,
+   "weekday_imbalance": 0.14,
+   "seconds": 120.7
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 2,
+   "coverage_pct": 100.0,
+   "scheduled_h": 643,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 2096,
+   "idle_gaps": 158,
+   "saturday_h": 74,
+   "late_h": 71,
+   "extended_h": 0,
+   "room_changes": 82,
+   "faculty_consec": 11,
+   "weekday_imbalance": 0.141,
+   "seconds": 76.9
+  },
+  {
+   "method": "GA memetic",
+   "seed": 2,
+   "coverage_pct": 99.69,
+   "scheduled_h": 641,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 2788,
+   "idle_gaps": 124,
+   "saturday_h": 67,
+   "late_h": 83,
+   "extended_h": 0,
+   "room_changes": 241,
+   "faculty_consec": 23,
+   "weekday_imbalance": 0.096,
+   "seconds": 120.1
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 3,
+   "coverage_pct": 99.69,
+   "scheduled_h": 641,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 2254,
+   "idle_gaps": 176,
+   "saturday_h": 72,
+   "late_h": 74,
+   "extended_h": 0,
+   "room_changes": 85,
+   "faculty_consec": 12,
+   "weekday_imbalance": 0.114,
+   "seconds": 86.7
+  },
+  {
+   "method": "GA memetic",
+   "seed": 3,
+   "coverage_pct": 100.0,
+   "scheduled_h": 643,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 2383,
+   "idle_gaps": 76,
+   "saturday_h": 74,
+   "late_h": 75,
+   "extended_h": 0,
+   "room_changes": 226,
+   "faculty_consec": 35,
+   "weekday_imbalance": 0.149,
+   "seconds": 120.3
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 4,
+   "coverage_pct": 100.0,
+   "scheduled_h": 643,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 2176,
+   "idle_gaps": 159,
+   "saturday_h": 72,
+   "late_h": 70,
+   "extended_h": 0,
+   "room_changes": 90,
+   "faculty_consec": 14,
+   "weekday_imbalance": 0.096,
+   "seconds": 76.7
+  },
+  {
+   "method": "GA memetic",
+   "seed": 4,
+   "coverage_pct": 99.84,
+   "scheduled_h": 642,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 2694,
+   "idle_gaps": 115,
+   "saturday_h": 65,
+   "late_h": 78,
+   "extended_h": 0,
+   "room_changes": 222,
+   "faculty_consec": 34,
+   "weekday_imbalance": 0.165,
+   "seconds": 120.2
+  },
+  {
+   "method": "CP-SAT pipeline",
+   "seed": 5,
+   "coverage_pct": 100.0,
+   "scheduled_h": 643,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 2248,
+   "idle_gaps": 177,
+   "saturday_h": 74,
+   "late_h": 71,
+   "extended_h": 0,
+   "room_changes": 82,
+   "faculty_consec": 13,
+   "weekday_imbalance": 0.167,
+   "seconds": 74.3
+  },
+  {
+   "method": "GA memetic",
+   "seed": 5,
+   "coverage_pct": 99.84,
+   "scheduled_h": 642,
+   "required_h": 643,
+   "hard": 0,
+   "soft_penalty": 2796,
+   "idle_gaps": 110,
+   "saturday_h": 65,
+   "late_h": 84,
+   "extended_h": 0,
+   "room_changes": 247,
+   "faculty_consec": 28,
+   "weekday_imbalance": 0.061,
+   "seconds": 120.3
+  }
+ ],
+ "diagnosis": {
+  "requirements": 340,
+  "sessions_per_week": 534,
+  "hours_per_week": 643,
+  "semesters": [
+   2,
+   4,
+   6,
+   8
+  ],
+  "batches_internal": 55,
+  "batches_external": 13,
+  "faculty": 84,
+  "rooms": 40,
+  "fixed_external_bookings": 54,
+  "elective_baskets": [
+   {
+    "basket_id": "S6-E1",
+    "courses": [
+     "NLP",
+     "SMDA"
+    ],
+    "evidence": 1,
+    "confidence": "low"
+   },
+   {
+    "basket_id": "S8-E1",
+    "courses": [
+     "CD",
+     "MC",
+     "NNA"
+    ],
+    "evidence": 4,
+    "confidence": "medium"
+   },
+   {
+    "basket_id": "S8-E2",
+    "courses": [
+     "EMP",
+     "IHM",
+     "LSM",
+     "NT"
+    ],
+    "evidence": 12,
+    "confidence": "high"
+   },
+   {
+    "basket_id": "S8-E3",
+    "courses": [
+     "IOT",
+     "RL",
+     "SC"
+    ],
+    "evidence": 5,
+    "confidence": "medium"
+   }
+  ],
+  "strict_model_infeasible_batches": 0,
+  "strict_model_provably_infeasible": false,
+  "basket_model_provably_infeasible": false,
+  "macro_rows_not_scheduled": 34,
+  "macro_hours_missing": 66,
+  "published_coverage_pct": 93.62,
+  "published_hard": 39,
+  "published_counts": {
+   "H1_batch_clash": 4,
+   "H2_faculty_clash": 11,
+   "H3_room_clash": 1,
+   "H5_outside_hours": 22,
+   "H5_saturday_cutoff": 1
+  },
+  "max_batch_hours": 33,
+  "issues_by_severity": {
+   "warning": 32,
+   "info": 258
+  }
+ },
+ "summary": {
+  "by_method": {
+   "CP-SAT pipeline": {
+    "n": 5,
+    "coverage_mean": 99.94,
+    "coverage_sd": 0.14,
+    "coverage_min": 99.69,
+    "hard_max": 0,
+    "soft_mean": 2134.4,
+    "soft_sd": 146.88,
+    "soft_per_h": 3.32,
+    "room_changes_mean": 84,
+    "teacher_runs_mean": 12.4,
+    "seconds_mean": 78.1
+   },
+   "GA memetic": {
+    "n": 5,
+    "coverage_mean": 99.81,
+    "coverage_sd": 0.13,
+    "coverage_min": 99.69,
+    "hard_max": 0,
+    "soft_mean": 2664,
+    "soft_sd": 167.84,
+    "soft_per_h": 4.15,
+    "room_changes_mean": 233,
+    "teacher_runs_mean": 29.4,
+    "seconds_mean": 120.3
+   },
+   "Published grid": {
+    "n": 1,
+    "coverage_mean": 93.62,
+    "coverage_sd": 0.0,
+    "coverage_min": 93.62,
+    "hard_max": 39,
+    "soft_mean": 2958,
+    "soft_sd": 0.0,
+    "soft_per_h": 4.91,
+    "room_changes_mean": 0,
+    "teacher_runs_mean": 13,
+    "seconds_mean": 0
+   },
+   "VBA macro (port)": {
+    "n": 1,
+    "coverage_mean": 88.96,
+    "coverage_sd": 0.0,
+    "coverage_min": 88.96,
+    "hard_max": 10,
+    "soft_mean": 2576,
+    "soft_sd": 0.0,
+    "soft_per_h": 4.5,
+    "room_changes_mean": 0,
+    "teacher_runs_mean": 22,
+    "seconds_mean": 0.0
+   }
+  },
+  "tests": {
+   "coverage": {
+    "U": 19.0,
+    "p": 0.1736,
+    "cliffs_delta": 0.52
+   },
+   "soft_per_h": {
+    "U": 0.0,
+    "p": 0.0079,
+    "cliffs_delta": -1.0
+   }
+  }
+ }
+}
