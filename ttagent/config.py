@@ -10,7 +10,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG_PATH = Path(os.getenv("TTAGENT_CONFIG", ROOT / "config" / "settings.yaml"))
-PROCESSED_DIR = ROOT / "data" / "processed"
+PROCESSED_DIR = Path(os.getenv("TTAGENT_PROCESSED_DIR", ROOT / "data" / "processed"))
 STATE_DIR = Path(os.getenv("TTAGENT_STATE_DIR", ROOT / "data" / "state"))
 DB_PATH = Path(os.getenv("TTAGENT_DB", STATE_DIR / "timetable.db"))
 CHECKPOINT_DB = Path(os.getenv("TTAGENT_CHECKPOINT_DB", STATE_DIR / "agent_memory.db"))

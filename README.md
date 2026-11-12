@@ -141,6 +141,12 @@ flowchart LR
 
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+**Replicated on two more terms.** The same 17 tasks, made term-independent, were run on the Jan–Jun 2026 and
+Jul–Dec 2025 workbooks. Pooled over three terms (51 task runs per variant): full system **51/51** (95 % CI
+93.0–100 %) with 0 unsafe publications; single tool call **17/51** with 11 (exact McNemar p = 1.2 × 10⁻¹⁰);
+− validator 39/51 (p = 0.0005), − repair 35/51 (p = 3 × 10⁻⁵), − memory 42/51 (p = 0.004), − fallback 45/51
+(p = 0.03). See [docs/MULTITERM_VALIDATION.md](docs/MULTITERM_VALIDATION.md).
+
 ## 📊 Results on real data and benchmarks
 
 **Real workbook** (348 requirements, 674 h/week, 54 batches, 38 rooms), 10 seeds × 120 s:
@@ -159,6 +165,21 @@ instance) kept the hand-set GA configuration. CP-SAT also leads on
 lecture theatres closed, three teachers absent); on semester 7 both reach 100 % and the GA has the lower soft
 penalty. The pipeline now also works on **one CPU core** (100 % coverage in 128 s via a GA start; v3: no solution).
 
+**Four timetabling workbooks, one unchanged pipeline** (5 seeds × 120 s each). The other terms were never used
+during development:
+
+| Term | Published grid: coverage / hard violations | VBA macro | Memetic GA | **CP-SAT pipeline** |
+|---|---:|---:|---:|---:|
+| Jul–Dec 2026 (main) | 98.96 % / 20 | 88.13 % | 98.10 ± 0.64 % | **99.76 ± 0.34 %**, 0 |
+| Jul–Dec 2026, earlier draft | 99.11 % / 17 | 88.87 % | 99.14 ± 0.61 % | **99.91 ± 0.13 %**, 0 |
+| Jul–Dec 2025 | 93.64 % / 148 | 91.01 % | 97.84 ± 0.32 % | **99.45 ± 0.19 %**, 0 |
+| Jan–Jun 2026 | 93.62 % / 39 | 88.96 % | 99.81 ± 0.13 % | **99.94 ± 0.14 %**, 0 |
+
+CP-SAT has the lowest soft penalty per scheduled hour in every term (p = 0.008, Cliff's δ = −1 each) and higher
+coverage than the GA in three terms (p = 0.011); on Jan–Jun 2026 the difference is not significant (p = 0.17).
+
+<img src="docs/media/v5/fig_multiterm.png" width="760" alt="coverage across four terms">
+
 **ITC-2007 Track 3** (21 public instances, 120 s, 2 cores): the time-then-room decomposition — the same idea
 the engine uses on the real data — cuts the median gap to the best-known results from 106 % (plain CP-SAT)
 to **37.5 %**, reaches the proven optimum on 5 instances, is at or below the time-limited average of Kiefer et
@@ -170,7 +191,7 @@ hardest instances; we report it as evidence that the engine is general and sound
 Findings from the real data: the macro's model is **provably infeasible** (some batches need 42 h in a 34-h
 week); elective baskets learned from the data make it feasible; requested venues must be treated as preferences.
 
-Details: [docs/V3_ANALYSIS.md](docs/V3_ANALYSIS.md) · [docs/RESEARCH_REPORT.md](docs/RESEARCH_REPORT.md) · [project report](docs/Project_Report.docx).
+Details: [docs/MULTITERM_VALIDATION.md](docs/MULTITERM_VALIDATION.md) · [docs/V3_ANALYSIS.md](docs/V3_ANALYSIS.md) · [docs/RESEARCH_REPORT.md](docs/RESEARCH_REPORT.md) · [project report](docs/Project_Report.docx).
 
 ## 🖼️ Screenshots
 
@@ -251,6 +272,7 @@ ttagent agent-eval && python -m scripts.report_agent_eval      # agents (~35 min
 python -m scripts.run_analysis_v3 --time 120        # methods, anytime, repair trade-off, heatmaps
 python -m scripts.run_analysis_v4                   # 10 seeds, GA tuning, instance family, one core
 ttagent benchmark --time 120 && ttagent benchmark --only-decomp && python -m scripts.report_itc
+python -m scripts.run_multiterm --workbooks NAME=path.xlsm ... && python -m scripts.report_multiterm  # other terms
 ttagent llm-eval                                    # with an LLM key
 ```
 

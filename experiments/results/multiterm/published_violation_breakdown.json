@@ -1,0 +1,31 @@
+{
+ "jul2026": {
+  "H5 other rules": 0,
+  "genuine (H2\u2013H9)": 18,
+  "H2 other rules": 0,
+  "genuine batch clash": 1,
+  "parallel sections of one course": 1
+ },
+ "jul2026_v15": {
+  "H5 other rules": 0,
+  "genuine (H2\u2013H9)": 17,
+  "H2 other rules": 0
+ },
+ "jul2025": {
+  "H5 other rules": 0,
+  "genuine (H2\u2013H9)": 25,
+  "H2 other rules": 0,
+  "genuine batch clash": 8,
+  "parallel sections of one course": 24,
+  "H3 other rules": 0,
+  "cohort-wide rows of different courses (possible electives)": 91
+ },
+ "jan2026": {
+  "H5 other rules": 0,
+  "genuine (H2\u2013H9)": 35,
+  "H2 other rules": 0,
+  "parallel sections of one course": 1,
+  "genuine batch clash": 3,
+  "H3 other rules": 0
+ }
+}

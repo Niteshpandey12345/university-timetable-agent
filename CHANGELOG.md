@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.1.0 (November 2026): validation on other terms
+- **Multi-term validation** (`scripts/run_multiterm.py`, `scripts/report_multiterm.py`): the unchanged pipeline
+  on three further workbooks (Jul–Dec 2025, Jan–Jun 2026, an earlier draft of Jul–Dec 2026). CP-SAT reaches
+  99.45–99.94 % coverage with 0 hard violations in every term and the lowest soft penalty per hour (p = 0.008).
+- **Agent evaluation replicated** on two more terms: full system 51/51 pooled, single tool call 17/51 with 11
+  unsafe publications. Tasks are now term-independent (`TTAGENT_EVAL_BASE_DB`, `--seed`).
+- `TTAGENT_PROCESSED_DIR` to keep each term's data separate. See [docs/MULTITERM_VALIDATION.md](docs/MULTITERM_VALIDATION.md).
+
 ## 4.0.0 (November 2026): measuring what the agents contribute
 - **Agent evaluation** (`ttagent agent-eval`): 17 timetabling-office tasks, 7 with an injected tool fault,
   run end-to-end through the LangGraph workflow and the MCP servers on 7 system variants (full, five
