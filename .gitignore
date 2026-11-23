@@ -14,3 +14,9 @@ data/raw/uploads/
 paper/
 *manuscript*.docx
 *_paper*.docx
+
+# institutional data is not distributed with the repository
+data/raw/*.xlsm
+data/raw/*.xlsx
+data/processed/
+samples/*.xlsx

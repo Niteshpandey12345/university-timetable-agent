@@ -39,6 +39,7 @@ def test_year_maps_to_semester():
     assert parse_rules("Generate timetable for Year 3").semesters == [5]
 
 
+@pytest.mark.workbook
 def test_mcp_round_trip():
     from ttagent.agents.mcp_bridge import MCPBridge
 
@@ -53,6 +54,7 @@ def test_mcp_round_trip():
     asyncio.run(go())
 
 
+@pytest.mark.workbook
 def test_agent_offline_generate_with_approval(tmp_path):
     from ttagent.agents.agent import TimetableAgent
 
