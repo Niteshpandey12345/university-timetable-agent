@@ -1,44 +1,39 @@
-<div align="center">
+# University Timetable Agent
 
-# 🗓️ University Timetable Agent
+A multi-agent AI system that builds, checks, repairs and explains a real university timetable, using
+LangGraph agents, the Model Context Protocol (MCP) and the OR-Tools CP-SAT solver. Version 4.1.
 
-**A multi-agent AI system that builds, checks, repairs and explains a real university timetable.
-LangGraph agents · Model Context Protocol (MCP) · OR-Tools CP-SAT**
+It was developed for the timetabling process of Jaypee University of Engineering & Technology (JUET), Guna,
+which previously relied on an Excel workbook and a VBA macro.
 
-![version](https://img.shields.io/badge/version-4.0.0-8b5cf6)
-![python](https://img.shields.io/badge/python-3.10%20%7C%203.14-3776AB?logo=python&logoColor=white)
-![langgraph](https://img.shields.io/badge/LangGraph-1.2-1C3C3C)
-![mcp](https://img.shields.io/badge/MCP-4%20servers%20%C2%B7%2030%20tools-6c8cff)
-![ortools](https://img.shields.io/badge/OR--Tools-CP--SAT%209.15-4285F4)
-[![tests](https://github.com/Niteshpandey12345/university-timetable-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Niteshpandey12345/university-timetable-agent/actions/workflows/ci.yml)
-![license](https://img.shields.io/badge/license-MIT-lightgrey)
+**Key results**
 
-| 🤖 **Agents** | 🛡️ **Safety** | 📅 **Real data** | 🧪 **Benchmarks** |
-|:-:|:-:|:-:|:-:|
-| **17/17** office tasks solved, incl. 7 with a faulty tool | **0** invalid timetables published (single-tool-call baseline: **4**) | **99.85 %** of 674 h/week, **0** clashes (published grid: 98.96 %, 20 clashes) | beats a tuned GA (p = 0.0002); ITC-2007 median gap 106 % → 37.5 % |
+| Area | Result |
+|---|---|
+| Agents | 51 of 51 office tasks solved across three terms, including tasks with a faulty tool |
+| Safety | No invalid timetable published; a single-tool-call baseline published 11 |
+| Real data | 99.85 % of 674 teaching hours per week scheduled with no clashes (published grid: 98.96 %, 20 clashes; VBA macro: 88.13 %) |
+| Robustness | 99.45–99.94 % with no clashes on three further timetables of the institution |
+| Benchmarks | Better than a tuned genetic algorithm (p = 0.0002); ITC-2007 median gap reduced from 106 % to 37.5 % |
 
-<img src="docs/media/agent_studio.gif" alt="Agent Studio: the LangGraph path and MCP calls light up live" width="900">
-
-🎬 **[Demo: agents catch a faulty tool (1 min)](docs/media/demo_v4.mp4)** · [Full tour (2 min)](docs/media/demo.mp4) · 🤖 **[Agent evaluation](docs/AGENT_EVALUATION.md)** · 📊 [Solver & GA analysis](docs/V3_ANALYSIS.md) · 📄 [Project report (Word)](docs/Project_Report.docx) · 📘 [User guide](docs/USAGE.md) · 🏗️ [Architecture](docs/ARCHITECTURE.md)
-
-</div>
+**Documentation:** [Agent evaluation](docs/AGENT_EVALUATION.md) · [Multi-term validation](docs/MULTITERM_VALIDATION.md) · [Solver and GA analysis](docs/V3_ANALYSIS.md) · [Architecture](docs/ARCHITECTURE.md) · [User guide](docs/USAGE.md) · [Project report](docs/Project_Report.docx) · Demo videos: [agents catch a faulty tool (1 min)](docs/media/demo_v4.mp4), [full tour (2 min)](docs/media/demo.mp4)
 
 ---
 
 ## Contents
-1. [What it does](#-what-it-does)
-2. [Why agents? The measured answer](#-why-agents-the-measured-answer)
-3. [How it works](#-how-it-works)
-4. [Results on real data and benchmarks](#-results-on-real-data-and-benchmarks)
-5. [Quick start](#-quick-start)
-6. [Ways to use it](#-ways-to-use-it)
-7. [Repository structure](#-repository-structure)
-8. [Reproducing the research](#-reproducing-the-research)
-9. [FAQ](#-faq)
+1. [What it does](#what-it-does)
+2. [Why agents? The measured answer](#why-agents-the-measured-answer)
+3. [How it works](#how-it-works)
+4. [Results on real data and benchmarks](#results-on-real-data-and-benchmarks)
+5. [Quick start](#quick-start)
+6. [Ways to use it](#ways-to-use-it)
+7. [Repository structure](#repository-structure)
+8. [Reproducing the research](#reproducing-the-research)
+9. [FAQ](#faq)
 
 ---
 
-## ✨ What it does
+## What it does
 
 A university's timetable lives in a macro-enabled Excel workbook (`Master_TimeTable_July-Dec-2026.xlsm`).
 A VBA macro fills it greedily and staff fix the rest by hand. This project replaces that with a team of
@@ -56,7 +51,7 @@ A VBA macro fills it greedily and staff fix the rest by hand. This project repla
 re-checked by a validator that shares no code with it. The LLM (optional: Gemini, Claude, OpenAI or a local
 model) only understands requests and words the answers; without a key a rule-based supervisor does the same job.
 
-## 🤖 Why agents? The measured answer
+## Why agents? The measured answer
 
 A solver alone produces timetables. The agents make it safe to *operate* one: they check the solver's work,
 fix what fails, recover when a tool breaks, remember who is working on which version, and ask a human before
@@ -77,7 +72,6 @@ approves whatever the system shows. Success is judged by an independent validati
 | − human approval | 16/17 | 7/7 | 0 |
 | Single tool call (no agents) | 6/17 | 1/7 | **4** |
 
-<img src="docs/media/v4/fig_agent_ablation_rules.png" width="720" alt="agent ablation">
 
 * **Validator agent → safety.** When the tool lied ("0 violations, valid") the single-call system published the
   clashes *and told the user they were valid*. The full system caught every one.
@@ -92,33 +86,25 @@ The agents cost about 2 extra tool calls and 4 seconds per request. In what-if r
 validity: **[docs/AGENT_EVALUATION.md](docs/AGENT_EVALUATION.md)**. The same suite runs with an LLM supervisor:
 `ttagent agent-eval --llm`.
 
-## 🧩 How it works
+## How it works
 
-```mermaid
-flowchart LR
-    U([👤 Officer]) -->|chat| UI[Dashboard / CLI / REST]
-    UI --> LG
-
-    subgraph LG[🧠 LangGraph multi-agent workflow]
-        direction TB
-        SUP[Supervisor<br/>intent: LLM or rules] --> REQ[Requirements<br/>capacity proof]
-        REQ --> SCH[Scheduler<br/>retry · GA fallback]
-        SCH --> VAL[Validator<br/>independent re-check]
-        VAL -- "unplaced or clashes" --> DIA[Diagnoser] --> REP[Repairer<br/>minimal change] --> VAL
-        VAL -- "0 violations" --> APP{{Approval<br/>human-in-the-loop}} --> EXP[Explainer]
-        SUP --> ACT[Action agent<br/>view · move · publish-with-check] --> EXP
-        SUP --> AST[ReAct assistant<br/>LLM + all 30 tools]
-        MEM[(Checkpointed memory<br/>this conversation's version)] -.- SCH
-    end
-
-    LG <-->|MCP · stdio| M1[(data)]
-    LG <-->|MCP · stdio| M2[(academic)]
-    LG <-->|MCP · stdio| M3[(resource)]
-    LG <-->|MCP · stdio| M4[(timetable)]
-
-    M1 & M2 & M3 & M4 --> ENG[⚙️ CP-SAT engine · GA · validator]
-    ENG --> DB[(SQLite: versions,<br/>audit log)]
-    ENG --> XL[(📄 .xlsm workbook)]
+```text
+1. Interface     Officer request in plain language (dashboard, CLI or REST API)
+                     |
+2. Agents        LangGraph workflow, 11 nodes, checkpointed per conversation
+                     Supervisor     -> understands the request and routes it
+                     Requirements   -> capacity proof and scope
+                     Scheduler      -> calls the solver; retries, then falls back to the GA
+                     Validator      -> independent re-check of every result (rules H1-H9)
+                     Diagnoser and Repairer -> fix clashes or unplaced classes, then re-validate
+                     Approval       -> a human approves before anything is published
+                     Explainer      -> answers with the exact figures
+                     |
+3. Tools         4 MCP servers over stdio, 30 typed tools
+                     data (3) | academic (4) | resource (8) | timetable (15)
+                     |
+4. Engine        CP-SAT (time-then-room) | LNS repair | memetic GA | validator
+                 SQLite store with versions and audit log | Excel workbook import and export
 ```
 
 | Agent | Role | Measured contribution |
@@ -135,9 +121,9 @@ flowchart LR
 | Layer | What it is | LLM? |
 |---|---|:-:|
 | **Agents** `ttagent/agents` | LangGraph `StateGraph`, 11 nodes, conditional routing, repair loop, `interrupt()` approval, SQLite checkpointer | optional |
-| **MCP** `ttagent/mcp_servers` | 4 FastMCP servers (data, academic, resource, timetable), 30 typed tools, every call audited | ❌ |
-| **Engine** `ttagent/engine` | Time-then-room **CP-SAT decomposition** with Hall cuts, **LNS repair**, memetic **GA**, VBA-macro port, validator (H1–H9), capacity proof, diagnosis | ❌ |
-| **Ingestion** `ttagent/ingestion` | Reads the `.xlsm` exactly as the macro does; learns elective baskets; data-quality report | ❌ |
+| **MCP** `ttagent/mcp_servers` | 4 FastMCP servers (data, academic, resource, timetable), 30 typed tools, every call audited | |
+| **Engine** `ttagent/engine` | Time-then-room **CP-SAT decomposition** with Hall cuts, **LNS repair**, memetic **GA**, VBA-macro port, validator (H1–H9), capacity proof, diagnosis | |
+| **Ingestion** `ttagent/ingestion` | Reads the `.xlsm` exactly as the macro does; learns elective baskets; data-quality report | |
 
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
@@ -147,7 +133,7 @@ Jul–Dec 2025 workbooks. Pooled over three terms (51 task runs per variant): fu
 − validator 39/51 (p = 0.0005), − repair 35/51 (p = 3 × 10⁻⁵), − memory 42/51 (p = 0.004), − fallback 45/51
 (p = 0.03). See [docs/MULTITERM_VALIDATION.md](docs/MULTITERM_VALIDATION.md).
 
-## 📊 Results on real data and benchmarks
+## Results on real data and benchmarks
 
 **Real workbook** (348 requirements, 674 h/week, 54 batches, 38 rooms), 10 seeds × 120 s:
 
@@ -178,7 +164,6 @@ during development:
 CP-SAT has the lowest soft penalty per scheduled hour in every term (p = 0.008, Cliff's δ = −1 each) and higher
 coverage than the GA in three terms (p = 0.011); on Jan–Jun 2026 the difference is not significant (p = 0.17).
 
-<img src="docs/media/v5/fig_multiterm.png" width="760" alt="coverage across four terms">
 
 **ITC-2007 Track 3** (21 public instances, 120 s, 2 cores): the time-then-room decomposition — the same idea
 the engine uses on the real data — cuts the median gap to the best-known results from 106 % (plain CP-SAT)
@@ -186,22 +171,13 @@ to **37.5 %**, reaches the proven optimum on 5 instances, is at or below the tim
 al. (2017) on 7 of 19, and beats the GA on all 21. It is still behind the dedicated state of the art on the
 hardest instances; we report it as evidence that the engine is general and sound, not as a new best result.
 
-<img src="docs/media/v4/fig_itc_costs.png" width="820" alt="ITC-2007 results">
 
 Findings from the real data: the macro's model is **provably infeasible** (some batches need 42 h in a 34-h
 week); elective baskets learned from the data make it feasible; requested venues must be treated as preferences.
 
 Details: [docs/MULTITERM_VALIDATION.md](docs/MULTITERM_VALIDATION.md) · [docs/V3_ANALYSIS.md](docs/V3_ANALYSIS.md) · [docs/RESEARCH_REPORT.md](docs/RESEARCH_REPORT.md) · [project report](docs/Project_Report.docx).
 
-## 🖼️ Screenshots
-
-| Agent Studio: live LangGraph path, MCP calls, approval | Agent evaluation page |
-|---|---|
-| ![studio](docs/media/studio.png) | ![agent eval](docs/media/agent_eval.png) |
-| **Overview** | **Timetable explorer** |
-| ![overview](docs/media/overview.png) | ![timetable](docs/media/timetable.png) |
-
-## 🚀 Quick start
+## Quick start
 
 **Requirements:** Python 3.10–3.14. No API key is needed.
 
@@ -226,7 +202,7 @@ then `ttagent serve`; the validator agent catches the corruption and the repaire
 
 > Optional LLM: copy `.env.example` to `.env` and add `GOOGLE_API_KEY` (or `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`).
 
-## 🛠️ Ways to use it
+## Ways to use it
 
 | Command | Purpose |
 |---|---|
@@ -241,7 +217,7 @@ then `ttagent serve`; the validator agent catches the corruption and the repaire
 
 Step-by-step guide: **[docs/USAGE.md](docs/USAGE.md)** · study with real users: **[docs/USER_STUDY.md](docs/USER_STUDY.md)**.
 
-## 📁 Repository structure
+## Repository structure
 
 ```
 ├── ttagent/
@@ -264,7 +240,7 @@ Step-by-step guide: **[docs/USAGE.md](docs/USAGE.md)** · study with real users:
 └── TimetableAgent.bat · run.sh · pyproject.toml
 ```
 
-## 🧪 Reproducing the research
+## Reproducing the research
 
 ```bash
 python -m pytest tests -q                           # 52 tests
@@ -276,7 +252,7 @@ python -m scripts.run_multiterm --workbooks NAME=path.xlsm ... && python -m scri
 ttagent llm-eval                                    # with an LLM key
 ```
 
-## ❓ FAQ
+## FAQ
 
 <details><summary><b>Does it need an OpenAI / Gemini / Claude key?</b></summary>
 
@@ -304,7 +280,7 @@ Yes, if it follows the same layout (requirements in `Main!K:V`, grid in `Main!B2
 **Settings**, or set `TTAGENT_WORKBOOK` and run `ttagent ingest`.
 </details>
 
-## 📜 License & citation
+## License & citation
 
 MIT; see [LICENSE](LICENSE). Release notes: [CHANGELOG.md](CHANGELOG.md). Citation metadata: [CITATION.cff](CITATION.cff). The workbook in `data/raw/` belongs to the institution and is not covered by the
 licence. If you use this work, please cite:
