@@ -16,20 +16,27 @@ which previously relied on an Excel workbook and a VBA macro.
 | Robustness | 99.45–99.94 % with no clashes on three further timetables of the institution |
 | Benchmarks | Better than a tuned genetic algorithm (p = 0.0002); ITC-2007 median gap reduced from 106 % to 37.5 % |
 
-**Documentation:** [Agent evaluation](docs/AGENT_EVALUATION.md) · [Multi-term validation](docs/MULTITERM_VALIDATION.md) · [Solver and GA analysis](docs/V3_ANALYSIS.md) · [Architecture](docs/ARCHITECTURE.md) · [User guide](docs/USAGE.md) · [Project report](docs/Project_Report.docx) · Demo videos: [agents catch a faulty tool (1 min)](docs/media/demo_v4.mp4), [full tour (2 min)](docs/media/demo.mp4)
+**Documentation:** [Agent evaluation](docs/AGENT_EVALUATION.md) · [Multi-term validation](docs/MULTITERM_VALIDATION.md) · [Solver and GA analysis](docs/V3_ANALYSIS.md) · [Architecture](docs/ARCHITECTURE.md) · [User guide](docs/USAGE.md) · [Project report](docs/Project_Report.docx)
+
+## Demo
+
+[![Agent Studio: the agents' path and tool calls during a request (click to watch the demo video)](docs/media/agent_studio.gif)](docs/media/demo_v4.mp4)
+
+Videos: [Overview (1 min)](docs/media/demo_overview.mp4) · [Agents catch a faulty tool (1 min)](docs/media/demo_v4.mp4) · [Full tour of the dashboard (2 min)](docs/media/demo.mp4)
 
 ---
 
 ## Contents
-1. [What it does](#what-it-does)
-2. [Why agents? The measured answer](#why-agents-the-measured-answer)
-3. [How it works](#how-it-works)
-4. [Results on real data and benchmarks](#results-on-real-data-and-benchmarks)
-5. [Quick start](#quick-start)
-6. [Ways to use it](#ways-to-use-it)
-7. [Repository structure](#repository-structure)
-8. [Reproducing the research](#reproducing-the-research)
-9. [FAQ](#faq)
+1. [Demo](#demo)
+2. [What it does](#what-it-does)
+3. [Why agents? The measured answer](#why-agents-the-measured-answer)
+4. [How it works](#how-it-works)
+5. [Results on real data and benchmarks](#results-on-real-data-and-benchmarks)
+6. [Quick start](#quick-start)
+7. [Ways to use it](#ways-to-use-it)
+8. [Repository structure](#repository-structure)
+9. [Reproducing the research](#reproducing-the-research)
+10. [FAQ](#faq)
 
 ---
 
