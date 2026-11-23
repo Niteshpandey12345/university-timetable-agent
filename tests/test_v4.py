@@ -60,6 +60,7 @@ def test_ctt_decomposition_feasible():
     assert r["feasible"] and r["cost"] >= BEST_KNOWN["comp01"][0]
 
 
+@pytest.mark.workbook
 def test_agent_catches_silent_corruption_and_never_publishes_a_clash(tmp_path, monkeypatch):
     """End to end through the MCP servers: the scheduling tool lies; the validator agent catches it."""
     from ttagent.agents.agent import TimetableAgent

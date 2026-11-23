@@ -181,6 +181,11 @@ Details: [docs/MULTITERM_VALIDATION.md](docs/MULTITERM_VALIDATION.md) · [docs/V
 
 **Requirements:** Python 3.10–3.14. No API key is needed.
 
+**Data:** the institution's timetable workbook is not distributed with this repository. Place a workbook in the
+same format at `data/raw/Master_TimeTable_July-Dec-2026.xlsm`, or point to it with the `TTAGENT_WORKBOOK`
+environment variable (see [data/raw/README.md](data/raw/README.md)). Without a workbook, the ITC-2007 benchmark
+and the engine tests still run.
+
 **Windows, one click:** double-click `TimetableAgent.bat`. It installs everything on first run, loads the workbook
 and opens the dashboard. (`./run.sh` on macOS/Linux.)
 
@@ -282,7 +287,7 @@ Yes, if it follows the same layout (requirements in `Main!K:V`, grid in `Main!B2
 
 ## License & citation
 
-MIT; see [LICENSE](LICENSE). Release notes: [CHANGELOG.md](CHANGELOG.md). Citation metadata: [CITATION.cff](CITATION.cff). The workbook in `data/raw/` belongs to the institution and is not covered by the
+MIT; see [LICENSE](LICENSE). Release notes: [CHANGELOG.md](CHANGELOG.md). Citation metadata: [CITATION.cff](CITATION.cff). The institution's workbook is not included in this repository and is not covered by the
 licence. If you use this work, please cite:
 
 ```
